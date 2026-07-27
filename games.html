@@ -8,14 +8,15 @@
   <link rel="icon" type="image/svg+xml" href="favicon.svg" />
   <meta name="theme-color" content="#000000" />
   <meta name="author" content="Divyansh Khare" />
-  <!-- After deploying, replace og:image with an absolute URL (e.g. https://yourdomain.com/assets/og.png) -->
+  <link rel="canonical" href="https://divyanshkhare.com/games.html" />
+  <meta property="og:url" content="https://divyanshkhare.com/games.html" />
   <meta property="og:type" content="website" />
   <meta property="og:title" content="Overwhelming Studios — Divyansh Khare" />
   <meta property="og:description" content="Overwhelming Studios: two shipped Unreal Engine 5 titles — Packet Patrol and Vegan Zombie Crop Apocalypse — with devlogs, systems design, and PlayStation recognition." />
-  <meta property="og:image" content="assets/og.png" />
+  <meta property="og:image" content="https://divyanshkhare.com/assets/og.png" />
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="Overwhelming Studios — Divyansh Khare" />
-  <meta name="twitter:image" content="assets/og.png" />
+  <meta name="twitter:image" content="https://divyanshkhare.com/assets/og.png" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
@@ -47,6 +48,17 @@
     .video-frame { position: relative; aspect-ratio: 16 / 9; border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; background: #050505; margin: 28px 0; }
     .video-frame iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
     .video-label { font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--fg-faint); margin: 28px 0 -16px; }
+    .mini-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+    .mini-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; transition: border-color 0.2s ease; }
+    .mini-card:hover { border-color: var(--border-strong); }
+    .mini-head { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; margin-bottom: 8px; }
+    .mini-head h3 { font-size: 16.5px; font-weight: 600; color: var(--fg-strong); letter-spacing: -0.01em; }
+    .mini-date { font-family: var(--font-mono); font-size: 11.5px; color: var(--fg-faint); }
+    .mini-card p { font-size: 13.5px; color: var(--fg-muted); line-height: 1.6; margin-bottom: 14px; }
+    .mini-card .tags { margin-bottom: 4px; }
+    .mini-card .project-links { margin-top: 12px; }
+    @media (max-width: 900px) { .mini-grid { grid-template-columns: 1fr 1fr; } }
+    @media (max-width: 640px) { .mini-grid { grid-template-columns: 1fr; } }
     @media (max-width: 720px) { .game-cols, .devlog-grid { grid-template-columns: 1fr; } .game-body { padding: 24px; } }
   </style>
 </head>
@@ -191,7 +203,83 @@ damage = (distance &lt;= 50)
         </div>
       </article>
 
-      <div style="text-align:center; margin-top: 8px;">
+      <!-- ============ ISOSCAPES ============ -->
+      <div class="section-head" style="margin-top:72px" id="isoscapes">
+        <div class="section-eyebrow">UC Santa Cruz · Jul — Aug 2022</div>
+        <h2>Isoscapes</h2>
+        <p>A procedurally generated, explorable, isometric 3D low-poly landscape, re-generated with the push of a button. Built in Unity; the project where the procedural-systems thread in my work started.</p>
+      </div>
+      <article class="game-block">
+        <div class="game-hero"><img src="assets/isoscapes-title.jpg" alt="Iso-Scapes title screen: a procedurally generated isometric low-poly landscape of forests, cliffs, and water, with a Re-Generate button" /></div>
+        <div class="game-body">
+          <h3>Iso-Scapes</h3>
+          <div class="game-sub">Procedural generation · Unity / C# · core architecture</div>
+          <p>
+            Every landscape you see is generated, not authored: Perlin noise produces height values,
+            falloff maps shape islands out of the noise, and an auto-tiling pass (built with my
+            teammate Keenan) turns raw heights into coherent terrain: cliffs, shores, forests, and
+            water. Hit <strong>Re-Generate</strong> and a new world assembles itself. The terrain
+            algorithm was prototyped in p5.js first, where iteration is fast, then ported to C#
+            for the real renderer.
+          </p>
+          <div class="game-cols">
+            <div>
+              <h4>Core architecture</h4>
+              <ul>
+                <li><strong>Noise and falloff-map generation</strong> over a grid system for dynamic environment creation.</li>
+                <li><strong>Cell</strong>, an abstract data structure holding each block object's attributes, keeping generation modular and data management clean.</li>
+                <li>Isometric camera with movement and zoom, tuned for exploring the generated worlds.</li>
+              </ul>
+            </div>
+            <div>
+              <h4>Outcomes</h4>
+              <ul>
+                <li>Released builds for both <strong>Windows and Mac</strong>.</li>
+                <li>The prototype-in-p5.js, ship-in-C# workflow became a habit: validate the algorithm where iteration is cheap, then port to where performance lives.</li>
+                <li>The procedural thread continued into Raveball Arena's music-driven generation and Vegan Zombie's recipe system.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <!-- ============ EARLIER GAMES ============ -->
+      <div class="section-head" style="margin-top:72px">
+        <div class="section-eyebrow">Earlier Work</div>
+        <h2>More games & experiments</h2>
+        <p>Student and personal projects from UCSC's game design program, where most of my systems instincts were formed.</p>
+      </div>
+      <div class="mini-grid">
+        <article class="mini-card">
+          <div class="mini-head"><h3>Raveball Arena</h3><span class="mini-date">2022</span></div>
+          <p>A competitive game where music dictates rhythm and gameplay. I invented a music-information-retrieval algorithm from scratch in Unreal Engine 5 so the game responds to its own soundtrack.</p>
+          <div class="tags"><span class="tag">C++</span><span class="tag">UE5</span><span class="tag">Audio MIR</span></div>
+          <div class="project-links"><a href="https://raveballarena.com/" target="_blank" rel="noopener">Visit the site</a></div>
+        </article>
+        <article class="mini-card">
+          <div class="mini-head"><h3>Packet Control</h3><span class="mini-date">2023</span></div>
+          <p>An arcade game for PC, Xbox, and PS5 with a music-reactive spawn system: a beat-matching algorithm syncs anomaly spawns to the soundtrack, with streak-based difficulty scaling.</p>
+          <div class="tags"><span class="tag">Beat Matching</span><span class="tag">Console</span></div>
+        </article>
+        <article class="mini-card">
+          <div class="mini-head"><h3>Never Alone</h3><span class="mini-date">2021</span></div>
+          <p>A point-and-click adventure set on an early-2000s desktop, built in Phaser.js: fake popup ads, an in-game email system, simulated web browsing, and an adaptive soundtrack.</p>
+          <div class="tags"><span class="tag">Phaser.js</span><span class="tag">Narrative</span></div>
+          <div class="project-links"><a href="https://justinaquan.github.io/NEVER-ALONE/" target="_blank" rel="noopener">Play it</a></div>
+        </article>
+        <article class="mini-card">
+          <div class="mini-head"><h3>WanQuest</h3><span class="mini-date">2021</span></div>
+          <p>A turn-based RPG built in one week with an eight-person team. I led the engineering: systems architecture in C#/Unity, the game-wide UI, and the Agile process, JIRA and Git included.</p>
+          <div class="tags"><span class="tag">Unity</span><span class="tag">Team Lead</span></div>
+        </article>
+        <article class="mini-card">
+          <div class="mini-head"><h3>The Enigma</h3><span class="mini-date">2018</span></div>
+          <p>An augmented-reality hackerspace game with pixel art, built on the Vuforia SDK with marker-based tracking effective to four meters.</p>
+          <div class="tags"><span class="tag">AR / Vuforia</span><span class="tag">C#</span></div>
+        </article>
+      </div>
+
+      <div style="text-align:center; margin-top: 48px;">
         <a class="btn btn-secondary" href="index.html#resume">← Back to resume</a>
       </div>
     </div>
@@ -203,6 +291,7 @@ damage = (distance &lt;= 50)
       <ul class="footer-links">
         <li><a href="mailto:dkhare1998@gmail.com">Email</a></li>
         <li><a href="https://github.com/T-98" target="_blank" rel="noopener">GitHub</a></li>
+        <li><a href="https://www.linkedin.com/in/divyansh-khare/" target="_blank" rel="noopener">LinkedIn</a></li>
         <li><a href="index.html">Home</a></li>
         <li><a href="blog.html">Blog</a></li>
       </ul>

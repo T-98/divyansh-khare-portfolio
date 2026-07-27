@@ -8,14 +8,15 @@
   <link rel="icon" type="image/svg+xml" href="favicon.svg" />
   <meta name="theme-color" content="#000000" />
   <meta name="author" content="Divyansh Khare" />
-  <!-- After deploying, replace og:image with an absolute URL (e.g. https://yourdomain.com/assets/og.png) -->
+  <link rel="canonical" href="https://divyanshkhare.com/" />
+  <meta property="og:url" content="https://divyanshkhare.com/" />
   <meta property="og:type" content="website" />
   <meta property="og:title" content="Divyansh Khare — Full-Stack Engineer & AI Systems Architect" />
   <meta property="og:description" content="Full-stack engineer and multi-time founder. Sole architect of SCM, an AI-agent governance platform. Consulting in software engineering and AI/ML systems." />
-  <meta property="og:image" content="assets/og.png" />
+  <meta property="og:image" content="https://divyanshkhare.com/assets/og.png" />
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="Divyansh Khare — Full-Stack Engineer & AI Systems Architect" />
-  <meta name="twitter:image" content="assets/og.png" />
+  <meta name="twitter:image" content="https://divyanshkhare.com/assets/og.png" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
@@ -26,7 +27,7 @@
    "email":"mailto:dkhare1998@gmail.com",
    "address":{"@type":"PostalAddress","addressLocality":"San Jose","addressRegion":"CA"},
    "alumniOf":"University of California, Santa Cruz",
-   "sameAs":["https://github.com/T-98"]}
+   "url":"https://divyanshkhare.com","sameAs":["https://github.com/T-98","https://www.linkedin.com/in/divyansh-khare/"]}
   </script>
 </head>
 <body>
@@ -149,7 +150,7 @@
           </div>
           <div class="project-links">
             <a href="blog/vortexeai-deterministic-orchestration.html">Read the write-up</a>
-            <a href="https://670b1f7da318cd000878a945--magical-moxie-045ea9.netlify.app/" target="_blank" rel="noopener">Visit the live site</a>
+            <a href="https://vortexeai.com/" target="_blank" rel="noopener">Visit the live site</a>
           </div>
         </article>
 
@@ -176,6 +177,55 @@
           </div>
         </article>
 
+
+        <!-- LUV Health -->
+        <article class="project-card wide reveal">
+          <div class="card-media"><img src="assets/cover-luvhealth.svg" alt="LUV Health flow schematic: specialist search, transparent self-pay profile, voice-agent booking, confirmed appointment" loading="lazy" /></div>
+          <div class="project-top">
+            <div class="project-icon">✚</div>
+            <div class="project-role">Lead Engineer</div>
+          </div>
+          <h3>LUV Health</h3>
+          <div class="tagline">Self-pay healthcare marketplace with AI-assisted booking</div>
+          <p class="desc">
+            A platform that helps patients book same-day appointments with hard-to-find specialists
+            at transparent self-pay rates. I led end-to-end development of the full MVP: smart
+            search with tailored relevance signals, practice profiles, doctor-facing pricing and
+            visibility tools, and automated scheduling. A voice-based AI agent (Vapi) books
+            appointments on the patient's behalf, cutting booking time from minutes to seconds and
+            keeping the path from search to booked appointment as short as possible.
+          </p>
+          <div class="tags">
+            <span class="tag">FastAPI</span><span class="tag">Next.js</span>
+            <span class="tag">Voice AI (Vapi)</span><span class="tag">Marketplace</span>
+          </div>
+        </article>
+
+        <!-- Isoscapes -->
+        <article class="project-card wide reveal">
+          <div class="card-media"><img src="assets/isoscapes-title.jpg" alt="Iso-Scapes title screen: a procedurally generated isometric low-poly landscape of forests, cliffs, and water, with a Re-Generate button" loading="lazy" /></div>
+          <div class="project-top">
+            <div class="project-icon">⬡</div>
+            <div class="project-role">Core Architecture</div>
+          </div>
+          <h3>Isoscapes</h3>
+          <div class="tagline">Procedural isometric worlds, re-generated at the push of a button</div>
+          <p class="desc">
+            A procedurally generated, explorable 3D low-poly landscape built in Unity at UCSC.
+            I built the core architecture: Perlin noise and falloff-map generation over a grid
+            system, a <strong>Cell</strong> abstract data structure holding each block's attributes,
+            the isometric camera with movement and zoom, and auto-tiled terrain driven by
+            noise-based height values, prototyped in p5.js and ported to C#. Shipped as builds for
+            both Windows and Mac.
+          </p>
+          <div class="tags">
+            <span class="tag">Unity / C#</span><span class="tag">Procedural Generation</span>
+            <span class="tag">Perlin Noise</span><span class="tag">Cross-platform</span>
+          </div>
+          <div class="project-links">
+            <a href="games.html#isoscapes">See it on the games page</a>
+          </div>
+        </article>
         <!-- Tracewell -->
         <article class="project-card reveal">
           <div class="card-media"><img src="assets/cover-tracewell.svg" alt="Tracewell pipeline schematic — a flagged injection event passing through deterministic feature extraction into a single narrating LLM call" loading="lazy" /></div>
@@ -261,6 +311,9 @@
             <span class="tag">React</span><span class="tag">Schema Introspection</span>
             <span class="tag">Agent UX</span>
           </div>
+          <div class="project-links">
+            <a href="https://sense-ui.vercel.app/" target="_blank" rel="noopener">Visit the landing page</a>
+          </div>
         </article>
 
         <!-- Atlas Admin -->
@@ -280,6 +333,10 @@
           <div class="tags">
             <span class="tag">NestJS</span><span class="tag">Elasticsearch</span>
             <span class="tag">Redis</span><span class="tag">Next.js</span>
+          </div>
+          <div class="project-links">
+            <a href="https://github.com/T-98/admin-dashboard-ui" target="_blank" rel="noopener">Frontend source</a>
+            <a href="https://github.com/T-98/admin-dashboard" target="_blank" rel="noopener">Backend source</a>
           </div>
         </article>
 
@@ -526,7 +583,7 @@
       <ul class="footer-links">
         <li><a href="mailto:dkhare1998@gmail.com">Email</a></li>
         <li><a href="https://github.com/T-98" target="_blank" rel="noopener">GitHub</a></li>
-        <li><a href="https://www.linkedin.com/" target="_blank" rel="noopener">LinkedIn</a></li>
+        <li><a href="https://www.linkedin.com/in/divyansh-khare/" target="_blank" rel="noopener">LinkedIn</a></li>
         <li><a href="blog.html">Blog</a></li>
         <li><a href="games.html">Games</a></li>
       </ul>
