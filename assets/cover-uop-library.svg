@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 640" font-family="ui-monospace,'SF Mono',Menlo,monospace">
+  <defs>
+    <radialGradient id="glow" cx="50%" cy="0%" r="75%">
+      <stop offset="0%" stop-color="#52a8ff" stop-opacity="0.18"/>
+      <stop offset="60%" stop-color="#52a8ff" stop-opacity="0.04"/>
+      <stop offset="100%" stop-color="#52a8ff" stop-opacity="0"/>
+    </radialGradient>
+    <pattern id="grid" width="48" height="48" patternUnits="userSpaceOnUse">
+      <path d="M 48 0 L 0 0 0 48" fill="none" stroke="rgba(255,255,255,0.045)" stroke-width="1"/>
+    </pattern>
+  </defs>
+  <rect width="1200" height="640" fill="#0a0a0a"/>
+  <rect width="1200" height="640" fill="url(#grid)"/>
+  <ellipse cx="600" cy="80" rx="620" ry="360" fill="url(#glow)"/>
+  <rect x="480" y="190" width="300" height="64" rx="10" fill="#111" stroke="rgba(255,255,255,0.3)" stroke-width="1.5"/><text x="630" y="228" text-anchor="middle" font-size="14.5" fill="#8f8f8f">['uops','list','all']</text><rect x="480" y="300" width="300" height="64" rx="10" fill="rgba(82,168,255,0.08)" stroke="#52a8ff" stroke-width="1.5"/><text x="630" y="338" text-anchor="middle" font-size="14.5" fill="#e8e8e8">['uops','list','cost']</text><rect x="480" y="410" width="300" height="64" rx="10" fill="#111" stroke="rgba(255,255,255,0.3)" stroke-width="1.5"/><text x="630" y="448" text-anchor="middle" font-size="14.5" fill="#8f8f8f">['uops','detail',7]</text><path d="M 240 260 C 360.0 260, 360.0 222, 480 222" fill="none" stroke="rgba(255,255,255,0.22)" stroke-width="1.5"/><path d="M 240 360 C 360.0 360, 360.0 332, 480 332" fill="none" stroke="#52a8ff" stroke-width="1.5"/><circle cx="240" cy="260" r="20" fill="#111" stroke="rgba(255,255,255,0.35)" stroke-width="1.5"/><circle cx="240" cy="360" r="20" fill="rgba(82,168,255,0.12)" stroke="#52a8ff" stroke-width="1.5"/><text x="240" y="420" text-anchor="middle" font-size="13" fill="#8f8f8f">responses</text><path d="M 240 480 C 360 480, 400 400, 458 350" fill="none" stroke="#f87171" stroke-width="1.5" stroke-dasharray="6 5"/><circle cx="240" cy="480" r="20" fill="rgba(248,113,113,0.10)" stroke="#f87171" stroke-width="1.5"/><text x="240" y="540" text-anchor="middle" font-size="13" fill="#f87171">stale · can&#39;t land</text><line x1="448" y1="336" x2="472" y2="360" stroke="#f87171" stroke-width="2"/><line x1="472" y1="336" x2="448" y2="360" stroke="#f87171" stroke-width="2"/><text x="900" y="150" text-anchor="middle" font-size="15" fill="#6e6e6e">results keyed to the query — races impossible</text>
+  <g>
+    <rect x="40" y="568" rx="15" height="30" width="334" fill="rgba(255,255,255,0.04)" stroke="rgba(255,255,255,0.16)"/>
+    <text x="207" y="588" text-anchor="middle" font-size="13" letter-spacing="2" fill="#a1a1a1">UOP LIBRARY · DATA-LAYER ARCHITECTURE</text>
+  </g>
+</svg>

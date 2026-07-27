@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Divyansh Khare — Full-Stack Engineer & AI Systems Architect</title>
+  <meta name="description" content="Full-stack engineer and multi-time founder. Sole architect of SCM, an AI-agent governance platform. Consulting in software engineering and AI/ML systems." />
+  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+  <meta name="theme-color" content="#000000" />
+  <meta name="author" content="Divyansh Khare" />
+  <!-- After deploying, replace og:image with an absolute URL (e.g. https://yourdomain.com/assets/og.png) -->
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Divyansh Khare — Full-Stack Engineer & AI Systems Architect" />
+  <meta property="og:description" content="Full-stack engineer and multi-time founder. Sole architect of SCM, an AI-agent governance platform. Consulting in software engineering and AI/ML systems." />
+  <meta property="og:image" content="assets/og.png" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Divyansh Khare — Full-Stack Engineer & AI Systems Architect" />
+  <meta name="twitter:image" content="assets/og.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"Person","name":"Divyansh Khare",
+   "jobTitle":"Full-Stack Engineer & AI Systems Architect",
+   "email":"mailto:dkhare1998@gmail.com",
+   "address":{"@type":"PostalAddress","addressLocality":"San Jose","addressRegion":"CA"},
+   "alumniOf":"University of California, Santa Cruz",
+   "sameAs":["https://github.com/T-98"]}
+  </script>
+</head>
+<body>
+  <a class="skip-link" href="#content">Skip to content</a>
+
+  <!-- ================= NAV ================= -->
+  <header class="nav">
+    <div class="nav-inner">
+      <a class="nav-logo" href="index.html">
+        <span class="logo-mark">DK</span>
+        Divyansh Khare
+      </a>
+      <ul class="nav-links">
+        <li><a href="#projects">Projects</a></li>
+        <li><a href="#resume">Resume</a></li>
+        <li><a href="#services">Services</a></li>
+        <li><a href="blog.html">Blog</a></li>
+        <li><button class="nav-k" type="button" aria-label="Open command palette (Cmd+K)" onclick="window.__openPalette&&window.__openPalette()">⌘K</button></li>
+        <li><a class="nav-cta" href="mailto:dkhare1998@gmail.com">Get in touch</a></li>
+      </ul>
+      <button class="nav-burger" aria-label="Toggle menu" aria-expanded="false" onclick="var l=this.parentNode.querySelector('.nav-links');var o=l.classList.toggle('open');this.setAttribute('aria-expanded',o)">
+        <svg width="16" height="12" viewBox="0 0 16 12" fill="none"><path d="M0 1h16M0 6h16M0 11h16" stroke="currentColor" stroke-width="1.6"/></svg>
+      </button>
+    </div>
+  </header>
+
+  <!-- ================= HERO ================= -->
+  <section id="content" class="hero">
+    <div class="hero-bg" aria-hidden="true">
+      <div class="hw hw-l1"><div class="hw-bar"><i></i><i></i><i></i><span>tracewell · run ledger</span></div><img src="assets/app-tracewell.svg" alt="" /></div>
+      <div class="hw hw-l2"><div class="hw-bar"><i></i><i></i><i></i><span>vortexeai · workflow editor</span></div><img src="assets/app-vortexeai.svg" alt="" /></div>
+      <div class="hw hw-r1"><div class="hw-bar"><i></i><i></i><i></i><span>scm · mission control</span></div><img src="assets/scm-mission-control.jpg" alt="" /></div>
+      <div class="hw hw-r2"><div class="hw-bar"><i></i><i></i><i></i><span>atlas · sub-second search</span></div><img src="assets/app-atlas.svg" alt="" /></div>
+    </div>
+    <div class="container hero-inner">
+      <div class="hero-badge"><span class="dot"></span> Available for consulting engagements</div>
+      <h1>Systems from 0→1.<br />Owned end to end.</h1>
+      <p class="sub">
+        I'm Divyansh, a full-stack engineer and multi-time founder. I take systems from first commit to production and own them across <strong>frontend, backend, infrastructure, and the
+        agent layer</strong>. Most recently I was sole architect and tech lead of SCM, an AI-agent governance platform that makes autonomous agents safe to run against FERPA-regulated student data.
+      </p>
+      <div class="hero-actions">
+        <a class="btn btn-primary" href="#projects">View my work</a>
+        <a class="btn btn-secondary" href="#services">Work with me</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= METRICS ================= -->
+  <section class="metrics">
+    <div class="container">
+      <div class="metrics-grid">
+        <div class="metric"><div class="num">$8M+/yr</div><div class="label">Revenue locked in at Union Pacific</div></div>
+        <div class="metric"><div class="num">89%</div><div class="label">Revenue-loss trajectory reversed</div></div>
+        <div class="metric"><div class="num">0→1</div><div class="label">AI governance platform, sole architect</div></div>
+        <div class="metric"><div class="num">200+</div><div class="label">Daily active users in 4 months at VortexeAI</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= PROJECTS ================= -->
+  <section class="section" id="projects">
+    <div class="container">
+      <div class="section-head reveal">
+        <div class="section-eyebrow">Selected Work</div>
+        <h2>Projects</h2>
+        <p>Production systems where I owned the architecture, the trade-offs, and the outcome, from AI-agent governance to compliance-critical rail infrastructure.</p>
+      </div>
+
+      <div class="projects-grid">
+        <!-- SCM — featured -->
+        <article class="project-card featured reveal">
+          <div class="featured-content">
+          <div class="project-top">
+            <div class="project-icon">◆</div>
+            <div class="project-role">Sole Architect · Tech Lead</div>
+          </div>
+          <h3>SCM — AI Agent Governance Platform</h3>
+          <div class="tagline">Autonomous agents, made safe for FERPA-regulated student data</div>
+          <p class="desc">
+            The governance layer that lets AI agents touch student records safely. Every agent action
+            resolves to the authority of the human it acts for; every autonomous workflow runs on a
+            single-use, time-boxed capability grant; and student names are structurally absent from
+            everything the LLM sees. Built as a Python/Temporal agent runtime with human-in-the-loop
+            approval gates, a NestJS capability registry, and a 71-tool MCP integration, shipped to a live production pilot with a large customer.
+          </p>
+          <div class="tags">
+            <span class="tag">Python / FastAPI</span><span class="tag">Temporal</span>
+            <span class="tag">LangGraph</span><span class="tag">NestJS + Prisma</span>
+            <span class="tag">MCP</span><span class="tag">FERPA Architecture</span>
+          </div>
+          <div class="project-links">
+            <a href="blog/scm-agent-governance.html">Read the architecture deep-dive</a>
+          </div>
+          </div>
+          <div class="featured-media">
+            <img src="assets/scm-mission-control.jpg" alt="Mission Control — the SCM teacher dashboard showing live class proficiency goals, Claude-generated small groups, and per-student pacing" loading="lazy" />
+          </div>
+        </article>
+
+        <!-- VortexeAI -->
+        <article class="project-card wide reveal">
+          <div class="card-media"><img src="assets/vortexeai-screens.jpg" alt="VortexeAI product screens — the workflow dashboard, editor, and profile surfaces floating on the brand's purple field" loading="lazy" /></div>
+          <div class="project-top">
+            <div class="project-icon">◉</div>
+            <div class="project-role">Co-founder & CEO</div>
+          </div>
+          <h3>VortexeAI</h3>
+          <div class="tagline">Low-code AI workflow automation, 0→1 in four months</div>
+          <p class="desc">
+            A low-code, AI-driven workflow editor for product and engineering teams, taken from
+            first commit to <strong>200+ daily active users</strong> and a TechStars invitation in
+            four months. The core is a deterministic multi-agent orchestration engine, graph traversal plus dependency resolution, running at 99.9% execution reliability, with a
+            React/Next.js node editor and an LLM tool runtime with memory routing. 50+ automation
+            patterns deployed; onboarding 40% faster.
+          </p>
+          <div class="tags">
+            <span class="tag">Next.js</span><span class="tag">Multi-agent orchestration</span>
+            <span class="tag">LLM runtime</span><span class="tag">Low-code</span>
+          </div>
+          <div class="project-links">
+            <a href="blog/vortexeai-deterministic-orchestration.html">Read the write-up</a>
+            <a href="https://670b1f7da318cd000878a945--magical-moxie-045ea9.netlify.app/" target="_blank" rel="noopener">Visit the live site</a>
+          </div>
+        </article>
+
+        <!-- AetherisVis -->
+        <article class="project-card wide reveal">
+          <div class="card-media"><img src="assets/aetherisvis-devices.jpg" alt="The SPX 3D equipment configurator running across MacBook, MacBook Air, and iMac" loading="lazy" /></div>
+          <div class="project-top">
+            <div class="project-icon">◭</div>
+            <div class="project-role">Co-founder & CTO</div>
+          </div>
+          <h3>AetherisVis</h3>
+          <div class="tagline">Real-time 3D product configurators in the browser</div>
+          <p class="desc">
+            A browser-based 3D equipment configurator for SPX, a luxury gym design brand, shipped as a commercial client product in <strong>one week</strong>. Real-time 4K/8K customization stays responsive under load through lazy loading and interaction-loop tuning. Built on a modular React + TypeScript visualization framework
+            of 35+ reusable components that cut UI prototyping time 60% across client projects.
+          </p>
+          <div class="tags">
+            <span class="tag">React + TypeScript</span><span class="tag">3D / WebGL</span>
+            <span class="tag">Real-time rendering</span><span class="tag">Client delivery</span>
+          </div>
+          <div class="project-links">
+            <a href="blog/aetherisvis-3d-configurator.html">Read the write-up</a>
+            <a href="https://www.spxgymdesign.com/configurator" target="_blank" rel="noopener">See it live at SPX</a>
+          </div>
+        </article>
+
+        <!-- Tracewell -->
+        <article class="project-card reveal">
+          <div class="card-media"><img src="assets/cover-tracewell.svg" alt="Tracewell pipeline schematic — a flagged injection event passing through deterministic feature extraction into a single narrating LLM call" loading="lazy" /></div>
+          <div class="project-top">
+            <div class="project-icon">⌁</div>
+            <div class="project-role">Solo Developer</div>
+          </div>
+          <h3>Tracewell</h3>
+          <div class="tagline">Guardrailed insights for browser-agent trajectories</div>
+          <p class="desc">
+            An insight pipeline for AI-agent run logs: deterministic Python computes every fact, one
+            LLM call narrates them, and three independent layers stop prompt injections scraped off
+            a web page from steering the report. Ships with an append-only run ledger and a live
+            prompt-robustness eval harness.
+          </p>
+          <div class="tags">
+            <span class="tag">FastAPI</span><span class="tag">Pydantic</span>
+            <span class="tag">LLM Guardrails</span><span class="tag">React</span>
+          </div>
+          <div class="project-links">
+            <a href="blog/tracewell-trust-boundaries.html">Read the write-up</a>
+            <a href="https://blok-agent-insight.vercel.app/" target="_blank" rel="noopener">Visit the live site</a>
+          </div>
+        </article>
+
+        <!-- UOP Library -->
+        <article class="project-card reveal">
+          <div class="card-media"><img src="assets/cover-uop-library.svg" alt="Keyed-cache schematic — responses routed to their query keys, with a stale response structurally unable to land" loading="lazy" /></div>
+          <div class="project-top">
+            <div class="project-icon">▤</div>
+            <div class="project-role">Case Study</div>
+          </div>
+          <h3>UoP Library</h3>
+          <div class="tagline">Frontend architecture as an executive-grade case study</div>
+          <p class="desc">
+            Took a half-working prototype and structurally eliminated an unplanted fetch race with
+            TanStack Query, built optimistic cross-route cache coherence, and designed a
+            Bloomberg-style tearsheet grid, documented in 20 logged decisions and a 134-finding self-audit.
+          </p>
+          <div class="tags">
+            <span class="tag">React 18</span><span class="tag">TanStack Query</span>
+            <span class="tag">TypeScript</span><span class="tag">Design Systems</span>
+          </div>
+          <div class="project-links">
+            <a href="blog/uop-library-case-study.html">Read the case study</a>
+          </div>
+        </article>
+
+        <!-- Freezer-car modernization -->
+        <article class="project-card reveal">
+          <div class="card-media"><img src="assets/cover-freezer-car.svg" alt="Rail telemetry schematic — wayside, AEI, and CAD signals joined on trainID, with a flagged bearing on the rail line" loading="lazy" /></div>
+          <div class="project-top">
+            <div class="project-icon">▣</div>
+            <div class="project-role">Technical Lead</div>
+          </div>
+          <h3>Freezer-Car Modernization</h3>
+          <div class="tagline">Deterministic correlation over rail sensor networks</div>
+          <p class="desc">
+            Reversed an 89% revenue-loss trajectory at Union Pacific and locked in $8M+/year. Built a
+            deterministic correlation engine joining wayside, AEI, and CAD signals over Kafka, with
+            ML-derived health thresholds surfacing derailment-risk bearings for crew intervention.
+          </p>
+          <div class="tags">
+            <span class="tag">Kafka</span><span class="tag">C++</span>
+            <span class="tag">ML Thresholds</span><span class="tag">Rail Systems</span>
+          </div>
+        </article>
+
+        <!-- Sense UI -->
+        <article class="project-card wide reveal">
+          <div class="card-media"><img src="assets/cover-sense-ui.svg" alt="Component tree schematic with metadata badges that make the UI legible to AI agents" loading="lazy" /></div>
+          <div class="project-top">
+            <div class="project-icon">◈</div>
+            <div class="project-role">Solo Developer</div>
+          </div>
+          <h3>Sense UI</h3>
+          <div class="tagline">AI-comprehensible component architecture</div>
+          <p class="desc">
+            A metadata-driven component architecture that lets AI agents comprehend and operate UI, measured as a 40% lift in accurate agent interactions and 30% less integration debugging. Schema
+            extraction and introspection pipelines deployed across 15+ projects.
+          </p>
+          <div class="tags">
+            <span class="tag">React</span><span class="tag">Schema Introspection</span>
+            <span class="tag">Agent UX</span>
+          </div>
+        </article>
+
+        <!-- Atlas Admin -->
+        <article class="project-card wide reveal">
+          <div class="card-media"><img src="assets/cover-atlas.svg" alt="Search interface schematic with fuzzy-match results returning in sub-millisecond query times" loading="lazy" /></div>
+          <div class="project-top">
+            <div class="project-icon">▥</div>
+            <div class="project-role">Solo Developer</div>
+          </div>
+          <h3>Atlas Admin Panel</h3>
+          <div class="tagline">Sub-second search at 10,000+ concurrent users</div>
+          <p class="desc">
+            An admin dashboard with sub-second prefix and fuzzy search via tuned Elasticsearch
+            indexing. Role-based invites, cursor-based pagination, and Redis caching cut
+            data-retrieval latency 35% on a zero-flicker Next.js + React 18 frontend.
+          </p>
+          <div class="tags">
+            <span class="tag">NestJS</span><span class="tag">Elasticsearch</span>
+            <span class="tag">Redis</span><span class="tag">Next.js</span>
+          </div>
+        </article>
+
+        <!-- Overwhelming Studios -->
+        <article class="project-card featured reveal">
+          <div class="featured-content">
+          <div class="project-top">
+            <div class="project-icon">▲</div>
+            <div class="project-role">Founder & CTO</div>
+          </div>
+          <h3>Overwhelming Studios</h3>
+          <div class="tagline">Two shipped UE5 titles, recognized by PlayStation Studios</div>
+          <p class="desc">
+            An independent game studio where I shipped two Unreal Engine 5 titles solo: <strong>Packet Patrol</strong>, a CRT-styled network-defense game, and
+            <strong>Vegan Zombie: Crop Apocalypse</strong>, an outback survival game with a
+            procedural recipe system and parabolic damage falloff. Cloud auth and cross-device sync
+            for 1,500+ players with 30% faster loads and 25% better retention. The work drew direct recognition from PlayStation's Head of UI/UX and reached promotion-support stage with PlayStation Studios.
+          </p>
+          <div class="tags">
+            <span class="tag">Unreal Engine 5</span><span class="tag">Gameplay Systems</span>
+            <span class="tag">Cloud Auth + Sync</span><span class="tag">Game Design</span>
+          </div>
+          <div class="project-links">
+            <a href="games.html">Explore the studio & devlogs</a>
+          </div>
+          </div>
+          <div class="featured-media">
+            <img src="assets/os-vz-title.jpg" alt="Vegan Zombie Crop Apocalypse title screen, set on an Australian outback road" loading="lazy" />
+          </div>
+        </article>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= INTERACTIVE DEMO ================= -->
+  <section class="section" id="system">
+    <div class="container">
+      <div class="section-head reveal">
+        <div class="section-eyebrow">Interactive</div>
+        <h2>Run the architecture</h2>
+        <p>Most portfolios describe systems. This one runs one: SCM's grant lifecycle, reimplemented in your browser. Mint a single-use permission slip and watch the whole pipeline execute.</p>
+      </div>
+      <div class="demo-grid">
+        <div class="demo-copy reveal">
+          <p>
+            Every idea from the <a href="blog/scm-agent-governance.html" style="color:#52a8ff">SCM deep-dive</a>
+            is in this demo. The workflow never holds a credential; it holds a
+            <strong>grant ID</strong>. Scope is read from the grant row, so the tampered
+            <code style="font-family:var(--font-mono);font-size:13px">classroomId=999</code> in the
+            request gets ignored. Students reach the model as opaque refs
+            (<strong>S1…S6</strong>), never as names. The LLM gets exactly one call. And every step
+            appends to an audit ledger that nothing can edit.
+          </p>
+          <p>
+            When the run finishes, try <strong>Replay expired grant</strong>. The request fails with
+            a 410 and a non-retryable error, because retries cannot un-expire a grant. A system is
+            defined by what it refuses to do.
+          </p>
+          <p class="demo-note">
+            All client-side, no tracking, ~150 lines of vanilla JS. View source; that's what it's
+            there for.
+          </p>
+        </div>
+        <div id="grant-demo" class="demo-console reveal" aria-live="polite"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= RESUME ================= -->
+  <section class="section" id="resume">
+    <div class="container">
+      <div class="section-head reveal">
+        <div class="section-eyebrow">Experience</div>
+        <h2>Resume</h2>
+        <p>Full-stack engineer and multi-time founder. Known for shipping fast and defending every architectural decision from first principles.</p>
+      </div>
+
+      <div class="resume-layout">
+        <div class="xp-timeline">
+          <div class="xp-item reveal">
+            <div class="xp-head"><h3>Teaching Lab Studio</h3><span class="xp-date">Mar 2026 — May 2026</span></div>
+            <div class="xp-role">Software Engineer III · Tech Lead, SCM</div>
+            <ul>
+              <li>Sole architect and tech lead of SCM, taking it from <strong>0→1 to a live production pilot</strong> with a large customer while owning engineering, product strategy, and forward-deployed customer work in parallel.</li>
+              <li>Re-architected the sensitive-data boundary for FERPA-regulated data from in-flight scrubbing to <strong>structural isolation</strong>: student PII never enters the AI region at all.</li>
+              <li>Built the capability registry, skill launcher, and per-invocation authorization model end-to-end (NestJS, Prisma, Postgres, Next.js, React) with time-bound grants and 7 FERPA-mapped audit events.</li>
+              <li>Built SCM into an identity provider for connected AI agents on a Python/FastAPI + LangGraph runtime: single-use grants, per-failure-class retry policies, ≤2 LLM calls per workflow.</li>
+              <li>Engineered the Temporal runtime with human-in-the-loop approval gates and deterministic, replayable workflows with re-validation closures.</li>
+            </ul>
+          </div>
+
+          <div class="xp-item reveal">
+            <div class="xp-head"><h3>Union Pacific Railroad</h3><span class="xp-date">Mar 2023 — Feb 2026</span></div>
+            <div class="xp-role">Software Development Engineer II · Mechanical Systems</div>
+            <ul>
+              <li>Led the freezer-car modernization that reversed an <strong>89% revenue-loss trajectory</strong> and locked in <strong>$8M+/year</strong> with a 45% efficiency gain, via a deterministic correlation engine over Kafka.</li>
+              <li>Built a management-scoped MCP-based AI assistant that collapsed a day-to-week analyst SQL lookup across segregated AEI, Wayside, and CAD databases into a real-time answer.</li>
+              <li>Owned compliance-critical CADX bulletins in a <strong>2M-line legacy C++ codebase</strong>, then took the CADX web applications end to end with a backend-for-frontend auth architecture.</li>
+              <li>Decomposed a legacy C++ monolith into modular services, a 70% improvement in real-time data responsiveness across three enterprise applications.</li>
+              <li>Stood up structured telemetry at >90% coverage; production downtime cut 50%, deployment cycles 40% faster.</li>
+            </ul>
+          </div>
+
+          <div class="xp-item reveal">
+            <div class="xp-head"><h3>VortexeAI</h3><span class="xp-date">Jun 2024 — Oct 2024</span></div>
+            <div class="xp-role">Co-founder & CEO</div>
+            <ul>
+              <li>Took VortexeAI 0→1 in four months to <strong>200+ daily active users</strong> and a TechStars invitation, building a low-code, AI-driven workflow editor for product and engineering teams.</li>
+              <li>Engineered a deterministic multi-agent orchestration engine (graph traversal + dependency resolution) at 99.9% execution reliability.</li>
+            </ul>
+          </div>
+
+          <div class="xp-item reveal">
+            <div class="xp-head"><h3>AetherisVis</h3><span class="xp-date">Nov 2024</span></div>
+            <div class="xp-role">Co-founder & CTO</div>
+            <ul>
+              <li>Shipped a browser-based 3D equipment configurator for a luxury gym brand in <strong>one week</strong>, with real-time 4K/8K customization delivered as a commercial client product.</li>
+              <li>Built a modular React + TypeScript visualization framework (35+ reusable components) that cut UI prototyping time 60%.</li>
+            </ul>
+          </div>
+
+          <div class="xp-item reveal">
+            <div class="xp-head"><h3>Overwhelming Studios</h3><span class="xp-date">Nov 2022 — Mar 2023</span></div>
+            <div class="xp-role">Founder & CTO</div>
+            <ul>
+              <li>Earned direct recognition from the Head of UI/UX at PlayStation for independently developed games, reaching <strong>promotion-support stage with PlayStation Studios</strong>.</li>
+              <li>Shipped two Unreal Engine 5 mobile titles, <strong>Packet Patrol</strong> and <strong>Vegan Zombie: Crop Apocalypse</strong>, with cloud auth and cross-device sync for 1,500+ players, 30% faster load times, and 25% better retention. <a href="games.html" style="color:#52a8ff">Explore the studio →</a></li>
+            </ul>
+          </div>
+        </div>
+
+        <aside>
+          <div class="side-block reveal">
+            <h4>Education</h4>
+            <div class="edu-name">University of California, Santa Cruz</div>
+            <div class="edu-detail">B.S. Computer Science: Computer Game Design · 2022</div>
+          </div>
+
+          <div class="side-block reveal">
+            <h4>Skills</h4>
+            <div class="skill-group">
+              <div class="sg-label">Languages</div>
+              <div class="tags"><span class="tag">TypeScript</span><span class="tag">Python</span><span class="tag">Java</span><span class="tag">C++</span><span class="tag">C</span><span class="tag">C#</span></div>
+            </div>
+            <div class="skill-group">
+              <div class="sg-label">Frameworks</div>
+              <div class="tags"><span class="tag">React</span><span class="tag">Next.js</span><span class="tag">Node.js</span><span class="tag">NestJS</span><span class="tag">FastAPI</span><span class="tag">Spring Boot</span><span class="tag">Tailwind</span></div>
+            </div>
+            <div class="skill-group">
+              <div class="sg-label">AI / Agentic</div>
+              <div class="tags"><span class="tag">LangGraph</span><span class="tag">Anthropic API</span><span class="tag">MCP</span><span class="tag">Temporal workflows</span><span class="tag">Multi-agent orchestration</span><span class="tag">Eval pipelines</span></div>
+            </div>
+            <div class="skill-group">
+              <div class="sg-label">Infrastructure</div>
+              <div class="tags"><span class="tag">PostgreSQL</span><span class="tag">Prisma</span><span class="tag">Docker</span><span class="tag">Kubernetes</span><span class="tag">AWS</span><span class="tag">Elasticsearch</span><span class="tag">Redis</span><span class="tag">Supabase</span></div>
+            </div>
+          </div>
+
+          <div class="side-block reveal">
+            <h4>Contact</h4>
+            <div class="edu-detail">San Jose, CA</div>
+            <div class="edu-detail"><a href="mailto:dkhare1998@gmail.com" style="color:#52a8ff">dkhare1998@gmail.com</a></div>
+            <div class="resume-dl" style="margin-top:20px">
+              <a class="btn btn-secondary" href="DivyanshKhareResume.pdf" download>Download resume ↓</a>
+            </div>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= SERVICES ================= -->
+  <section class="section" id="services">
+    <div class="container">
+      <div class="section-head reveal">
+        <div class="section-eyebrow">Consulting</div>
+        <h2>Services</h2>
+        <p>I help teams ship AI systems that hold up in production, and untangle the ones that don't. Engagements are scoped, outcome-driven, and defended from first principles.</p>
+      </div>
+
+      <div class="services-grid">
+        <article class="service-card reveal">
+          <div class="service-num">01</div>
+          <h3>AI Agent Systems & Governance</h3>
+          <p>Design and build agent platforms that are safe to point at sensitive, regulated production data.</p>
+          <ul>
+            <li>Agent runtimes on Temporal / LangGraph with human-in-the-loop gates</li>
+            <li>Capability grants, authorization models, and audit architecture</li>
+            <li>PII isolation and compliance-by-design (FERPA, sensitive data)</li>
+            <li>MCP integrations and tool-surface design</li>
+          </ul>
+        </article>
+
+        <article class="service-card reveal">
+          <div class="service-num">02</div>
+          <h3>LLM Integration & Reliability</h3>
+          <p>Make LLM features deterministic where it counts: bounded cost, guarded outputs, measurable quality.</p>
+          <ul>
+            <li>Trust-boundary design: deterministic facts, narrated prose</li>
+            <li>Prompt-injection defense and output validation layers</li>
+            <li>Eval harnesses and regression gates for prompt changes</li>
+            <li>Cost and retry-policy architecture for paid model calls</li>
+          </ul>
+        </article>
+
+        <article class="service-card reveal">
+          <div class="service-num">03</div>
+          <h3>Full-Stack Product Engineering</h3>
+          <p>0→1 product builds and modernization of systems other teams are afraid to touch.</p>
+          <ul>
+            <li>React / Next.js frontends with modern data-layer architecture</li>
+            <li>NestJS, FastAPI, and event-driven backend design</li>
+            <li>Legacy modernization: monolith decomposition, C++ to services</li>
+            <li>Design systems with real accessibility floors</li>
+          </ul>
+        </article>
+
+        <article class="service-card reveal">
+          <div class="service-num">04</div>
+          <h3>Architecture Review & Technical Advisory</h3>
+          <p>An outside voice for high-stakes decisions, with every recommendation reasoned in writing.</p>
+          <ul>
+            <li>Adversarial architecture and security reviews</li>
+            <li>Decision records, trade-off analysis, and documentation systems</li>
+            <li>Data-layer correctness: caching, race conditions, idempotency</li>
+            <li>Fractional tech leadership for early-stage teams</li>
+          </ul>
+        </article>
+      </div>
+
+      <div class="services-cta reveal">
+        <h3>Let's build something that holds up.</h3>
+        <p>Tell me what you're shipping, what's breaking, or what you're afraid to ship, and I'll tell you how I'd approach it. I usually reply within a day.</p>
+        <a class="btn btn-primary" href="mailto:dkhare1998@gmail.com?subject=Consulting%20inquiry">Start a conversation</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= FOOTER ================= -->
+  <footer class="footer">
+    <div class="footer-inner">
+      <div class="copy">© 2026 Divyansh Khare · San Jose, CA</div>
+      <ul class="footer-links">
+        <li><a href="mailto:dkhare1998@gmail.com">Email</a></li>
+        <li><a href="https://github.com/T-98" target="_blank" rel="noopener">GitHub</a></li>
+        <li><a href="https://www.linkedin.com/" target="_blank" rel="noopener">LinkedIn</a></li>
+        <li><a href="blog.html">Blog</a></li>
+        <li><a href="games.html">Games</a></li>
+      </ul>
+    </div>
+  </footer>
+
+  <script>
+    // Scroll-reveal
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach((e) => { if (e.isIntersecting) { e.target.classList.add("visible"); io.unobserve(e.target); } });
+    }, { threshold: 0.08 });
+    document.querySelectorAll(".reveal").forEach((el) => io.observe(el));
+  </script>
+  <script src="site.js" defer></script>
+</body>
+</html>

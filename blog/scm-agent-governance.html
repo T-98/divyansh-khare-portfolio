@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Your Agent Shouldn't Have a Password — Divyansh Khare</title>
+  <meta name="description" content="How SCM's capability-grant model makes autonomous AI agents safe against FERPA-regulated student data, and why every design that stored a credential leaked." />
+  <link rel="icon" type="image/svg+xml" href="../favicon.svg" />
+  <meta name="theme-color" content="#000000" />
+  <meta name="author" content="Divyansh Khare" />
+  <!-- After deploying, replace og:image with an absolute URL (e.g. https://yourdomain.com/assets/og.png) -->
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Your Agent Shouldn't Have a Password — Divyansh Khare" />
+  <meta property="og:description" content="How SCM's capability-grant model makes autonomous AI agents safe against FERPA-regulated student data — and why every design that stored a credential leaked." />
+  <meta property="og:image" content="../assets/og.png" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Your Agent Shouldn't Have a Password — Divyansh Khare" />
+  <meta name="twitter:image" content="../assets/og.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../styles.css" />
+</head>
+<body>
+  <a class="skip-link" href="#content">Skip to content</a>
+
+  <header class="nav">
+    <div class="nav-inner">
+      <a class="nav-logo" href="../index.html">
+        <span class="logo-mark">DK</span>
+        Divyansh Khare
+      </a>
+      <ul class="nav-links">
+        <li><a href="../index.html#projects">Projects</a></li>
+        <li><a href="../index.html#resume">Resume</a></li>
+        <li><a href="../index.html#services">Services</a></li>
+        <li><a href="../blog.html">Blog</a></li>
+        <li><button class="nav-k" type="button" aria-label="Open command palette (Cmd+K)" onclick="window.__openPalette&&window.__openPalette()">⌘K</button></li>
+        <li><a class="nav-cta" href="mailto:dkhare1998@gmail.com">Get in touch</a></li>
+      </ul>
+      <button class="nav-burger" aria-label="Toggle menu" aria-expanded="false" onclick="var l=this.parentNode.querySelector('.nav-links');var o=l.classList.toggle('open');this.setAttribute('aria-expanded',o)">
+        <svg width="16" height="12" viewBox="0 0 16 12" fill="none"><path d="M0 1h16M0 6h16M0 11h16" stroke="currentColor" stroke-width="1.6"/></svg>
+      </button>
+    </div>
+  </header>
+
+  <article class="article" id="content">
+    <header class="article-header">
+      <div class="meta">
+        <span class="pill">AI Agent Governance</span>
+        <span>SCM · Sole Architect & Tech Lead</span>
+        <span>14 min read</span>
+        <span>Jul 2026</span>
+      </div>
+      <h1>Your Agent Shouldn't Have a Password</h1>
+      <p class="lede">
+        SCM lets school administrators hand real work to Claude ("propose small groups for Period 3") without raw FERPA-protected student data ever crossing a third-party boundary. Getting there meant
+        answering a question conventional auth systems have no answer for: what identity does an
+        autonomous workflow have, hours after the human who started it walked away?
+      </p>
+    </header>
+
+    <div class="article-body">
+      <figure>
+        <img src="../assets/scm-mission-control.jpg" alt="Mission Control — the SCM teacher dashboard: live class proficiency goals, Claude-generated small groups with co-teach controls, and per-student pacing" />
+        <figcaption>Mission Control — the teacher-facing surface SCM governs. Every Claude action here runs on a grant, as the teacher, with an audit row.</figcaption>
+      </figure>
+
+      <h2>The problem: agents are delegates, not users</h2>
+      <p>
+        Conventional auth answers "who is this user?" An AI agent is neither a user nor a service. It's a <strong>delegate</strong>. When a teacher asks an agent to propose small groups for their
+        classroom, the agent needs to read student data <em>on that teacher's behalf</em>, possibly
+        minutes or hours after the teacher stopped clicking. The naive fix, a service token that lets the Python runtime act as anyone, destroys exactly the thing FERPA demands: actor attribution. Your workflow history shows a shared service identity where it should show a
+        specific, accountable human.
+      </p>
+      <p>
+        The constraint, stated precisely: <strong>no agent invocation may read student data unless the
+        system can prove that this exact staff member is allowed to run this exact capability for this
+        exact classroom and this exact material</strong>. And it has to be provable months later, from an append-only audit trail.
+      </p>
+
+      <h2>Seven designs, seven leaks</h2>
+      <p>
+        A browser request completes in 200ms with a live JWT. A Temporal workflow with a
+        human-in-the-loop pause can sit idle for hours, then need to call back into the API. You can't rely on the session. You also can't hand the workflow a long-lived credential, because
+        that's a standing grant of authority to a process nobody is watching.
+      </p>
+      <p>
+        Seven plan iterations tried variations of "put the JWT somewhere": in the workflow input, in an
+        environment variable, in a local encrypted vault with indirection. Every one leaked. Temporal
+        workflow history is durable, queryable, and replay-driven; anything that touches a workflow input is permanently visible to anyone with UI access. The vault wasn't durable and leaked
+        across pod restarts. Frontend-only gating is trivially bypassable, and FERPA doesn't allow
+        client-trusted gates.
+      </p>
+      <blockquote>
+        <p>The answer to "where do you put the credential?" was: nowhere. Invert the problem.</p>
+      </blockquote>
+
+      <h2>The permission slip</h2>
+      <p>
+        Instead of a credential, the workflow gets a <code>grantId</code>: a 36-character UUID with
+        zero PII content. Safe to log, safe to replay, safe to store forever. The authority lives in a
+        database row that only the API can interpret:
+      </p>
+      <pre><code>CapabilityExecutionGrant {
+  staffProfileId   // who this acts as
+  capabilityId     // what they may run
+  scopeKind        // what shape of scope (classroom, CSV batch, ...)
+  scopeHash        // sha256 of the canonical scope payload
+  status           // ACTIVE → COMPLETED | EXPIRED | REVOKED
+  expiresAt        // 15-minute TTL
+}</code></pre>
+      <p>
+        A grant is single-use, time-boxed, and single-scope. It is a permission slip, not a password. A
+        partial unique index (<code>WHERE status = 'ACTIVE'</code>) guarantees at most one live grant
+        per scope tuple, so concurrent mints collapse to the same row instead of multiplying authority.
+      </p>
+      <p>
+        Two structural details make the model hold. First, the agent endpoint takes <em>only</em> the
+        <code>grantId</code> and reads the classroom and material <em>out of the grant row</em>, so a compromised runtime cannot ask for a classroom the grant doesn't cover. That closes
+        the time-of-check/time-of-use gap by construction, not by review. Second, the workflow input
+        schemas are closed (<code>extra='forbid'</code>), with parametrized tests proving that fields
+        named <code>token</code>, <code>authorization</code>, or
+        <code>supabase_access_token</code> are rejected at the boundary. A future engineer can't
+        reintroduce the leak without deleting a test that says, in effect, "this was a design decision."
+      </p>
+      <p class="code-label">From schemas.py: the workflow boundary</p>
+      <pre><code>class WorkflowStartInput(BaseModel):
+    """What the FastAPI handler hands to the workflow.
+
+    Closed schema: ``extra='forbid'`` rejects JWT-shaped fields so the
+    handler can't accidentally smuggle a token into Temporal history.
+
+    ``grant_id`` carries the server-issued grant. Activity 1 re-validates
+    the grant before reading the dashboard, so the classroom_id +
+    material_id below are advisory only — the grant's stored scope is
+    canonical and the agent-side endpoint reads from it.
+    """
+
+    staff_profile_id: str = Field(alias="staffProfileId")
+    staff_role: Literal["TEACHER", "COACH", "ADMIN"] = Field(alias="staffRole")
+    capability_id: str = Field(alias="capabilityId")
+    classroom_id: str = Field(alias="classroomId")
+    material_id: str = Field(alias="materialId")
+    group_size: int = Field(alias="groupSize", ge=3, le=8)</code></pre>
+      <p>
+        Note what the docstring admits: the classroom and material fields the caller sends are
+        <em>advisory</em>. The row is canonical. That's the TOCTOU closure, written into the schema's
+        own documentation.
+      </p>
+
+      <div class="callout">
+        <p><strong>The principle:</strong> security properties should be structural, not procedural.
+        Every hard decision in SCM converts "remember to check X" into "X is impossible." Removing a
+        surface closes the entire class of bug, including the ones that don't exist yet.</p>
+      </div>
+
+      <h2>"Maya R." is still PII</h2>
+      <p>
+        The second hard problem was what the LLM gets to see. Masking names server-side (<code>"Maya Rodriguez"</code> becomes <code>"Maya R."</code>) passes every obvious test. It's also
+        trivially re-identifiable by anyone who knows the roster of a 24-student classroom, and the
+        model provider's logging retains the prompt verbatim during the inference window.
+      </p>
+      <p>
+        The privacy posture got stronger by getting <em>simpler</em>, in four steps: mask names at the
+        server; validate at workflow entry that nothing unmasked slips in; scan every freeform LLM
+        output field for identifiers; and finally, the step that made the others obsolete: replace students with <strong>opaque per-run references</strong>. The prompt says
+        <code>S1: completion=64% accuracy=0.71</code>. The map from <code>S1</code> back to a name
+        lives in a local variable in the activity's call frame: never serialized to workflow history,
+        never logged, never sent to the model. The endgame inverts the claim entirely. The agent path carries only opaque IDs and numeric metrics, and names are hydrated at the UI boundary, gated
+        by the human's own session. The claim stops being "we scrub names at every boundary" and
+        becomes <strong>"names never enter the AI region at all."</strong> That change deleted more
+        code than it added.
+      </p>
+
+      <h3>The bug that made it interesting</h3>
+      <p>
+        The first opaque-ref implementation passed every unit test and blew up in production. The strict output schema, the one that validates masked-name shape, was bound directly to the
+        LLM via <code>with_structured_output</code>. But LangChain parses and validates tool-call
+        arguments eagerly, inside <code>invoke()</code>, so the name-shape regex ran against the raw
+        <code>S1</code> refs <em>before</em> rehydration ever saw the data. The fix was a loose
+        private mirror schema for the LLM boundary, then rehydrate, then strict validation:
+        <strong>loose parse → rehydrate → strict validate</strong>.
+      </p>
+      <p>
+        The tests had passed because the mock returned the wire shape while the real parser returned a
+        validated runtime type. That became a permanent engineering rule in the repo: mocks of a
+        parsing or validating library must return the same runtime type production receives, not the shape you wish the wire had.
+      </p>
+
+      <h2>Cost is a correctness property</h2>
+      <p>
+        Temporal's default retry policy is unlimited attempts with exponential backoff. That is correct for network calls and catastrophic for a paid, non-idempotent LLM call. The original design claimed
+        "max 2 LLM calls per workflow," and the math was wrong: three transient retries compounding
+        with an in-activity re-prompt meant <strong>six paid calls per click</strong>.
+      </p>
+      <p>
+        The fix wasn't a config value; it was a refactor. The activity was split along the LLM
+        boundary: a fetch activity with <code>maximum_attempts=3</code> for transient infrastructure
+        failures, and a synthesis activity that owns the LLM call with
+        <code>maximum_attempts=1</code>, always, with the one-shot schema-violation re-prompt bounded inside that single attempt. Retry policy became <em>semantic</em>, per failure class: a
+        network blip retries; a 401 doesn't, because a 401 means the grant expired and retrying an authorization failure is conceptually wrong, not just wasteful.
+      </p>
+      <p class="code-label">From workflows.py: the split, with the cost math in the comment</p>
+      <pre><code>context = await workflow.execute_activity(
+    "fetch_grant_and_context",           # no LLM; transient infra may retry
+    workflow_input,
+    start_to_close_timeout=timedelta(seconds=30),
+    retry_policy=RetryPolicy(maximum_attempts=3),
+)
+# Step 2: synthesize. ``maximum_attempts=1`` caps LLM cost at one
+# synthesize call per workflow execution (plus the in-activity
+# re-prompt on schema violation, bounded inside the activity →
+# max 2 LLM calls per workflow execution).
+return await workflow.execute_activity(
+    "synthesize_and_validate",           # owns the LLM; never retried
+    context,
+    start_to_close_timeout=timedelta(seconds=90),
+    retry_policy=RetryPolicy(maximum_attempts=1),
+)</code></pre>
+
+      <h2>Human-in-the-loop breaks every fire-and-forget assumption</h2>
+      <p>
+        The first capability was blocking: the handler awaits the workflow, returns the proposal,
+        emits its audit event on the way out. The second capability, goal-setting from an uploaded diagnostic CSV with two human approval checkpoints, broke every one of those assumptions. Each break earned its own decision record:
+      </p>
+      <ul>
+        <li><strong>The handler can't block</strong> for a pause of unbounded duration, so it starts
+        the workflow and returns in under a second; the UI drives itself off a polling query.</li>
+        <li><strong>The completion audit never fires</strong>, because the handler returns before the workflow ends. The grant-retirement logic piggybacked on that audit event, so grants
+        silently stopped retiring. Audit emission moved into workflow activities, gated behind a
+        versioned patch marker so in-flight replays don't break.</li>
+        <li><strong>The grant expires during the wait</strong>, so the final write re-validates the
+        grant immediately before committing (a second TOCTOU closure) and fails terminally on 410,
+        because retries cannot un-expire a grant.</li>
+        <li><strong>Temporal is at-least-once</strong>, so a timeout after the database insert but
+        before the acknowledgment would duplicate the batch. Idempotency comes from a key derived from the input itself: structured source columns under a partial unique index. No token table, no garbage collection, no extra round trip.</li>
+      </ul>
+
+      <h2>What an adversarial review taught me</h2>
+      <p>
+        I scheduled outside-voice reviews as a process rather than an accident, and one afternoon's adversarial pass found four exploitable holes. Each got fixed in its own PR. The most instructive:
+        the workflow ID was displayed in a UI status banner <em>and</em> accepted as a path parameter
+        without an ownership check. Copy another admin's banner, and you could signal their workflow.
+        The fix wasn't validating the parameter. It was <strong>deleting the surface</strong>:
+        route by run ID, derive the workflow ID server-side from the authenticated user. The spoofing
+        class is gone, including variants nobody has thought of yet.
+      </p>
+      <p>
+        The counterintuitive lesson from the same period: defense in depth is not free, and sometimes
+        it's negative. A duplicated role check in the Python runtime <em>shadowed</em> the canonical
+        capability registry and rejected an admin the registry had just authorized. A redundant check
+        made from a less-informed position isn't a second line of defense; it's a second source of truth. The discipline is knowing which layer <em>owns</em> a decision, and letting the others
+        delegate.
+      </p>
+
+      <h2>Learnings</h2>
+      <p>
+        <strong>Documented trade-offs are pre-written post-mortems.</strong> One decision record
+        explicitly accepted "no retroactive expiry" of stale grants as a trade-off. Six weeks later it caused a production incident: a grant that looked freshly minted but was actually a stale row returned by the uniqueness constraint. Because the trade-off was written down, diagnosis was
+        immediate, and the fix (a third self-heal site, at mint) closed a <em>known</em> gap instead
+        of a mystery.
+      </p>
+      <p>
+        <strong>The wire shape between two repos is a first-class artifact.</strong> A "stuck UI"
+        incident traced to a Python workflow state string that had drifted from the TypeScript union
+        rendering it. The fix was a ten-line parity doc-test that fails CI when either side changes
+        alone. The cheapest gate that fails the build beats the elegant codegen you'll never build.
+      </p>
+      <p>
+        <strong>An agent should have no intrinsic authority.</strong> Everything else in SCM is
+        downstream of one sentence, the one I'd defend in a board meeting: Claude does not have its
+        own permissions. It always acts as a specific human and inherits exactly that human's
+        authority — no more, no less.
+      </p>
+    </div>
+
+    <footer class="article-footer">
+      <div class="inner">
+        <a class="back" href="../blog.html">← Back to all posts</a>
+        <a class="btn btn-secondary" href="mailto:dkhare1998@gmail.com?subject=AI%20agent%20governance">Discuss a similar problem</a>
+      </div>
+    </footer>
+  </article>
+
+  <footer class="footer" style="border-top:1px solid var(--border)">
+    <div class="footer-inner">
+      <div class="copy">© 2026 Divyansh Khare · San Jose, CA</div>
+      <ul class="footer-links">
+        <li><a href="mailto:dkhare1998@gmail.com">Email</a></li>
+        <li><a href="../index.html">Home</a></li>
+        <li><a href="../blog.html">Blog</a></li>
+      </ul>
+    </div>
+  </footer>
+  <script src="../site.js" defer></script>
+</body>
+</html>

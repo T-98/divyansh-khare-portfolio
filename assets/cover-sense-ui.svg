@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 640" font-family="ui-monospace,'SF Mono',Menlo,monospace">
+  <defs>
+    <radialGradient id="glow" cx="50%" cy="0%" r="75%">
+      <stop offset="0%" stop-color="#52a8ff" stop-opacity="0.18"/>
+      <stop offset="60%" stop-color="#52a8ff" stop-opacity="0.04"/>
+      <stop offset="100%" stop-color="#52a8ff" stop-opacity="0"/>
+    </radialGradient>
+    <pattern id="grid" width="48" height="48" patternUnits="userSpaceOnUse">
+      <path d="M 48 0 L 0 0 0 48" fill="none" stroke="rgba(255,255,255,0.045)" stroke-width="1"/>
+    </pattern>
+  </defs>
+  <rect width="1200" height="640" fill="#0a0a0a"/>
+  <rect width="1200" height="640" fill="url(#grid)"/>
+  <ellipse cx="600" cy="80" rx="620" ry="360" fill="url(#glow)"/>
+  <rect x="470" y="140" width="260" height="56" rx="10" fill="rgba(82,168,255,0.08)" stroke="#52a8ff" stroke-width="1.5"/><text x="488" y="174" font-size="14" fill="#d6d6d6">&lt;AppShell&gt;</text><rect x="666" y="154" width="50" height="26" rx="13" fill="rgba(52,211,153,0.10)" stroke="#34d399" stroke-width="1.2"/><text x="691" y="172" text-anchor="middle" font-size="12" fill="#34d399">meta</text><line x1="600" y1="196" x2="380" y2="280" stroke="rgba(255,255,255,0.22)" stroke-width="1.5"/><line x1="600" y1="196" x2="600" y2="280" stroke="rgba(255,255,255,0.22)" stroke-width="1.5"/><line x1="600" y1="196" x2="830" y2="280" stroke="rgba(82,168,255,0.5)" stroke-width="1.5"/><rect x="260" y="280" width="240" height="56" rx="10" fill="#111" stroke="rgba(255,255,255,0.32)" stroke-width="1.5"/><text x="278" y="314" font-size="14" fill="#d6d6d6">&lt;NavPanel&gt;</text><rect x="436" y="294" width="50" height="26" rx="13" fill="rgba(52,211,153,0.10)" stroke="#34d399" stroke-width="1.2"/><text x="461" y="312" text-anchor="middle" font-size="12" fill="#34d399">meta</text><rect x="520" y="280" width="200" height="56" rx="10" fill="#111" stroke="rgba(255,255,255,0.32)" stroke-width="1.5"/><text x="538" y="314" font-size="14" fill="#d6d6d6">&lt;Grid&gt;</text><rect x="656" y="294" width="50" height="26" rx="13" fill="rgba(52,211,153,0.10)" stroke="#34d399" stroke-width="1.2"/><text x="681" y="312" text-anchor="middle" font-size="12" fill="#34d399">meta</text><rect x="740" y="280" width="230" height="56" rx="10" fill="rgba(82,168,255,0.08)" stroke="#52a8ff" stroke-width="1.5"/><text x="758" y="314" font-size="14" fill="#d6d6d6">&lt;Form&gt;</text><rect x="906" y="294" width="50" height="26" rx="13" fill="rgba(52,211,153,0.10)" stroke="#34d399" stroke-width="1.2"/><text x="931" y="312" text-anchor="middle" font-size="12" fill="#34d399">meta</text><line x1="855" y1="336" x2="855" y2="420" stroke="rgba(82,168,255,0.5)" stroke-width="1.5"/><rect x="740" y="420" width="230" height="56" rx="10" fill="rgba(82,168,255,0.08)" stroke="#52a8ff" stroke-width="1.5"/><text x="758" y="454" font-size="14" fill="#d6d6d6">&lt;Field.email&gt;</text><rect x="906" y="434" width="50" height="26" rx="13" fill="rgba(52,211,153,0.10)" stroke="#34d399" stroke-width="1.2"/><text x="931" y="452" text-anchor="middle" font-size="12" fill="#34d399">meta</text><text x="360" y="470" font-size="15" fill="#6e6e6e">schema extraction → agents operate the UI</text><text x="360" y="500" font-size="14" fill="#34d399">+40% accurate agent interactions</text>
+  <g>
+    <rect x="40" y="568" rx="15" height="30" width="308" fill="rgba(255,255,255,0.04)" stroke="rgba(255,255,255,0.16)"/>
+    <text x="194" y="588" text-anchor="middle" font-size="13" letter-spacing="2" fill="#a1a1a1">SENSE UI · AGENT-COMPREHENSIBLE UI</text>
+  </g>
+</svg>

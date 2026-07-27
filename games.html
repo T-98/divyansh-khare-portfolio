@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Overwhelming Studios — Divyansh Khare</title>
+  <meta name="description" content="Overwhelming Studios: two shipped Unreal Engine 5 titles — Packet Patrol and Vegan Zombie Crop Apocalypse — with devlogs, systems design, and PlayStation recognition." />
+  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+  <meta name="theme-color" content="#000000" />
+  <meta name="author" content="Divyansh Khare" />
+  <!-- After deploying, replace og:image with an absolute URL (e.g. https://yourdomain.com/assets/og.png) -->
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Overwhelming Studios — Divyansh Khare" />
+  <meta property="og:description" content="Overwhelming Studios: two shipped Unreal Engine 5 titles — Packet Patrol and Vegan Zombie Crop Apocalypse — with devlogs, systems design, and PlayStation recognition." />
+  <meta property="og:image" content="assets/og.png" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Overwhelming Studios — Divyansh Khare" />
+  <meta name="twitter:image" content="assets/og.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+  <style>
+    .game-block { border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; margin-bottom: 48px; background: var(--bg-card); }
+    .game-hero { border-bottom: 1px solid var(--border); }
+    .game-hero img { width: 100%; display: block; }
+    .game-body { padding: 40px; }
+    .game-body h3 { font-size: 24px; font-weight: 700; letter-spacing: -0.02em; color: var(--fg-strong); margin-bottom: 6px; }
+    .game-sub { font-family: var(--font-mono); font-size: 13px; color: var(--blue); margin-bottom: 20px; }
+    .game-body p { color: var(--fg-muted); font-size: 15.5px; line-height: 1.7; margin-bottom: 16px; }
+    .game-body p strong { color: var(--fg); }
+    .game-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; margin: 28px 0; }
+    .game-cols h4 { font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--fg-faint); margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid var(--border); }
+    .game-cols ul { list-style: none; }
+    .game-cols li { font-size: 14px; color: var(--fg-muted); padding: 6px 0 6px 18px; position: relative; }
+    .game-cols li::before { content: ""; position: absolute; left: 0; top: 14px; width: 5px; height: 5px; border-radius: 2px; background: var(--fg-faint); }
+    .game-cols li strong { color: var(--fg); font-weight: 500; }
+    .devlog { margin-top: 8px; }
+    .devlog-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+    .devlog-item { border: 1px solid var(--border); border-radius: var(--radius-sm); overflow: hidden; background: var(--bg-subtle); }
+    .devlog-item img { width: 100%; aspect-ratio: 16/10; object-fit: cover; display: block; }
+    .devlog-item .cap { padding: 12px 14px; }
+    .devlog-item .date { font-family: var(--font-mono); font-size: 11.5px; color: var(--fg-faint); margin-bottom: 4px; }
+    .devlog-item .note { font-size: 13px; color: var(--fg-muted); }
+    .game-body pre { background: var(--bg-subtle); border: 1px solid var(--border); border-radius: var(--radius); padding: 18px 22px; overflow-x: auto; margin: 20px 0; }
+    .game-body pre code { font-family: var(--font-mono); font-size: 13px; line-height: 1.7; color: #d6d6d6; }
+    .video-frame { position: relative; aspect-ratio: 16 / 9; border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; background: #050505; margin: 28px 0; }
+    .video-frame iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+    .video-label { font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--fg-faint); margin: 28px 0 -16px; }
+    @media (max-width: 720px) { .game-cols, .devlog-grid { grid-template-columns: 1fr; } .game-body { padding: 24px; } }
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#content">Skip to content</a>
+
+  <header class="nav">
+    <div class="nav-inner">
+      <a class="nav-logo" href="index.html">
+        <span class="logo-mark">DK</span>
+        Divyansh Khare
+      </a>
+      <ul class="nav-links">
+        <li><a href="index.html#projects">Projects</a></li>
+        <li><a href="index.html#resume">Resume</a></li>
+        <li><a href="index.html#services">Services</a></li>
+        <li><a href="blog.html">Blog</a></li>
+        <li><button class="nav-k" type="button" aria-label="Open command palette (Cmd+K)" onclick="window.__openPalette&&window.__openPalette()">⌘K</button></li>
+        <li><a class="nav-cta" href="mailto:dkhare1998@gmail.com">Get in touch</a></li>
+      </ul>
+      <button class="nav-burger" aria-label="Toggle menu" aria-expanded="false" onclick="var l=this.parentNode.querySelector('.nav-links');var o=l.classList.toggle('open');this.setAttribute('aria-expanded',o)">
+        <svg width="16" height="12" viewBox="0 0 16 12" fill="none"><path d="M0 1h16M0 6h16M0 11h16" stroke="currentColor" stroke-width="1.6"/></svg>
+      </button>
+    </div>
+  </header>
+
+  <section id="content" class="section" style="border-bottom:none">
+    <div class="container">
+      <div class="section-head">
+        <div class="section-eyebrow">Founder & CTO · Nov 2022 — Mar 2023</div>
+        <h2>Overwhelming Studios</h2>
+        <p>An independent game studio where I shipped two Unreal Engine 5 titles end to end: design, systems, engineering, and live devlogs. The work earned direct recognition from Ant Rogers, Head of UI/UX at PlayStation, reaching promotion-support stage with PlayStation Studios before visa constraints halted progression. Cloud auth and cross-device sync served 1,500+ players, with 30% faster load times and 25% better retention.</p>
+      </div>
+
+      <!-- ============ PACKET PATROL ============ -->
+      <article class="game-block">
+        <div class="game-hero"><img src="assets/cover-packet-patrol.svg" alt="Packet Patrol — retro CRT-styled network-defense game by Overwhelming Studios" /></div>
+        <div class="game-body">
+          <h3>Packet Patrol</h3>
+          <div class="game-sub">Retro network-defense · Unreal Engine 5 · developed & designed solo</div>
+          <p>
+            A network-security game with a retro terminal soul: you patrol a stream of packets on a
+            CRT-styled interface, spotting and quarantining anomalies before they reach the network.
+            The aesthetic is the mechanic: the vintage-monitor presentation (photographed as a physical CRT prop for the trailer) turns anomaly detection into a period-piece puzzle. The design ran through storyboards and flow diagrams before any Blueprint was written.
+          </p>
+          <div class="video-label">Development sizzle video</div>
+          <div class="video-frame">
+            <iframe src="https://www.youtube-nocookie.com/embed/N3T2W28PKXk" title="Packet Patrol — development sizzle video" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen loading="lazy"></iframe>
+          </div>
+          <div class="game-cols">
+            <div>
+              <h4>Challenges & Learnings</h4>
+              <ul>
+                <li>Making <strong>detection gameplay legible</strong>: teaching players to read network traffic patterns without a tutorial wall.</li>
+                <li>Keeping the CRT post-processing look <strong>performant on mobile</strong> hardware budgets.</li>
+                <li>Solo scope discipline: a devlog-driven cadence with a public sizzle video as the forcing function.</li>
+              </ul>
+            </div>
+            <div>
+              <h4>Outcomes</h4>
+              <ul>
+                <li>Shipped as one of the studio's <strong>two UE5 titles</strong> with cloud auth and cross-device sync.</li>
+                <li>Part of the portfolio that earned <strong>PlayStation Studios promotion-support recognition</strong>.</li>
+                <li>Design-process artifacts (flow diagrams, storyboards) documented alongside the build.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <!-- ============ VEGAN ZOMBIE ============ -->
+      <article class="game-block">
+        <div class="game-hero"><img src="assets/os-vz-title.jpg" alt="Vegan Zombie Crop Apocalypse title screen — an Unreal Engine 5 first-person survival game set on an Australian outback road" /></div>
+        <div class="game-body">
+          <h3>Vegan Zombie: Crop Apocalypse</h3>
+          <div class="game-sub">First-person survival · Unreal Engine 5 · developed & designed solo</div>
+          <p>
+            A first-person survival romp set in the Australian outback: zombies want your crops, and
+            you defend the farm shotgun-in-hand while gathering vegetables to complete randomized
+            recipes. The interesting part is the systems work. A <strong>procedural recipe system</strong> generates a new recipe each run and live-tracks collected ingredients
+            against it (requirements printed in yellow, current inventory state in red, updated
+            every time you bank ingredients), which is what makes each run replayable rather than
+            memorizable. Completing recipes grants randomized buffs (move speed or money) that feed a light economy loop.
+          </p>
+          <div class="video-label">Project trailer</div>
+          <div class="video-frame">
+            <iframe src="https://www.youtube-nocookie.com/embed/uIfIEXSwDTA" title="Vegan Zombie: Crop Apocalypse — project trailer" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen loading="lazy"></iframe>
+          </div>
+          <p>
+            Combat got the same systems treatment: a zombie health model (100 HP), tuned hitboxes,
+            aim-detection improvements, health-bar widgets, and a shotgun with realistic spread and
+            distance-based damage falloff on a parabolic curve:
+          </p>
+          <pre><code>// Shotgun damage: 100 at point-blank, parabolic falloff to a 5-damage floor
+damage = (distance &lt;= 50)
+  ? 100 * pow(1 - distance / 50, 2)
+  : 5;</code></pre>
+          <p>
+            Presentation-layer details carried the polish: a live vegetable-count 3D widget wired to
+            the in-world collection bucket, a settings menu with functional graphics options, and
+            quality-of-life fixes like vegetables no longer de-spawning in the bucket. Each landed and was documented in a dated devlog.
+          </p>
+
+          <div class="game-cols">
+            <div>
+              <h4>Systems shipped</h4>
+              <ul>
+                <li><strong>Procedural recipe system</strong> with live ingredient tracking and per-run generation.</li>
+                <li><strong>Parabolic damage falloff</strong> with realistic shotgun spread.</li>
+                <li>Zombie health system, tuned hitboxes, and aim detection.</li>
+                <li>In-world 3D widgets: vegetable counts, health bars.</li>
+                <li>Settings menu with functional graphical options.</li>
+              </ul>
+            </div>
+            <div>
+              <h4>Challenges & Learnings</h4>
+              <ul>
+                <li>Randomization needs <strong>guardrails to stay fun</strong>: recipes are generated, but tracking keeps progress legible.</li>
+                <li>Damage curves are <strong>feel, expressed as math</strong>: the parabola was tuned by playtest, then frozen as a formula.</li>
+                <li>Public devlogs create accountability: every entry shipped visible progress with screenshots.</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="devlog">
+            <h4 style="font-family:var(--font-mono);font-size:12px;letter-spacing:0.08em;text-transform:uppercase;color:var(--fg-faint);margin-bottom:14px;">From the devlogs</h4>
+            <div class="devlog-grid">
+              <div class="devlog-item">
+                <img src="assets/os-vz-title.jpg" alt="Devlog 1/15/23 — title screen, settings menu, zombie health system" />
+                <div class="cap"><div class="date">1/15/23</div><div class="note">Settings menu, zombie health system (100 HP), shotgun damage-range calculations.</div></div>
+              </div>
+              <div class="devlog-item">
+                <img src="assets/os-vz-widgets.jpg" alt="Devlog 1/16/23 — live vegetable count 3D widget and zombie health bars" />
+                <div class="cap"><div class="date">1/16/23</div><div class="note">Better aim detection, fixed hitboxes, live vegetable-count 3D widget.</div></div>
+              </div>
+              <div class="devlog-item">
+                <img src="assets/os-vz-recipes.jpg" alt="Devlog 1/18/23 — procedural recipe system with live ingredient tracking" />
+                <div class="cap"><div class="date">1/18/23</div><div class="note">Procedural recipe system: generated recipes with live ingredient tracking.</div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <div style="text-align:center; margin-top: 8px;">
+        <a class="btn btn-secondary" href="index.html#resume">← Back to resume</a>
+      </div>
+    </div>
+  </section>
+
+  <footer class="footer" style="border-top:1px solid var(--border)">
+    <div class="footer-inner">
+      <div class="copy">© 2026 Divyansh Khare · San Jose, CA</div>
+      <ul class="footer-links">
+        <li><a href="mailto:dkhare1998@gmail.com">Email</a></li>
+        <li><a href="https://github.com/T-98" target="_blank" rel="noopener">GitHub</a></li>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="blog.html">Blog</a></li>
+      </ul>
+    </div>
+  </footer>
+  <script src="site.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 640" font-family="ui-monospace,'SF Mono',Menlo,monospace">
+  <defs>
+    <radialGradient id="glow" cx="50%" cy="0%" r="75%">
+      <stop offset="0%" stop-color="#52a8ff" stop-opacity="0.18"/>
+      <stop offset="60%" stop-color="#52a8ff" stop-opacity="0.04"/>
+      <stop offset="100%" stop-color="#52a8ff" stop-opacity="0"/>
+    </radialGradient>
+    <pattern id="grid" width="48" height="48" patternUnits="userSpaceOnUse">
+      <path d="M 48 0 L 0 0 0 48" fill="none" stroke="rgba(255,255,255,0.045)" stroke-width="1"/>
+    </pattern>
+  </defs>
+  <rect width="1200" height="640" fill="#0a0a0a"/>
+  <rect width="1200" height="640" fill="url(#grid)"/>
+  <ellipse cx="600" cy="80" rx="620" ry="360" fill="url(#glow)"/>
+  <path d="M 180 320 C 290.0 320, 290.0 200, 400 200" fill="none" stroke="#52a8ff" stroke-width="1.5"/><path d="M 180 320 C 290.0 320, 290.0 440, 400 440" fill="none" stroke="rgba(255,255,255,0.22)" stroke-width="1.5"/><path d="M 400 200 C 520.0 200, 520.0 320, 640 320" fill="none" stroke="#52a8ff" stroke-width="1.5"/><path d="M 400 440 C 520.0 440, 520.0 320, 640 320" fill="none" stroke="rgba(255,255,255,0.22)" stroke-width="1.5"/><path d="M 640 320 C 760.0 320, 760.0 200, 880 200" fill="none" stroke="rgba(255,255,255,0.22)" stroke-width="1.5"/><path d="M 640 320 C 760.0 320, 760.0 440, 880 440" fill="none" stroke="#52a8ff" stroke-width="1.5"/><path d="M 880 440 C 970.0 440, 970.0 320, 1060 320" fill="none" stroke="#52a8ff" stroke-width="1.5"/><path d="M 880 200 C 970.0 200, 970.0 320, 1060 320" fill="none" stroke="rgba(255,255,255,0.22)" stroke-width="1.5"/><circle cx="180" cy="320" r="30" fill="rgba(82,168,255,0.12)" stroke="#52a8ff" stroke-width="1.5"/><circle cx="180" cy="320" r="39" fill="none" stroke="#52a8ff" stroke-opacity="0.25" stroke-width="1"/><text x="180" y="376" text-anchor="middle" font-size="14" fill="#8f8f8f">trigger</text><circle cx="400" cy="200" r="26" fill="rgba(82,168,255,0.12)" stroke="#52a8ff" stroke-width="1.5"/><circle cx="400" cy="200" r="35" fill="none" stroke="#52a8ff" stroke-opacity="0.25" stroke-width="1"/><text x="400" y="252" text-anchor="middle" font-size="14" fill="#8f8f8f">claude-3.5</text><circle cx="400" cy="440" r="26" fill="#111" stroke="rgba(255,255,255,0.35)" stroke-width="1.5"/><text x="400" y="492" text-anchor="middle" font-size="14" fill="#8f8f8f">llama</text><circle cx="640" cy="320" r="30" fill="rgba(82,168,255,0.12)" stroke="#52a8ff" stroke-width="1.5"/><circle cx="640" cy="320" r="39" fill="none" stroke="#52a8ff" stroke-opacity="0.25" stroke-width="1"/><text x="640" y="376" text-anchor="middle" font-size="14" fill="#8f8f8f">transform</text><circle cx="880" cy="200" r="26" fill="#111" stroke="rgba(255,255,255,0.35)" stroke-width="1.5"/><text x="880" y="252" text-anchor="middle" font-size="14" fill="#8f8f8f">notify</text><circle cx="880" cy="440" r="26" fill="rgba(82,168,255,0.12)" stroke="#52a8ff" stroke-width="1.5"/><circle cx="880" cy="440" r="35" fill="none" stroke="#52a8ff" stroke-opacity="0.25" stroke-width="1"/><text x="880" y="492" text-anchor="middle" font-size="14" fill="#8f8f8f">deploy</text><circle cx="1060" cy="320" r="22" fill="rgba(82,168,255,0.12)" stroke="#52a8ff" stroke-width="1.5"/><circle cx="1060" cy="320" r="31" fill="none" stroke="#52a8ff" stroke-opacity="0.25" stroke-width="1"/><text x="1060" y="380" text-anchor="middle" font-size="14" fill="#34d399">99.9%</text><text x="1035" y="120" text-anchor="end" font-size="15" fill="#6e6e6e">graph traversal · dependency resolution</text>
+  <g>
+    <rect x="40" y="568" rx="15" height="30" width="291" fill="rgba(255,255,255,0.04)" stroke="rgba(255,255,255,0.16)"/>
+    <text x="186" y="588" text-anchor="middle" font-size="13" letter-spacing="2" fill="#a1a1a1">VORTEXEAI · ORCHESTRATION ENGINE</text>
+  </g>
+</svg>

@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Blog — Divyansh Khare</title>
+  <meta name="description" content="Engineering deep-dives: AI agent governance, LLM trust boundaries, and frontend architecture, with the challenges and learnings behind each." />
+  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+  <meta name="theme-color" content="#000000" />
+  <meta name="author" content="Divyansh Khare" />
+  <!-- After deploying, replace og:image with an absolute URL (e.g. https://yourdomain.com/assets/og.png) -->
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Blog — Divyansh Khare" />
+  <meta property="og:description" content="Engineering deep-dives: AI agent governance, LLM trust boundaries, and frontend architecture — challenges, systems thinking, and learnings." />
+  <meta property="og:image" content="assets/og.png" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Blog — Divyansh Khare" />
+  <meta name="twitter:image" content="assets/og.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <a class="skip-link" href="#content">Skip to content</a>
+
+  <header class="nav">
+    <div class="nav-inner">
+      <a class="nav-logo" href="index.html">
+        <span class="logo-mark">DK</span>
+        Divyansh Khare
+      </a>
+      <ul class="nav-links">
+        <li><a href="index.html#projects">Projects</a></li>
+        <li><a href="index.html#resume">Resume</a></li>
+        <li><a href="index.html#services">Services</a></li>
+        <li><a href="blog.html">Blog</a></li>
+        <li><button class="nav-k" type="button" aria-label="Open command palette (Cmd+K)" onclick="window.__openPalette&&window.__openPalette()">⌘K</button></li>
+        <li><a class="nav-cta" href="mailto:dkhare1998@gmail.com">Get in touch</a></li>
+      </ul>
+      <button class="nav-burger" aria-label="Toggle menu" aria-expanded="false" onclick="var l=this.parentNode.querySelector('.nav-links');var o=l.classList.toggle('open');this.setAttribute('aria-expanded',o)">
+        <svg width="16" height="12" viewBox="0 0 16 12" fill="none"><path d="M0 1h16M0 6h16M0 11h16" stroke="currentColor" stroke-width="1.6"/></svg>
+      </button>
+    </div>
+  </header>
+
+  <section id="content" class="section" style="border-bottom:none; min-height: 70vh;">
+    <div class="container">
+      <div class="section-head">
+        <div class="section-eyebrow">Writing</div>
+        <h2>Engineering deep-dives</h2>
+        <p>How the hard problems in my projects actually got solved: the challenges, the systems thinking behind each decision, and what I learned shipping them.</p>
+      </div>
+
+      <div class="blog-list">
+        <a class="blog-item" href="blog/vortexeai-deterministic-orchestration.html">
+          <div class="meta"><span class="pill">Founder Story</span><span>VortexeAI · Co-founder & CEO</span><span>9 min read</span><span>Jul 2026</span></div>
+          <h3>Determinism Is a Feature</h3>
+          <p>VortexeAI went 0→1 in four months: 200+ daily active users, a TechStars invitation, and a low-code editor where non-technical users chain AI actions like Legos. The engineering problem was the inverse of the pitch: making a system built on non-deterministic models reliable enough (99.9%) that people trust it with real work. On graph traversal over vibes, memory routing, and wearing the CEO hat while holding the architecture.</p>
+        </a>
+
+        <a class="blog-item" href="blog/aetherisvis-3d-configurator.html">
+          <div class="meta"><span class="pill">Client Delivery</span><span>AetherisVis · Co-founder & CTO</span><span>8 min read</span><span>Jul 2026</span></div>
+          <h3>Shipping a 3D Configurator in a Week</h3>
+          <p>A luxury gym brand needed clients to see their machine, in their finishes, photorealistically, in the browser. It shipped as a commercial product in one week. What browser 3D actually costs after the first minute, why the week was fast because the framework was slow, and how commercial delivery changes the definition of done.</p>
+        </a>
+
+        <a class="blog-item" href="blog/scm-agent-governance.html">
+          <div class="meta"><span class="pill">AI Agent Governance</span><span>SCM · Teaching Lab Studio</span><span>14 min read</span><span>Jul 2026</span></div>
+          <h3>Your Agent Shouldn't Have a Password</h3>
+          <p>Seven design iterations tried to answer "where do you put the JWT?" for an autonomous workflow that outlives the user's session. Every one leaked. The answer was to put it nowhere, and what a single-use permission slip in a database row buys you: FERPA-grade auditability, structural PII isolation, and human-in-the-loop workflows that can pause for hours.</p>
+        </a>
+
+        <a class="blog-item" href="blog/tracewell-trust-boundaries.html">
+          <div class="meta"><span class="pill">LLM Systems</span><span>Tracewell</span><span>10 min read</span><span>Jul 2026</span></div>
+          <h3>Deterministic Facts, Probabilistic Prose</h3>
+          <p>Agent trajectories carry untrusted text, and that text ends up in the prompt that explains the trajectory. Building Tracewell, I treated prompt injection as an ordinary data-flow problem: deterministic Python computes every fact, the LLM only narrates. An attacker can bend the sentences but never the numbers.</p>
+        </a>
+
+        <a class="blog-item" href="blog/uop-library-case-study.html">
+          <div class="meta"><span class="pill">Frontend Architecture</span><span>UoP Library</span><span>11 min read</span><span>Jul 2026</span></div>
+          <h3>Deleting a Race Condition by Construction</h3>
+          <p>The assigned bug was a one-line fix. The interesting bugs were the ones nobody asked about: a fetch race that made stale data win, a cache that defeated the feature it powered, and a 2-second latency report that wasn't a query problem. On measuring before fixing, and choosing designs where the bug can't exist.</p>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <footer class="footer" style="border-top:1px solid var(--border)">
+    <div class="footer-inner">
+      <div class="copy">© 2026 Divyansh Khare · San Jose, CA</div>
+      <ul class="footer-links">
+        <li><a href="mailto:dkhare1998@gmail.com">Email</a></li>
+        <li><a href="https://github.com/T-98" target="_blank" rel="noopener">GitHub</a></li>
+        <li><a href="https://www.linkedin.com/" target="_blank" rel="noopener">LinkedIn</a></li>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="games.html">Games</a></li>
+      </ul>
+    </div>
+  </footer>
+  <script src="site.js" defer></script>
+</body>
+</html>

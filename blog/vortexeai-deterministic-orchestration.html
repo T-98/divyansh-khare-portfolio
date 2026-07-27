@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Determinism Is a Feature — Divyansh Khare</title>
+  <meta name="description" content="Building VortexeAI: taking a low-code AI workflow platform from 0→1 in four months, and why the orchestration engine had to be deterministic." />
+  <link rel="icon" type="image/svg+xml" href="../favicon.svg" />
+  <meta name="theme-color" content="#000000" />
+  <meta name="author" content="Divyansh Khare" />
+  <!-- After deploying, replace og:image with an absolute URL (e.g. https://yourdomain.com/assets/og.png) -->
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Determinism Is a Feature — Divyansh Khare" />
+  <meta property="og:description" content="Building VortexeAI: taking a low-code AI workflow platform from 0→1 in four months, and why the orchestration engine had to be deterministic." />
+  <meta property="og:image" content="../assets/og.png" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Determinism Is a Feature — Divyansh Khare" />
+  <meta name="twitter:image" content="../assets/og.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../styles.css" />
+</head>
+<body>
+  <a class="skip-link" href="#content">Skip to content</a>
+
+  <header class="nav">
+    <div class="nav-inner">
+      <a class="nav-logo" href="../index.html">
+        <span class="logo-mark">DK</span>
+        Divyansh Khare
+      </a>
+      <ul class="nav-links">
+        <li><a href="../index.html#projects">Projects</a></li>
+        <li><a href="../index.html#resume">Resume</a></li>
+        <li><a href="../index.html#services">Services</a></li>
+        <li><a href="../blog.html">Blog</a></li>
+        <li><button class="nav-k" type="button" aria-label="Open command palette (Cmd+K)" onclick="window.__openPalette&&window.__openPalette()">⌘K</button></li>
+        <li><a class="nav-cta" href="mailto:dkhare1998@gmail.com">Get in touch</a></li>
+      </ul>
+      <button class="nav-burger" aria-label="Toggle menu" aria-expanded="false" onclick="var l=this.parentNode.querySelector('.nav-links');var o=l.classList.toggle('open');this.setAttribute('aria-expanded',o)">
+        <svg width="16" height="12" viewBox="0 0 16 12" fill="none"><path d="M0 1h16M0 6h16M0 11h16" stroke="currentColor" stroke-width="1.6"/></svg>
+      </button>
+    </div>
+  </header>
+
+  <article class="article" id="content">
+    <header class="article-header">
+      <div class="meta">
+        <span class="pill">Founder Story</span>
+        <span>VortexeAI · Co-founder & CEO</span>
+        <span>9 min read</span>
+        <span>Jul 2026</span>
+      </div>
+      <h1>Determinism Is a Feature</h1>
+      <p class="lede">
+        VortexeAI went from first commit to 200+ daily active users and a TechStars invitation in
+        four months. It was a low-code editor where non-technical users chain AI actions into workflows
+        "as simple as playing with Legos." The pitch was simplicity. The engineering problem was the
+        opposite: making a system built on non-deterministic models behave deterministically enough
+        that people would trust it with real work.
+      </p>
+    </header>
+
+    <div class="article-body">
+      <figure>
+        <img src="../assets/vortexeai-screens.jpg" alt="VortexeAI product surfaces — dashboard, workflow editor, and profile screens" />
+        <figcaption>The product surfaces: dashboard, editor, and profiles. Underneath every one of them, the same deterministic engine.</figcaption>
+      </figure>
+      <figure>
+        <img src="../assets/cover-vortexeai.svg" alt="Schematic of VortexeAI's deterministic orchestration engine — a workflow graph traversed by dependency resolution" />
+        <figcaption>A workflow as the engine sees it: a directed graph. The highlighted path is chosen by dependency resolution, never by the model.</figcaption>
+      </figure>
+
+      <h2>The product bet</h2>
+      <p>
+        The thesis behind VortexeAI: most people who would benefit from AI automation will never
+        write a line of glue code. They don't want a framework. They want to describe a repetitive
+        task, test it against near-realistic scenarios before committing resources, and then have it
+        run on a schedule, on a trigger, or on demand. So the product surface was a visual node
+        editor: chain actions into a workflow, connect a data source, pick a model, ship a
+        micro-service in seconds. Users could pull in ChatGPT, Claude, or Llama (the platform auto-suggests the model best suited to each task), feed workflows anything from
+        <code>.pdf</code> to <code>.wav</code>, and eventually sell finished workflows to other
+        users in a marketplace.
+      </p>
+      <p>
+        Every one of those product promises quietly depends on the same engineering property:
+        <strong>a workflow that runs today must run the same way tomorrow.</strong> A developer
+        tolerates flaky automation because they can read the logs. A non-technical user who built
+        something out of Legos experiences one silent failure and never comes back. For a product
+        whose entire audience is non-technical, reliability isn't a quality attribute. It is the feature.
+      </p>
+
+      <h2>The engine: graph traversal, not vibes</h2>
+      <p>
+        The tempting architecture in 2024 was to let an LLM plan the execution: hand it the
+        workflow, let it decide what to run next. We went the other way. The orchestration engine
+        treats a workflow as what it actually is, a directed graph, and executes it by
+        <strong>deterministic graph traversal with dependency resolution</strong>. The engine
+        topologically orders the nodes, resolves what each step needs before it runs, executes
+        independent branches without blocking each other, and knows exactly which downstream steps
+        are invalidated when an upstream one fails.
+      </p>
+      <blockquote>
+        <p>The model gets to be creative inside a node. It never gets a vote on what runs next.</p>
+      </blockquote>
+      <p>
+        That boundary, probabilistic inside the node and deterministic between nodes, is what made
+        99.9% execution reliability achievable. Failures still happen: an API times out, a model
+        returns something malformed. But because the engine owns the control flow, a failure is a
+        <em>located</em> event on a known graph edge with a known retry story, not a mystery
+        somewhere inside an agent's reasoning. Debugging a workflow becomes reading a path, not
+        interrogating a transcript.
+      </p>
+      <p class="code-label">The shape of the engine's execution loop</p>
+      <pre><code>async function execute(workflow: WorkflowGraph, run: RunContext) {
+  const order = topologicalSort(workflow.nodes, workflow.edges)  // cycles rejected at save-time
+  const results = new Map&lt;NodeId, NodeResult&gt;()
+
+  for (const batch of readyBatches(order, results)) {           // independent nodes run together
+    await Promise.all(batch.map(async (node) => {
+      const inputs = resolveDependencies(node, results)          // only declared upstream outputs
+      const memory = routeMemory(node.consumes, results)         // context is a dependency too
+      try {
+        results.set(node.id, await runNode(node, inputs, memory, run))
+      } catch (err) {
+        markInvalidated(downstreamOf(node, workflow), results)   // failure is a located event
+        throw new NodeFailure(node.id, err)
+      }
+    }))
+  }
+  return results
+}</code></pre>
+      <p>
+        Everything the product promises is visible in that loop: cycles can't be saved, so
+        traversal can't hang; a node receives only what it declared, so runs are reproducible; and
+        when a node fails, the engine knows exactly which downstream work is invalidated, and that is what the user's error message is built from.
+      </p>
+      <p>
+        The same boundary shaped the <strong>LLM tool runtime</strong>. Nodes that call models
+        needed memory across steps (a summarization node feeding a drafting node feeding a formatting node), but naive approaches either stuff the entire history into every call
+        (cost explodes, context drowns) or share nothing (every node starts amnesiac). The runtime
+        used memory routing: each node declares what it consumes, and the runtime routes forward
+        only the relevant state. It's dependency resolution again, applied to context instead of execution order: the graph tells you not just what to run, but what each step deserves
+        to know.
+      </p>
+
+      <h2>The editor is the product</h2>
+      <p>
+        The React/Next.js node editor consumed as much design effort as the engine, because for the
+        user, the editor <em>is</em> the product. The "Legos" promise sets a brutally high bar: every concept the engine cares about (dependencies, triggers, data-shape mismatches) has to be
+        expressible by someone who has never heard those words. The measure that mattered wasn't
+        feature count; it was time-to-first-working-workflow, and the iteration loop of watching
+        real users get stuck drove onboarding 40% faster over the product's life. By the end, 50+
+        automation patterns were deployed across users, the strongest evidence that the abstraction
+        held for problems we hadn't personally imagined.
+      </p>
+
+      <h2>Wearing the CEO hat while holding the architecture</h2>
+      <p>
+        I co-founded VortexeAI as CEO while owning the core engine, which meant every architecture
+        decision had a business constraint attached and every business promise had an architecture
+        cost. Demo-driven development is real at a four-month-old startup: TechStars conversations
+        and user onboarding calls happen whether or not your dependency resolver is elegant. The
+        discipline that saved us was the same one I'd carry into every system since: decide which properties are load-bearing and non-negotiable (deterministic execution, isolated failure),
+        and let everything else be renegotiated weekly. Features got cut ruthlessly. The execution
+        contract never did.
+      </p>
+
+      <h2>Learnings</h2>
+      <p>
+        <strong>Non-technical users are the hardest reliability customers.</strong> They can't read
+        a stack trace, so the system has to fail in vocabulary they own: which step, on which input,
+        and what to do about it. Designing error surfaces for that audience made every later system I built more honest. An error message is an API, and most engineers only design it for
+        themselves.
+      </p>
+      <p>
+        <strong>Determinism at the boundary is the pattern that kept paying.</strong> The engine's core idea, LLMs create inside a step while deterministic code owns the graph, is the same invariant I later scaled into Tracewell's trust boundary and SCM's deterministic
+        planning nodes. VortexeAI is where I learned it, under the least forgiving conditions:
+        paying users, live demos, four months.
+      </p>
+      <p>
+        <strong>0→1 speed comes from knowing what you're not building.</strong> Four months to 200+
+        DAU wasn't fast typing; it was scope discipline. A marketplace launched as one-time
+        purchases, not a payment platform. Integrations shipped as direct API connections before
+        pre-built connectors. Every "not yet" was written down with the condition that would change it, the habit that later became formal decision records in my production systems.
+      </p>
+    </div>
+
+    <footer class="article-footer">
+      <div class="inner">
+        <a class="back" href="../blog.html">← Back to all posts</a>
+        <a class="btn btn-secondary" href="https://670b1f7da318cd000878a945--magical-moxie-045ea9.netlify.app/" target="_blank" rel="noopener">Visit VortexeAI</a>
+      </div>
+    </footer>
+  </article>
+
+  <footer class="footer" style="border-top:1px solid var(--border)">
+    <div class="footer-inner">
+      <div class="copy">© 2026 Divyansh Khare · San Jose, CA</div>
+      <ul class="footer-links">
+        <li><a href="mailto:dkhare1998@gmail.com">Email</a></li>
+        <li><a href="../index.html">Home</a></li>
+        <li><a href="../blog.html">Blog</a></li>
+      </ul>
+    </div>
+  </footer>
+  <script src="../site.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Deleting a Race Condition by Construction — Divyansh Khare</title>
+  <meta name="description" content="The UoP Library case study: finding the bugs nobody asked about, measuring before fixing, and choosing designs where the bug can't exist." />
+  <link rel="icon" type="image/svg+xml" href="../favicon.svg" />
+  <meta name="theme-color" content="#000000" />
+  <meta name="author" content="Divyansh Khare" />
+  <!-- After deploying, replace og:image with an absolute URL (e.g. https://yourdomain.com/assets/og.png) -->
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Deleting a Race Condition by Construction — Divyansh Khare" />
+  <meta property="og:description" content="The UoP Library case study: finding the bugs nobody asked about, measuring before fixing, and choosing designs where the bug can't exist." />
+  <meta property="og:image" content="../assets/og.png" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Deleting a Race Condition by Construction — Divyansh Khare" />
+  <meta name="twitter:image" content="../assets/og.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../styles.css" />
+</head>
+<body>
+  <a class="skip-link" href="#content">Skip to content</a>
+
+  <header class="nav">
+    <div class="nav-inner">
+      <a class="nav-logo" href="../index.html">
+        <span class="logo-mark">DK</span>
+        Divyansh Khare
+      </a>
+      <ul class="nav-links">
+        <li><a href="../index.html#projects">Projects</a></li>
+        <li><a href="../index.html#resume">Resume</a></li>
+        <li><a href="../index.html#services">Services</a></li>
+        <li><a href="../blog.html">Blog</a></li>
+        <li><button class="nav-k" type="button" aria-label="Open command palette (Cmd+K)" onclick="window.__openPalette&&window.__openPalette()">⌘K</button></li>
+        <li><a class="nav-cta" href="mailto:dkhare1998@gmail.com">Get in touch</a></li>
+      </ul>
+      <button class="nav-burger" aria-label="Toggle menu" aria-expanded="false" onclick="var l=this.parentNode.querySelector('.nav-links');var o=l.classList.toggle('open');this.setAttribute('aria-expanded',o)">
+        <svg width="16" height="12" viewBox="0 0 16 12" fill="none"><path d="M0 1h16M0 6h16M0 11h16" stroke="currentColor" stroke-width="1.6"/></svg>
+      </button>
+    </div>
+  </header>
+
+  <article class="article" id="content">
+    <header class="article-header">
+      <div class="meta">
+        <span class="pill">Frontend Architecture</span>
+        <span>UoP Library · Case Study</span>
+        <span>11 min read</span>
+        <span>Jul 2026</span>
+      </div>
+      <h1>Deleting a Race Condition by Construction</h1>
+      <p class="lede">
+        The brief: a half-working prototype, a filter that doesn't filter, a missing detail view, and a
+        demo with a Fortune 500 executive "tomorrow." The assigned bug was a one-line fix. The
+        interesting work was everything nobody asked about, plus the discipline of measuring before
+        fixing, patching at root cause, and choosing designs where the bug can't exist.
+      </p>
+    </header>
+
+    <div class="article-body">
+      <figure>
+        <img src="../assets/cover-uop-library.svg" alt="Keyed-cache schematic — responses routed to their query keys, with a stale response structurally unable to land" />
+        <figcaption>The structural fix in one picture: responses can only populate the cache entry their query key owns. The stale response has nowhere to land.</figcaption>
+      </figure>
+
+      <h2>The planted bug was the easy part</h2>
+      <p>
+        The filter didn't filter because the frontend sent <code>?cat=</code> while the backend read <code>category</code>, and FastAPI silently ignores unknown query params, so the
+        <code>WHERE</code> clause never ran. The tempting fix is to add a <code>cat</code> alias
+        server-side. But the backend was <em>correct</em>; aliasing it would add dead surface to a
+        working API to accommodate a client typo. The fix was a one-line rename in the client,
+        backend untouched, with evidence captured in both directions before and after. Smallest diff
+        that addresses the actual cause.
+      </p>
+
+      <h2>The bug nobody asked about</h2>
+      <p>
+        Reading the fetch code on principle, not because a ticket said to, turned up the real
+        problem. The library fetch ran in a <code>useEffect</code> keyed on the category, with no
+        stale-response guard:
+      </p>
+      <pre><code>useEffect(() => {
+  fetch(`/uops?category=${category}`)
+    .then(r => r.json())
+    .then(setUops);        // applied unconditionally
+}, [category]);</code></pre>
+      <p>
+        Each category change fires a new request; responses aren't guaranteed to return in order; and
+        <code>setUops</code> applies whichever lands last. A slow response for the <em>previous</em>
+        category can overwrite the current one: the grid shows a category the user already left, and
+        stays wrong until the next interaction. The loading flag cleared when the <em>first</em>
+        promise settled, so the spinner disappeared while a request was still in flight.
+      </p>
+      <p>
+        There are four hand-rolled fixes, and the useful exercise is tabulating <strong>which axis
+        each one actually addresses</strong>: an ignore-stale flag and an <code>AbortController</code>
+        fix response <em>ordering</em>; debouncing and a keyed cache reduce request <em>count</em>.
+        They're orthogonal and they compose, but each is a patch on a design in which the race is
+        still conceptually possible.
+      </p>
+      <blockquote>
+        <p>"Keys results to the query" is a materially different argument than "React Query is nice."
+        One patches the symptom; the other chooses a design in which the symptom cannot exist.</p>
+      </blockquote>
+      <p>
+        Migrating to TanStack Query made the stale render <em>structurally impossible</em>: results are keyed to <code>['uops','list',category]</code>, so a response can only ever populate the
+        cache entry it belongs to. One dependency bought ordering, cancellation, in-flight dedup, a
+        keyed cache, and loading/error state. The cost, a provider and a library "more than the minimum for a 17-row prototype," got logged honestly in the decision record.
+      </p>
+
+      <h2>Cache coherence across routes</h2>
+      <p>
+        The second feature, "mark as reviewed" on a detail page reflected back on the library card, is a cache-coherence problem in miniature. With a 60-second stale time, mutating on the detail
+        page and navigating back shows the cached list with stale state: the cache defeats the exact
+        behavior the feature demonstrates.
+      </p>
+      <p>
+        The optimistic mutation triad handles it, but the load-bearing detail is easy to miss:
+        <code>onMutate</code> cancels in-flight queries (so a racing read can't clobber the
+        optimistic write), snapshots the detail cache <em>and every list bucket</em>, and patches
+        <code>reviewed: true</code> into all of them. Rollback restores every snapshot; settlement
+        invalidates the namespace to reconcile against server truth. Patching only the detail cache, the obvious implementation, leaves the list stale and the bug half-fixed.
+      </p>
+      <p class="code-label">From UoPDetail.tsx, comments included</p>
+      <pre><code>// Optimistic review: patch the detail cache AND every cached list
+// bucket so the library card reflects the reviewed state instantly on
+// return. Roll back on error; invalidate on settle to reconcile.
+const { mutate, isPending } = useMutation({
+  mutationFn: () => reviewUop(id),
+  onMutate: async () => {
+    await queryClient.cancelQueries({ queryKey: ['uops'] })
+    const prevDetail = queryClient.getQueryData&lt;UoP&gt;(['uops', 'detail', id])
+    const prevLists  = queryClient.getQueriesData&lt;UoP[]&gt;({ queryKey: ['uops', 'list'] })
+    const patch = (u: UoP): UoP =>
+      u.id === id ? { ...u, reviewed: true, reviewed_at: u.reviewed_at ?? reviewedAt } : u
+
+    queryClient.setQueryData&lt;UoP&gt;(['uops', 'detail', id], (old) => (old ? patch(old) : old))
+    queryClient.setQueriesData&lt;UoP[]&gt;({ queryKey: ['uops', 'list'] }, (old) =>
+      Array.isArray(old) ? old.map(patch) : old,
+    )
+    return { prevDetail, prevLists }
+  },
+  onError: (_err, _vars, ctx) => {
+    if (ctx?.prevDetail) queryClient.setQueryData(['uops', 'detail', id], ctx.prevDetail)
+    ctx?.prevLists?.forEach(([key, data]) => queryClient.setQueryData(key, data))
+  },
+  onSettled: () => queryClient.invalidateQueries({ queryKey: ['uops'] }),
+})</code></pre>
+
+      <h2>The 2-second latency report that wasn't a query problem</h2>
+      <p>
+        A latency complaint came with an implied fix attached: paginate. Instrumenting first told a different story: the query was a single indexed <code>SELECT</code> over 17 rows, measuring
+        <strong>0.6–7ms warm</strong>. The slow path was the dev server's cold start (worker fork,
+        imports, DDL, seeding ≈ 1s) plus a browser IPv6-to-IPv4 connection fallback: reproduced once
+        at 1011ms cold, sub-10ms every request after.
+      </p>
+      <p>
+        Decision: no backend change, because cursor pagination doesn't fix a cold start. But the
+        investigation surfaced a genuine adjacent gap, an endpoint returning an unbounded list with no server cap, which got logged as its own properly-scoped item, since an API contract change
+        deserves review, not a drive-by "fix" justified by an unrelated symptom.
+      </p>
+      <div class="callout">
+        <p><strong>The habit:</strong> measure, find the real cause, decline the plausible fix, and separately log the real gap the plausible fix would have papered over.</p>
+      </div>
+
+      <h2>Ranking dollars against head-counts</h2>
+      <p>
+        The design problem hiding in the data: 12 of 17 records carry a dollar impact, 5 carry an FTE
+        or governance count, 2 have no number at all. The ledger view sorts by impact. A
+        normalized score would rank a $1 row against a 9,999-FTE row on a scale that doesn't exist;
+        it would <em>invent precision</em>. Instead, a pure tiered key: dollar rows rank first by
+        amount, count rows next by count, unquantified rows sink last, with a stable ID tiebreaker.
+        Deterministic, money-first, and readable top-to-bottom by a reviewer who has to trust it, which was the actual requirement. Unit-tested, because it's a pure function, which is exactly
+        where a time-boxed testing budget buys the most: the tricky pure logic gets Vitest coverage;
+        browser-verified behavior is labeled as browser-verified, not silently untested.
+      </p>
+
+      <h2>Small decisions that carry the quality</h2>
+      <p>
+        The remaining calls are individually small; the pattern is what matters. Filter, view, and
+        sort state live in the URL: shareable, refresh-proof, and the substrate the next feature
+        layered onto with zero new state machinery. The sorted list is computed in render, never
+        stored: derived state stays derived. The impact-formatting <em>logic</em> is shared between
+        card and detail page because it must not drift; the JSX stays per-surface because presentation legitimately differs. That is DRY applied at the right altitude. And the visual thesis of the whole
+        grid rests on one specification detail: fixed card height with the stat region
+        bottom-anchored, so impact figures align in a scannable column regardless of headline length.
+      </p>
+      <p>
+        Accessibility went in while it was cheap: a 4.5:1 contrast floor everywhere (including darkening a muted-text token so an 11px kicker survives a projector), a real <code>&lt;table&gt;</code> with <code>aria-sort</code> for the ledger, and reviewed-state
+        signaled by text plus color, never color alone.
+      </p>
+
+      <h2>Learnings</h2>
+      <p>
+        <strong>The proactive sweep is the differentiator.</strong> The planted bug was assigned; the
+        fetch race, the silently-forked SQLite file (a CWD-relative path creating two databases
+        depending on launch directory), and the cold-start latency story were all found by reading
+        code nobody flagged. Three bugs found by looking; one was assigned.
+      </p>
+      <p>
+        <strong>Structural fixes beat guards.</strong> The through-line from this project to
+        everything I've built since: prefer the design where the failure is impossible over the
+        design where it's checked for. A keyed cache instead of a stale flag. A grant row instead of
+        a validated parameter. The guard can be forgotten; the structure can't.
+      </p>
+      <p>
+        <strong>Document what you deliberately didn't do.</strong> The final write-up lists the
+        patterns consciously skipped (virtualization, offline, auth) as not applicable at this
+        scale, so omissions read as decisions rather than gaps. Then it audits its own work harder
+        than a reviewer would: 20 logged decisions and a line-by-line self-audit cataloguing 134
+        findings across every file, most of them documented trade-offs. That's the standard I hold
+        client work to: not "it works," but "every decision has a defense in writing."
+      </p>
+    </div>
+
+    <footer class="article-footer">
+      <div class="inner">
+        <a class="back" href="../blog.html">← Back to all posts</a>
+        <a class="btn btn-secondary" href="mailto:dkhare1998@gmail.com?subject=Frontend%20architecture">Discuss a similar problem</a>
+      </div>
+    </footer>
+  </article>
+
+  <footer class="footer" style="border-top:1px solid var(--border)">
+    <div class="footer-inner">
+      <div class="copy">© 2026 Divyansh Khare · San Jose, CA</div>
+      <ul class="footer-links">
+        <li><a href="mailto:dkhare1998@gmail.com">Email</a></li>
+        <li><a href="../index.html">Home</a></li>
+        <li><a href="../blog.html">Blog</a></li>
+      </ul>
+    </div>
+  </footer>
+  <script src="../site.js" defer></script>
+</body>
+</html>

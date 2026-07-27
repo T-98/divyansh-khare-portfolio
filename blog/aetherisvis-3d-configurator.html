@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Shipping a 3D Configurator in a Week — Divyansh Khare</title>
+  <meta name="description" content="AetherisVis: building a real-time, browser-based 3D equipment configurator for a luxury gym brand in one week, and the framework that made it possible." />
+  <link rel="icon" type="image/svg+xml" href="../favicon.svg" />
+  <meta name="theme-color" content="#000000" />
+  <meta name="author" content="Divyansh Khare" />
+  <!-- After deploying, replace og:image with an absolute URL (e.g. https://yourdomain.com/assets/og.png) -->
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Shipping a 3D Configurator in a Week — Divyansh Khare" />
+  <meta property="og:description" content="AetherisVis: building a real-time, browser-based 3D equipment configurator for a luxury gym brand in one week — and the framework that made it possible." />
+  <meta property="og:image" content="../assets/og.png" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Shipping a 3D Configurator in a Week — Divyansh Khare" />
+  <meta name="twitter:image" content="../assets/og.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../styles.css" />
+</head>
+<body>
+  <a class="skip-link" href="#content">Skip to content</a>
+
+  <header class="nav">
+    <div class="nav-inner">
+      <a class="nav-logo" href="../index.html">
+        <span class="logo-mark">DK</span>
+        Divyansh Khare
+      </a>
+      <ul class="nav-links">
+        <li><a href="../index.html#projects">Projects</a></li>
+        <li><a href="../index.html#resume">Resume</a></li>
+        <li><a href="../index.html#services">Services</a></li>
+        <li><a href="../blog.html">Blog</a></li>
+        <li><button class="nav-k" type="button" aria-label="Open command palette (Cmd+K)" onclick="window.__openPalette&&window.__openPalette()">⌘K</button></li>
+        <li><a class="nav-cta" href="mailto:dkhare1998@gmail.com">Get in touch</a></li>
+      </ul>
+      <button class="nav-burger" aria-label="Toggle menu" aria-expanded="false" onclick="var l=this.parentNode.querySelector('.nav-links');var o=l.classList.toggle('open');this.setAttribute('aria-expanded',o)">
+        <svg width="16" height="12" viewBox="0 0 16 12" fill="none"><path d="M0 1h16M0 6h16M0 11h16" stroke="currentColor" stroke-width="1.6"/></svg>
+      </button>
+    </div>
+  </header>
+
+  <article class="article" id="content">
+    <header class="article-header">
+      <div class="meta">
+        <span class="pill">Client Delivery</span>
+        <span>AetherisVis · Co-founder & CTO</span>
+        <span>8 min read</span>
+        <span>Jul 2026</span>
+      </div>
+      <h1>Shipping a 3D Configurator in a Week</h1>
+      <p class="lede">
+        SPX designs luxury fitness spaces: private residences, high-end hotels. Their sales
+        conversations needed something a spec sheet can't do: let a client see <em>their</em>
+        machine, in <em>their</em> finishes, photorealistically, in the browser. AetherisVis
+        delivered that configurator as a commercial product in one week. This is what a week like
+        that actually looks like, plus the earlier framework decision that made it possible.
+      </p>
+    </header>
+
+    <div class="article-body">
+      <figure>
+        <img src="../assets/aetherisvis-devices.jpg" alt="The SPX 3D equipment configurator running across MacBook Pro, MacBook, MacBook Air, and iMac" />
+        <figcaption>The shipped configurator across the device lineup: the same real-time scene, finish selectors, and save flow from a 13" Air to a 5K iMac.</figcaption>
+      </figure>
+
+      <h2>The brief</h2>
+      <p>
+        A luxury brand's configurator has a different job than an e-commerce widget. SPX sells
+        environments where the equipment is part of the interior design, so when a client
+        configures a chest press, the steel finish and the upholstery stitching aren't SKU options,
+        they're the product. The tool had to render at the fidelity the brand's clientele expects (<strong>real-time customization at 4K/8K</strong>), stay responsive while a sales
+        conversation is happening around it, and live on the open web as part of
+        <a href="https://www.spxgymdesign.com/configurator" target="_blank" rel="noopener">SPX's own site</a>,
+        not in a native app someone has to install. Configure the frame, configure the upholstery,
+        view it from any angle, save the configuration. One week to commercial delivery.
+      </p>
+
+      <h2>What makes browser 3D hard is the second minute</h2>
+      <p>
+        Getting a 3D model spinning in a browser is a weekend project. Keeping it responsive at
+        luxury-brand fidelity, on hardware you don't control, while a user drags the camera and
+        swaps materials mid-frame. That is the actual work, and it is a budget problem: at 60fps you
+        get about 16 milliseconds per frame, and high-resolution material swaps want far more than
+        that.
+      </p>
+      <p>
+        Two disciplines carried the performance. <strong>Lazy loading</strong> shaped the load
+        story: the configurator ships the minimum first, just the base model and default finishes, then streams higher-resolution textures and alternate material sets behind the interaction,
+        so first paint is fast and detail arrives before the user asks for it. Nobody configures
+        every option in the first second; the asset pipeline exploits that.
+        <strong>Interaction-loop tuning</strong> shaped the feel: expensive work is scheduled
+        around the user's gestures rather than in them. While the camera is moving, the loop
+        renders; texture uploads and material compilation land in the frames between gestures. The
+        heuristic that mattered: <em>never spend a frame's budget on something the user didn't just
+        do.</em> Responsiveness under concurrent load isn't one optimization; it's a policy about who owns the frame.
+      </p>
+      <p class="code-label">The interaction-loop policy, distilled</p>
+      <pre><code>const deferred: Array&lt;() => void&gt; = []   // texture uploads, material compiles
+
+function frame(now: number) {
+  controls.update(now)
+  renderer.render(scene, camera)          // the gesture always gets the frame
+
+  // Spend leftover budget on deferred work; only while the camera is idle,
+  // and never more than fits before the next frame is due.
+  if (!controls.isInteracting()) {
+    const budget = FRAME_MS - (performance.now() - now)
+    while (deferred.length && performance.now() - now < budget * 0.8) {
+      deferred.shift()!()                 // e.g. upload one 4K mip level
+    }
+  }
+  requestAnimationFrame(frame)
+}
+
+function onFinishSelect(finish: Finish) {
+  applyLowResPreview(finish)              // instant feedback at proxy resolution
+  enqueueMips(finish, deferred)           // full 4K/8K arrives between gestures
+}</code></pre>
+      <p>
+        The user sees a finish change instantly at proxy resolution, and the full-resolution
+        version resolves in the gaps between their gestures. That is why the tool feels photoreal <em>and</em> immediate, instead of making them choose.
+      </p>
+      <blockquote>
+        <p>Fidelity sells the product; latency sells the fidelity. A photorealistic render that
+        stutters while the client drags it reads as broken, and "broken" is the one thing a luxury
+        brand cannot ship.</p>
+      </blockquote>
+
+      <h2>The week was fast because the framework was slow</h2>
+      <p>
+        The honest answer to "how do you ship this in a week?" is: you don't. You ship it in a week
+        <em>plus</em> the months of framework work that preceded it. AetherisVis had been building a
+        modular React + TypeScript visualization framework: <strong>35+ reusable components</strong> covering the recurring anatomy of every configurator: scene management, camera controls,
+        material and finish selectors, variant preview panes, save/share state. Measured across
+        client projects, it cut UI prototyping time by 60%.
+      </p>
+      <p>
+        That's what made the SPX build an <em>assembly</em> problem instead of an invention problem.
+        The week went into what was genuinely specific to the client: the equipment models and
+        their material systems, the finish and upholstery options that matched SPX's actual product
+        line, the brand-fidelity pass, and the performance tuning above. The parts every
+        configurator shares were already built, already typed, already debugged on someone else's
+        deadline. Component reuse is usually pitched as a code-quality virtue; under a one-week
+        commercial deadline it's the difference between shipping and apologizing.
+      </p>
+
+      <h2>Commercial delivery is a different sport</h2>
+      <p>
+        This wasn't a demo. It shipped as a commercial client product, embedded in the client's
+        sales motion. That changes the definition of done. Done means the client's team can use it
+        in front of <em>their</em> customers without an engineer in the room: configurations save
+        and reload, the tool degrades gracefully on a hotel-lobby iPad, and the visual language
+        matches the brand it lives inside. As CTO, the calls I made that week were mostly about
+        protecting that bar: cutting configurable options that couldn't hit the fidelity target in
+        time rather than shipping them at half-quality, because in luxury retail an absent option
+        is forgivable and an ugly one is not.
+      </p>
+
+      <h2>Learnings</h2>
+      <p>
+        <strong>Deadlines are an architecture review.</strong> A one-week commercial build is a
+        brutal audit of every abstraction you own: whatever isn't genuinely reusable reveals itself
+        immediately. The 35+ components that survived contact with the SPX build became the
+        framework's trusted core; the ones that needed rework taught us more than any design
+        review had.
+      </p>
+      <p>
+        <strong>Performance is a product feature with a brand attached.</strong> The same frame-rate
+        discipline reads differently for different clients; for SPX it was luxury-grade polish. It
+        taught me to write performance targets in the client's vocabulary ("never stutters during a
+        sales demo") rather than the engine's ("16ms frame budget"), then translate. The engineering
+        is identical; the accountability is legible.
+      </p>
+      <p>
+        <strong>Speed and quality trade off against scope, not against each other.</strong> The week
+        never compromised rendering fidelity or interaction feel. It compromised the number of
+        things configurable at launch. That's the through-line from this project to everything
+        since: hold the load-bearing properties fixed, and negotiate everything else. It's the same
+        shape as VortexeAI's execution contract and SCM's security invariants, decided here under the shortest deadline of the three.
+      </p>
+    </div>
+
+    <footer class="article-footer">
+      <div class="inner">
+        <a class="back" href="../blog.html">← Back to all posts</a>
+        <a class="btn btn-secondary" href="https://www.spxgymdesign.com/configurator" target="_blank" rel="noopener">See it live at SPX</a>
+      </div>
+    </footer>
+  </article>
+
+  <footer class="footer" style="border-top:1px solid var(--border)">
+    <div class="footer-inner">
+      <div class="copy">© 2026 Divyansh Khare · San Jose, CA</div>
+      <ul class="footer-links">
+        <li><a href="mailto:dkhare1998@gmail.com">Email</a></li>
+        <li><a href="../index.html">Home</a></li>
+        <li><a href="../blog.html">Blog</a></li>
+      </ul>
+    </div>
+  </footer>
+  <script src="../site.js" defer></script>
+</body>
+</html>
