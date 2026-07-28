@@ -76,302 +76,6 @@
     </div>
   </section>
 
-  <!-- ================= METRICS ================= -->
-  <section class="metrics">
-    <div class="container">
-      <div class="metrics-grid">
-        <div class="metric"><div class="num">$8M+/yr</div><div class="label">Revenue locked in at Union Pacific</div></div>
-        <div class="metric"><div class="num">89%</div><div class="label">Revenue-loss trajectory reversed</div></div>
-        <div class="metric"><div class="num">0→1</div><div class="label">AI governance platform, sole architect</div></div>
-        <div class="metric"><div class="num">200+</div><div class="label">Daily active users in 4 months at VortexeAI</div></div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ================= PROJECTS ================= -->
-  <section class="section" id="projects">
-    <div class="container">
-      <div class="section-head reveal">
-        <div class="section-eyebrow">Selected Work</div>
-        <h2>Projects</h2>
-        <p>Production systems where I owned the architecture, the trade-offs, and the outcome, from AI-agent governance to compliance-critical rail infrastructure.</p>
-      </div>
-
-      <div class="projects-grid">
-        <!-- SCM — featured -->
-        <article class="project-card featured reveal">
-          <div class="featured-content">
-          <div class="project-top">
-            <div class="project-icon">◆</div>
-            <div class="project-role">Sole Architect · Tech Lead</div>
-          </div>
-          <h3>SCM — AI Agent Governance Platform</h3>
-          <div class="tagline">Autonomous agents, made safe for FERPA-regulated student data</div>
-          <p class="desc">
-            The governance layer that lets AI agents touch student records safely. Every agent action
-            resolves to the authority of the human it acts for; every autonomous workflow runs on a
-            single-use, time-boxed capability grant; and student names are structurally absent from
-            everything the LLM sees. Built as a Python/Temporal agent runtime with human-in-the-loop
-            approval gates, a NestJS capability registry, and a 71-tool MCP integration, shipped to a live production pilot with a large customer.
-          </p>
-          <div class="tags">
-            <span class="tag">Python / FastAPI</span><span class="tag">Temporal</span>
-            <span class="tag">LangGraph</span><span class="tag">NestJS + Prisma</span>
-            <span class="tag">MCP</span><span class="tag">FERPA Architecture</span>
-          </div>
-          <div class="project-links">
-            <a href="blog/scm-agent-governance.html">Read the architecture deep-dive</a>
-          </div>
-          </div>
-          <div class="featured-media">
-            <img src="assets/scm-mission-control.jpg" alt="Mission Control — the SCM teacher dashboard showing live class proficiency goals, Claude-generated small groups, and per-student pacing" loading="lazy" />
-          </div>
-        </article>
-
-        <!-- VortexeAI -->
-        <article class="project-card wide reveal">
-          <div class="card-media"><img src="assets/vortexeai-screens.jpg" alt="VortexeAI product screens — the workflow dashboard, editor, and profile surfaces floating on the brand's purple field" loading="lazy" /></div>
-          <div class="project-top">
-            <div class="project-icon">◉</div>
-            <div class="project-role">Co-founder & CEO</div>
-          </div>
-          <h3>VortexeAI</h3>
-          <div class="tagline">Low-code AI workflow automation, 0→1 in four months</div>
-          <p class="desc">
-            A low-code, AI-driven workflow editor for product and engineering teams, taken from
-            first commit to <strong>200+ daily active users</strong> and a TechStars invitation in
-            four months. The core is a deterministic multi-agent orchestration engine, graph traversal plus dependency resolution, running at 99.9% execution reliability, with a
-            React/Next.js node editor and an LLM tool runtime with memory routing. 50+ automation
-            patterns deployed; onboarding 40% faster.
-          </p>
-          <div class="tags">
-            <span class="tag">Next.js</span><span class="tag">Multi-agent orchestration</span>
-            <span class="tag">LLM runtime</span><span class="tag">Low-code</span>
-          </div>
-          <div class="project-links">
-            <a href="blog/vortexeai-deterministic-orchestration.html">Read the write-up</a>
-            <a href="https://vortexeai.com/" target="_blank" rel="noopener">Visit the live site</a>
-          </div>
-        </article>
-
-        <!-- AetherisVis -->
-        <article class="project-card wide reveal">
-          <div class="card-media"><img src="assets/aetherisvis-devices.jpg" alt="The SPX 3D equipment configurator running across MacBook, MacBook Air, and iMac" loading="lazy" /></div>
-          <div class="project-top">
-            <div class="project-icon">◭</div>
-            <div class="project-role">Co-founder & CTO</div>
-          </div>
-          <h3>AetherisVis</h3>
-          <div class="tagline">Real-time 3D product configurators in the browser</div>
-          <p class="desc">
-            A browser-based 3D equipment configurator for SPX, a luxury gym design brand, shipped as a commercial client product in <strong>one week</strong>. Real-time 4K/8K customization stays responsive under load through lazy loading and interaction-loop tuning. Built on a modular React + TypeScript visualization framework
-            of 35+ reusable components that cut UI prototyping time 60% across client projects.
-          </p>
-          <div class="tags">
-            <span class="tag">React + TypeScript</span><span class="tag">3D / WebGL</span>
-            <span class="tag">Real-time rendering</span><span class="tag">Client delivery</span>
-          </div>
-          <div class="project-links">
-            <a href="blog/aetherisvis-3d-configurator.html">Read the write-up</a>
-            <a href="https://www.spxgymdesign.com/configurator" target="_blank" rel="noopener">See it live at SPX</a>
-          </div>
-        </article>
-
-
-        <!-- LUV Health -->
-        <article class="project-card wide reveal">
-          <div class="card-media"><img src="assets/cover-luvhealth.svg" alt="LUV Health flow schematic: specialist search, transparent self-pay profile, voice-agent booking, confirmed appointment" loading="lazy" /></div>
-          <div class="project-top">
-            <div class="project-icon">✚</div>
-            <div class="project-role">Lead Engineer</div>
-          </div>
-          <h3>LUV Health</h3>
-          <div class="tagline">Self-pay healthcare marketplace with AI-assisted booking</div>
-          <p class="desc">
-            A platform that helps patients book same-day appointments with hard-to-find specialists
-            at transparent self-pay rates. I led end-to-end development of the full MVP: smart
-            search with tailored relevance signals, practice profiles, doctor-facing pricing and
-            visibility tools, and automated scheduling. A voice-based AI agent (Vapi) books
-            appointments on the patient's behalf, cutting booking time from minutes to seconds and
-            keeping the path from search to booked appointment as short as possible.
-          </p>
-          <div class="tags">
-            <span class="tag">FastAPI</span><span class="tag">Next.js</span>
-            <span class="tag">Voice AI (Vapi)</span><span class="tag">Marketplace</span>
-          </div>
-        </article>
-
-        <!-- Isoscapes -->
-        <article class="project-card wide reveal">
-          <div class="card-media"><img src="assets/isoscapes-title.jpg" alt="Iso-Scapes title screen: a procedurally generated isometric low-poly landscape of forests, cliffs, and water, with a Re-Generate button" loading="lazy" /></div>
-          <div class="project-top">
-            <div class="project-icon">⬡</div>
-            <div class="project-role">Core Architecture</div>
-          </div>
-          <h3>Isoscapes</h3>
-          <div class="tagline">Procedural isometric worlds, re-generated at the push of a button</div>
-          <p class="desc">
-            A procedurally generated, explorable 3D low-poly landscape built in Unity at UCSC.
-            I built the core architecture: Perlin noise and falloff-map generation over a grid
-            system, a <strong>Cell</strong> abstract data structure holding each block's attributes,
-            the isometric camera with movement and zoom, and auto-tiled terrain driven by
-            noise-based height values, prototyped in p5.js and ported to C#. Shipped as builds for
-            both Windows and Mac.
-          </p>
-          <div class="tags">
-            <span class="tag">Unity / C#</span><span class="tag">Procedural Generation</span>
-            <span class="tag">Perlin Noise</span><span class="tag">Cross-platform</span>
-          </div>
-          <div class="project-links">
-            <a href="games.html#isoscapes">See it on the games page</a>
-          </div>
-        </article>
-        <!-- Tracewell -->
-        <article class="project-card reveal">
-          <div class="card-media"><img src="assets/cover-tracewell.svg" alt="Tracewell pipeline schematic — a flagged injection event passing through deterministic feature extraction into a single narrating LLM call" loading="lazy" /></div>
-          <div class="project-top">
-            <div class="project-icon">⌁</div>
-            <div class="project-role">Solo Developer</div>
-          </div>
-          <h3>Tracewell</h3>
-          <div class="tagline">Guardrailed insights for browser-agent trajectories</div>
-          <p class="desc">
-            An insight pipeline for AI-agent run logs: deterministic Python computes every fact, one
-            LLM call narrates them, and three independent layers stop prompt injections scraped off
-            a web page from steering the report. Ships with an append-only run ledger and a live
-            prompt-robustness eval harness.
-          </p>
-          <div class="tags">
-            <span class="tag">FastAPI</span><span class="tag">Pydantic</span>
-            <span class="tag">LLM Guardrails</span><span class="tag">React</span>
-          </div>
-          <div class="project-links">
-            <a href="blog/tracewell-trust-boundaries.html">Read the write-up</a>
-            <a href="https://blok-agent-insight.vercel.app/" target="_blank" rel="noopener">Visit the live site</a>
-          </div>
-        </article>
-
-        <!-- UOP Library -->
-        <article class="project-card reveal">
-          <div class="card-media"><img src="assets/cover-uop-library.svg" alt="Keyed-cache schematic — responses routed to their query keys, with a stale response structurally unable to land" loading="lazy" /></div>
-          <div class="project-top">
-            <div class="project-icon">▤</div>
-            <div class="project-role">Case Study</div>
-          </div>
-          <h3>UoP Library</h3>
-          <div class="tagline">Frontend architecture as an executive-grade case study</div>
-          <p class="desc">
-            Took a half-working prototype and structurally eliminated an unplanted fetch race with
-            TanStack Query, built optimistic cross-route cache coherence, and designed a
-            Bloomberg-style tearsheet grid, documented in 20 logged decisions and a 134-finding self-audit.
-          </p>
-          <div class="tags">
-            <span class="tag">React 18</span><span class="tag">TanStack Query</span>
-            <span class="tag">TypeScript</span><span class="tag">Design Systems</span>
-          </div>
-          <div class="project-links">
-            <a href="blog/uop-library-case-study.html">Read the case study</a>
-          </div>
-        </article>
-
-        <!-- Freezer-car modernization -->
-        <article class="project-card reveal">
-          <div class="card-media"><img src="assets/cover-freezer-car.svg" alt="Rail telemetry schematic — wayside, AEI, and CAD signals joined on trainID, with a flagged bearing on the rail line" loading="lazy" /></div>
-          <div class="project-top">
-            <div class="project-icon">▣</div>
-            <div class="project-role">Technical Lead</div>
-          </div>
-          <h3>Freezer-Car Modernization</h3>
-          <div class="tagline">Deterministic correlation over rail sensor networks</div>
-          <p class="desc">
-            Reversed an 89% revenue-loss trajectory at Union Pacific and locked in $8M+/year. Built a
-            deterministic correlation engine joining wayside, AEI, and CAD signals over Kafka, with
-            ML-derived health thresholds surfacing derailment-risk bearings for crew intervention.
-          </p>
-          <div class="tags">
-            <span class="tag">Kafka</span><span class="tag">C++</span>
-            <span class="tag">ML Thresholds</span><span class="tag">Rail Systems</span>
-          </div>
-        </article>
-
-        <!-- Sense UI -->
-        <article class="project-card wide reveal">
-          <div class="card-media"><img src="assets/cover-sense-ui.svg" alt="Component tree schematic with metadata badges that make the UI legible to AI agents" loading="lazy" /></div>
-          <div class="project-top">
-            <div class="project-icon">◈</div>
-            <div class="project-role">Solo Developer</div>
-          </div>
-          <h3>Sense UI</h3>
-          <div class="tagline">AI-comprehensible component architecture</div>
-          <p class="desc">
-            A metadata-driven component architecture that lets AI agents comprehend and operate UI, measured as a 40% lift in accurate agent interactions and 30% less integration debugging. Schema
-            extraction and introspection pipelines deployed across 15+ projects.
-          </p>
-          <div class="tags">
-            <span class="tag">React</span><span class="tag">Schema Introspection</span>
-            <span class="tag">Agent UX</span>
-          </div>
-          <div class="project-links">
-            <a href="https://sense-ui.vercel.app/" target="_blank" rel="noopener">Visit the landing page</a>
-          </div>
-        </article>
-
-        <!-- Atlas Admin -->
-        <article class="project-card wide reveal">
-          <div class="card-media"><img src="assets/cover-atlas.svg" alt="Search interface schematic with fuzzy-match results returning in sub-millisecond query times" loading="lazy" /></div>
-          <div class="project-top">
-            <div class="project-icon">▥</div>
-            <div class="project-role">Solo Developer</div>
-          </div>
-          <h3>Atlas Admin Panel</h3>
-          <div class="tagline">Sub-second search at 10,000+ concurrent users</div>
-          <p class="desc">
-            An admin dashboard with sub-second prefix and fuzzy search via tuned Elasticsearch
-            indexing. Role-based invites, cursor-based pagination, and Redis caching cut
-            data-retrieval latency 35% on a zero-flicker Next.js + React 18 frontend.
-          </p>
-          <div class="tags">
-            <span class="tag">NestJS</span><span class="tag">Elasticsearch</span>
-            <span class="tag">Redis</span><span class="tag">Next.js</span>
-          </div>
-          <div class="project-links">
-            <a href="https://github.com/T-98/admin-dashboard-ui" target="_blank" rel="noopener">Frontend source</a>
-            <a href="https://github.com/T-98/admin-dashboard" target="_blank" rel="noopener">Backend source</a>
-          </div>
-        </article>
-
-        <!-- Overwhelming Studios -->
-        <article class="project-card featured reveal">
-          <div class="featured-content">
-          <div class="project-top">
-            <div class="project-icon">▲</div>
-            <div class="project-role">Founder & CTO</div>
-          </div>
-          <h3>Overwhelming Studios</h3>
-          <div class="tagline">Two shipped UE5 titles, recognized by PlayStation Studios</div>
-          <p class="desc">
-            An independent game studio where I shipped two Unreal Engine 5 titles solo: <strong>Packet Patrol</strong>, a CRT-styled network-defense game, and
-            <strong>Vegan Zombie: Crop Apocalypse</strong>, an outback survival game with a
-            procedural recipe system and parabolic damage falloff. Cloud auth and cross-device sync
-            for 1,500+ players with 30% faster loads and 25% better retention. The work drew direct recognition from PlayStation's Head of UI/UX and reached promotion-support stage with PlayStation Studios.
-          </p>
-          <div class="tags">
-            <span class="tag">Unreal Engine 5</span><span class="tag">Gameplay Systems</span>
-            <span class="tag">Cloud Auth + Sync</span><span class="tag">Game Design</span>
-          </div>
-          <div class="project-links">
-            <a href="games.html">Explore the studio & devlogs</a>
-          </div>
-          </div>
-          <div class="featured-media">
-            <img src="assets/os-vz-title.jpg" alt="Vegan Zombie Crop Apocalypse title screen, set on an Australian outback road" loading="lazy" />
-          </div>
-        </article>
-
-      </div>
-    </div>
-  </section>
-
   <!-- ================= INTERACTIVE DEMO ================= -->
   <section class="section" id="system">
     <div class="container">
@@ -402,6 +106,291 @@
           </p>
         </div>
         <div id="grant-demo" class="demo-console reveal" aria-live="polite"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= METRICS ================= -->
+  <section class="metrics">
+    <div class="container">
+      <div class="metrics-grid">
+        <div class="metric"><div class="num">$8M+/yr</div><div class="label">Revenue locked in at Union Pacific</div></div>
+        <div class="metric"><div class="num">89%</div><div class="label">Revenue-loss trajectory reversed</div></div>
+        <div class="metric"><div class="num">0→1</div><div class="label">AI governance platform, sole architect</div></div>
+        <div class="metric"><div class="num">200+</div><div class="label">Daily active users in 4 months at VortexeAI</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= PROJECTS ================= -->
+  <section class="section" id="projects">
+    <div class="container">
+      <div class="section-head reveal">
+        <div class="section-eyebrow">Selected Work</div>
+        <h2>Projects</h2>
+        <p>Production systems where I owned the architecture, the trade-offs, and the outcome, from AI-agent governance to compliance-critical rail infrastructure.</p>
+      </div>
+
+      <div class="projects-grid">
+        <!-- SCM — featured -->
+        <article class="project-card featured reveal">
+          <div class="featured-content">
+          <div class="project-top">
+            <div class="project-role">Sole Architect · Tech Lead</div>
+          </div>
+          <h3><a class="project-title-link" href="blog/scm-agent-governance.html">SCM — AI Agent Governance Platform</a></h3>
+          <div class="tagline">Autonomous agents, made safe for FERPA-regulated student data</div>
+          <p class="desc">
+            The governance layer that lets AI agents touch student records safely. Every agent action
+            resolves to the authority of the human it acts for; every autonomous workflow runs on a
+            single-use, time-boxed capability grant; and student names are structurally absent from
+            everything the LLM sees. Built as a Python/Temporal agent runtime with human-in-the-loop
+            approval gates, a NestJS capability registry, and a 71-tool MCP integration, shipped to a live production pilot with a large customer.
+          </p>
+          <div class="tags">
+            <span class="tag">Python / FastAPI</span><span class="tag">Temporal</span>
+            <span class="tag">LangGraph</span><span class="tag">NestJS + Prisma</span>
+            <span class="tag">MCP</span><span class="tag">FERPA Architecture</span>
+          </div>
+          <div class="project-links">
+            <a href="blog/scm-agent-governance.html">Read the architecture deep-dive</a>
+          </div>
+          </div>
+          <div class="featured-media">
+            <img src="assets/scm-mission-control.jpg" alt="Mission Control — the SCM teacher dashboard showing live class proficiency goals, Claude-generated small groups, and per-student pacing" loading="lazy" />
+          </div>
+        </article>
+
+        <!-- VortexeAI -->
+        <article class="project-card wide reveal">
+          <div class="card-media"><img src="assets/vortexeai-screens.jpg" alt="VortexeAI product screens — the workflow dashboard, editor, and profile surfaces floating on the brand's purple field" loading="lazy" /></div>
+          <div class="project-top">
+            <div class="project-role">Co-founder & CEO</div>
+          </div>
+          <h3><a class="project-title-link" href="blog/vortexeai-deterministic-orchestration.html">VortexeAI</a></h3>
+          <div class="tagline">Low-code AI workflow automation, 0→1 in four months</div>
+          <p class="desc">
+            A low-code, AI-driven workflow editor for product and engineering teams, taken from
+            first commit to <strong>200+ daily active users</strong> and a TechStars invitation in
+            four months. The core is a deterministic multi-agent orchestration engine, graph traversal plus dependency resolution, running at 99.9% execution reliability, with a
+            React/Next.js node editor and an LLM tool runtime with memory routing. 50+ automation
+            patterns deployed; onboarding 40% faster.
+          </p>
+          <div class="tags">
+            <span class="tag">Next.js</span><span class="tag">Multi-agent orchestration</span>
+            <span class="tag">LLM runtime</span><span class="tag">Low-code</span>
+          </div>
+          <div class="project-links">
+            <a href="blog/vortexeai-deterministic-orchestration.html">Read the write-up</a>
+            <a href="https://vortexeai.com/" target="_blank" rel="noopener">Visit the live site</a>
+          </div>
+        </article>
+
+        <!-- AetherisVis -->
+        <article class="project-card wide reveal">
+          <div class="card-media"><img src="assets/aetherisvis-devices.jpg" alt="The SPX 3D equipment configurator running across MacBook, MacBook Air, and iMac" loading="lazy" /></div>
+          <div class="project-top">
+            <div class="project-role">Co-founder & CTO</div>
+          </div>
+          <h3><a class="project-title-link" href="blog/aetherisvis-3d-configurator.html">AetherisVis</a></h3>
+          <div class="tagline">Real-time 3D product configurators in the browser</div>
+          <p class="desc">
+            A browser-based 3D equipment configurator for SPX, a luxury gym design brand, shipped as a commercial client product in <strong>one week</strong>. Real-time 4K/8K customization stays responsive under load through lazy loading and interaction-loop tuning. Built on a modular React + TypeScript visualization framework
+            of 35+ reusable components that cut UI prototyping time 60% across client projects.
+          </p>
+          <div class="tags">
+            <span class="tag">React + TypeScript</span><span class="tag">3D / WebGL</span>
+            <span class="tag">Real-time rendering</span><span class="tag">Client delivery</span>
+          </div>
+          <div class="project-links">
+            <a href="blog/aetherisvis-3d-configurator.html">Read the write-up</a>
+            <a href="https://www.spxgymdesign.com/configurator" target="_blank" rel="noopener">See it live at SPX</a>
+          </div>
+        </article>
+
+
+        <!-- LUV Health -->
+        <article class="project-card wide reveal">
+          <div class="card-media"><img src="assets/cover-luvhealth.svg" alt="LUV Health flow schematic: specialist search, transparent self-pay profile, voice-agent booking, confirmed appointment" loading="lazy" /></div>
+          <div class="project-top">
+            <div class="project-role">Lead Engineer</div>
+          </div>
+          <h3>LUV Health</h3>
+          <div class="tagline">Self-pay healthcare marketplace with AI-assisted booking</div>
+          <p class="desc">
+            A platform that helps patients book same-day appointments with hard-to-find specialists
+            at transparent self-pay rates. I led end-to-end development of the full MVP: smart
+            search with tailored relevance signals, practice profiles, doctor-facing pricing and
+            visibility tools, and automated scheduling. A voice-based AI agent (Vapi) books
+            appointments on the patient's behalf, cutting booking time from minutes to seconds and
+            keeping the path from search to booked appointment as short as possible.
+          </p>
+          <div class="tags">
+            <span class="tag">FastAPI</span><span class="tag">Next.js</span>
+            <span class="tag">Voice AI (Vapi)</span><span class="tag">Marketplace</span>
+          </div>
+        </article>
+
+        <!-- Isoscapes -->
+        <article class="project-card wide reveal">
+          <div class="card-media"><img src="assets/isoscapes-title.jpg" alt="Iso-Scapes title screen: a procedurally generated isometric low-poly landscape of forests, cliffs, and water, with a Re-Generate button" loading="lazy" /></div>
+          <div class="project-top">
+            <div class="project-role">Core Architecture</div>
+          </div>
+          <h3><a class="project-title-link" href="games.html#isoscapes">Isoscapes</a></h3>
+          <div class="tagline">Procedural isometric worlds, re-generated at the push of a button</div>
+          <p class="desc">
+            A procedurally generated, explorable 3D low-poly landscape built in Unity at UCSC.
+            I built the core architecture: Perlin noise and falloff-map generation over a grid
+            system, a <strong>Cell</strong> abstract data structure holding each block's attributes,
+            the isometric camera with movement and zoom, and auto-tiled terrain driven by
+            noise-based height values, prototyped in p5.js and ported to C#. Shipped as builds for
+            both Windows and Mac.
+          </p>
+          <div class="tags">
+            <span class="tag">Unity / C#</span><span class="tag">Procedural Generation</span>
+            <span class="tag">Perlin Noise</span><span class="tag">Cross-platform</span>
+          </div>
+          <div class="project-links">
+            <a href="games.html#isoscapes">See it on the games page</a>
+          </div>
+        </article>
+        <!-- Tracewell -->
+        <article class="project-card reveal">
+          <div class="card-media"><img src="assets/cover-tracewell.svg" alt="Tracewell pipeline schematic — a flagged injection event passing through deterministic feature extraction into a single narrating LLM call" loading="lazy" /></div>
+          <div class="project-top">
+            <div class="project-role">Solo Developer</div>
+          </div>
+          <h3><a class="project-title-link" href="blog/tracewell-trust-boundaries.html">Tracewell</a></h3>
+          <div class="tagline">Guardrailed insights for browser-agent trajectories</div>
+          <p class="desc">
+            An insight pipeline for AI-agent run logs: deterministic Python computes every fact, one
+            LLM call narrates them, and three independent layers stop prompt injections scraped off
+            a web page from steering the report. Ships with an append-only run ledger and a live
+            prompt-robustness eval harness.
+          </p>
+          <div class="tags">
+            <span class="tag">FastAPI</span><span class="tag">Pydantic</span>
+            <span class="tag">LLM Guardrails</span><span class="tag">React</span>
+          </div>
+          <div class="project-links">
+            <a href="blog/tracewell-trust-boundaries.html">Read the write-up</a>
+            <a href="https://blok-agent-insight.vercel.app/" target="_blank" rel="noopener">Visit the live site</a>
+          </div>
+        </article>
+
+        <!-- UOP Library -->
+        <article class="project-card reveal">
+          <div class="card-media"><img src="assets/cover-uop-library.svg" alt="Keyed-cache schematic — responses routed to their query keys, with a stale response structurally unable to land" loading="lazy" /></div>
+          <div class="project-top">
+            <div class="project-role">Case Study</div>
+          </div>
+          <h3><a class="project-title-link" href="blog/uop-library-case-study.html">UoP Library</a></h3>
+          <div class="tagline">Frontend architecture as an executive-grade case study</div>
+          <p class="desc">
+            Took a half-working prototype and structurally eliminated an unplanted fetch race with
+            TanStack Query, built optimistic cross-route cache coherence, and designed a
+            Bloomberg-style tearsheet grid, documented in 20 logged decisions and a 134-finding self-audit.
+          </p>
+          <div class="tags">
+            <span class="tag">React 18</span><span class="tag">TanStack Query</span>
+            <span class="tag">TypeScript</span><span class="tag">Design Systems</span>
+          </div>
+          <div class="project-links">
+            <a href="blog/uop-library-case-study.html">Read the case study</a>
+          </div>
+        </article>
+
+        <!-- Freezer-car modernization -->
+        <article class="project-card reveal">
+          <div class="card-media"><img src="assets/cover-freezer-car.svg" alt="Rail telemetry schematic — wayside, AEI, and CAD signals joined on trainID, with a flagged bearing on the rail line" loading="lazy" /></div>
+          <div class="project-top">
+            <div class="project-role">Technical Lead</div>
+          </div>
+          <h3>Freezer-Car Modernization</h3>
+          <div class="tagline">Deterministic correlation over rail sensor networks</div>
+          <p class="desc">
+            Reversed an 89% revenue-loss trajectory at Union Pacific and locked in $8M+/year. Built a
+            deterministic correlation engine joining wayside, AEI, and CAD signals over Kafka, with
+            ML-derived health thresholds surfacing derailment-risk bearings for crew intervention.
+          </p>
+          <div class="tags">
+            <span class="tag">Kafka</span><span class="tag">C++</span>
+            <span class="tag">ML Thresholds</span><span class="tag">Rail Systems</span>
+          </div>
+        </article>
+
+        <!-- Sense UI -->
+        <article class="project-card wide reveal">
+          <div class="card-media"><img src="assets/cover-sense-ui.svg" alt="Component tree schematic with metadata badges that make the UI legible to AI agents" loading="lazy" /></div>
+          <div class="project-top">
+            <div class="project-role">Solo Developer</div>
+          </div>
+          <h3>Sense UI</h3>
+          <div class="tagline">AI-comprehensible component architecture</div>
+          <p class="desc">
+            A metadata-driven component architecture that lets AI agents comprehend and operate UI, measured as a 40% lift in accurate agent interactions and 30% less integration debugging. Schema
+            extraction and introspection pipelines deployed across 15+ projects.
+          </p>
+          <div class="tags">
+            <span class="tag">React</span><span class="tag">Schema Introspection</span>
+            <span class="tag">Agent UX</span>
+          </div>
+          <div class="project-links">
+            <a href="https://sense-ui.vercel.app/" target="_blank" rel="noopener">Visit the landing page</a>
+          </div>
+        </article>
+
+        <!-- Atlas Admin -->
+        <article class="project-card wide reveal">
+          <div class="card-media"><img src="assets/cover-atlas.svg" alt="Search interface schematic with fuzzy-match results returning in sub-millisecond query times" loading="lazy" /></div>
+          <div class="project-top">
+            <div class="project-role">Solo Developer</div>
+          </div>
+          <h3>Atlas Admin Panel</h3>
+          <div class="tagline">Sub-second search at 10,000+ concurrent users</div>
+          <p class="desc">
+            An admin dashboard with sub-second prefix and fuzzy search via tuned Elasticsearch
+            indexing. Role-based invites, cursor-based pagination, and Redis caching cut
+            data-retrieval latency 35% on a zero-flicker Next.js + React 18 frontend.
+          </p>
+          <div class="tags">
+            <span class="tag">NestJS</span><span class="tag">Elasticsearch</span>
+            <span class="tag">Redis</span><span class="tag">Next.js</span>
+          </div>
+          <div class="project-links">
+            <a href="https://github.com/T-98/admin-dashboard-ui" target="_blank" rel="noopener">Frontend source</a>
+            <a href="https://github.com/T-98/admin-dashboard" target="_blank" rel="noopener">Backend source</a>
+          </div>
+        </article>
+
+        <!-- Overwhelming Studios -->
+        <article class="project-card featured reveal">
+          <div class="featured-content">
+          <div class="project-top">
+            <div class="project-role">Founder & CTO</div>
+          </div>
+          <h3><a class="project-title-link" href="games.html">Overwhelming Studios</a></h3>
+          <div class="tagline">Two shipped UE5 titles, recognized by PlayStation Studios</div>
+          <p class="desc">
+            An independent game studio where I shipped two Unreal Engine 5 titles solo: <strong>Packet Patrol</strong>, a CRT-styled network-defense game, and
+            <strong>Vegan Zombie: Crop Apocalypse</strong>, an outback survival game with a
+            procedural recipe system and parabolic damage falloff. Cloud auth and cross-device sync
+            for 1,500+ players with 30% faster loads and 25% better retention. The work drew direct recognition from PlayStation's Head of UI/UX and reached promotion-support stage with PlayStation Studios.
+          </p>
+          <div class="tags">
+            <span class="tag">Unreal Engine 5</span><span class="tag">Gameplay Systems</span>
+            <span class="tag">Cloud Auth + Sync</span><span class="tag">Game Design</span>
+          </div>
+          <div class="project-links">
+            <a href="games.html">Explore the studio & devlogs</a>
+          </div>
+          </div>
+          <div class="featured-media">
+            <img src="assets/os-vz-title.jpg" alt="Vegan Zombie Crop Apocalypse title screen, set on an Australian outback road" loading="lazy" />
+          </div>
+        </article>
+
       </div>
     </div>
   </section>

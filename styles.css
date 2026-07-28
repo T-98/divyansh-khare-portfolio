@@ -442,6 +442,30 @@ a { color: inherit; text-decoration: none; }
   color: var(--fg-strong);
   margin-bottom: 4px;
 }
+.project-card h3 a.project-title-link {
+  color: inherit;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: baseline;
+  gap: 6px;
+  transition: color 0.15s ease;
+}
+.project-card h3 a.project-title-link::after {
+  content: "→";
+  font-family: var(--font-mono);
+  font-size: 14px;
+  color: var(--fg-faint);
+  transition: transform 0.15s ease, color 0.15s ease;
+}
+.project-card h3 a.project-title-link:hover,
+.project-card h3 a.project-title-link:focus-visible {
+  color: var(--blue);
+}
+.project-card h3 a.project-title-link:hover::after,
+.project-card h3 a.project-title-link:focus-visible::after {
+  color: var(--blue);
+  transform: translateX(3px);
+}
 .project-card .tagline {
   font-size: 13px;
   color: var(--blue);
