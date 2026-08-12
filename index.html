@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Divyansh Khare — Full-Stack Engineer & AI Systems Architect</title>
-  <meta name="description" content="Full-stack engineer and multi-time founder. Sole architect of SCM, an AI-agent governance platform. Consulting in software engineering and AI/ML systems." />
+  <meta name="description" content="Full-stack engineer and multi-time founder. Co-founder and founding engineer at MADE; previously sole architect of SCM, an AI-agent governance platform. Selective consulting in AI systems and full-stack engineering." />
   <link rel="icon" type="image/svg+xml" href="favicon.svg" />
   <meta name="theme-color" content="#000000" />
   <meta name="author" content="Divyansh Khare" />
@@ -12,7 +12,7 @@
   <meta property="og:url" content="https://divyanshkhare.com/" />
   <meta property="og:type" content="website" />
   <meta property="og:title" content="Divyansh Khare — Full-Stack Engineer & AI Systems Architect" />
-  <meta property="og:description" content="Full-stack engineer and multi-time founder. Sole architect of SCM, an AI-agent governance platform. Consulting in software engineering and AI/ML systems." />
+  <meta property="og:description" content="Full-stack engineer and multi-time founder. Co-founder and founding engineer at MADE; previously sole architect of SCM, an AI-agent governance platform. Selective consulting in AI systems and full-stack engineering." />
   <meta property="og:image" content="https://divyanshkhare.com/assets/og.png" />
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="Divyansh Khare — Full-Stack Engineer & AI Systems Architect" />
@@ -23,7 +23,8 @@
   <link rel="stylesheet" href="styles.css" />
   <script type="application/ld+json">
   {"@context":"https://schema.org","@type":"Person","name":"Divyansh Khare",
-   "jobTitle":"Full-Stack Engineer & AI Systems Architect",
+   "jobTitle":"Co-Founder & Founding Engineer",
+   "worksFor":{"@type":"Organization","name":"MADE"},
    "email":"mailto:dkhare1998@gmail.com",
    "address":{"@type":"PostalAddress","addressLocality":"San Jose","addressRegion":"CA"},
    "alumniOf":"University of California, Santa Cruz",
@@ -63,11 +64,12 @@
       <div class="hw hw-r2"><div class="hw-bar"><i></i><i></i><i></i><span>atlas · sub-second search</span></div><img src="assets/app-atlas.svg" alt="" /></div>
     </div>
     <div class="container hero-inner">
-      <div class="hero-badge"><span class="dot"></span> Available for consulting engagements</div>
+      <div class="hero-badge"><span class="dot"></span> Co-Founder &amp; Founding Engineer at MADE</div>
       <h1>Systems from 0→1.<br />Owned end to end.</h1>
       <p class="sub">
         I'm Divyansh, a full-stack engineer and multi-time founder. I take systems from first commit to production and own them across <strong>frontend, backend, infrastructure, and the
-        agent layer</strong>. Most recently I was sole architect and tech lead of SCM, an AI-agent governance platform that makes autonomous agents safe to run against FERPA-regulated student data.
+        agent layer</strong>. Right now I'm co-founder and founding engineer at <strong>MADE</strong>, replacing forecast-based manufacturing with demand-validated production. Before that I was sole
+        architect and tech lead of SCM, an AI-agent governance platform that makes autonomous agents safe to run against FERPA-regulated student data.
       </p>
       <div class="hero-actions">
         <a class="btn btn-primary" href="#projects">View my work</a>
@@ -195,7 +197,7 @@
     <div class="container">
       <div class="metrics-grid">
         <div class="metric"><div class="num">$8M+/yr</div><div class="label">Revenue locked in at Union Pacific</div></div>
-        <div class="metric"><div class="num">89%</div><div class="label">Revenue-loss trajectory reversed</div></div>
+        <div class="metric"><div class="num">4–8 wks</div><div class="label">Demand-to-delivery at MADE, from an industry-standard 3–5 months</div></div>
         <div class="metric"><div class="num">0→1</div><div class="label">AI governance platform, sole architect</div></div>
         <div class="metric"><div class="num">200+</div><div class="label">Daily active users in 4 months at VortexeAI</div></div>
       </div>
@@ -273,6 +275,59 @@
           </div>
           <div class="featured-media">
             <img src="assets/scm-mission-control.jpg" alt="Mission Control — the SCM teacher dashboard showing live class proficiency goals, Claude-generated small groups, and per-student pacing" loading="lazy" />
+          </div>
+        </article>
+
+        <!-- MADE -->
+        <article class="project-card wide reveal">
+          <div class="project-top">
+            <div class="project-role">Co-Founder &amp; Founding Engineer</div>
+          </div>
+          <h3>MADE</h3>
+          <div class="tagline">Demand-validated manufacturing, built pre-order first</div>
+          <p class="desc">
+            A production model that replaces forecast-based manufacturing with pre-order-triggered
+            batches: demand-to-delivery drops from an industry-standard 3&ndash;5 months to
+            <strong>4&ndash;8 weeks</strong>, with zero unsold inventory by construction. I architected
+            the intermediate-representation translation layer that converts AI-generated garment
+            designs straight into production-ready DXF pattern files and techpacks, killing the manual
+            handoff to manufacturing partners across 12 silhouettes, 10 fabrics, and 8 fabrication
+            techniques. An MCP integration layer exposes the catalog, configurator, and order
+            management to AI assistants under the same manufacturability and authorization guardrails
+            as the web app &mdash; a zero-install storefront and back office for every assistant.
+          </p>
+          <div class="tags">
+            <span class="tag">MCP</span><span class="tag">Next.js</span>
+            <span class="tag">Generative Design</span><span class="tag">DXF / Techpacks</span>
+            <span class="tag">Stripe</span>
+          </div>
+        </article>
+
+        <!-- Closed Circle -->
+        <article class="project-card wide reveal">
+          <div class="project-top">
+            <div class="project-role">Solo Developer</div>
+          </div>
+          <h3>Closed Circle</h3>
+          <div class="tagline">An accountability network where the ranker is an argument</div>
+          <p class="desc">
+            An invite-only accountability network for founders, shipped end to end as sole engineer
+            and designer. The feed ranker is a product argument, not an engagement optimizer: items
+            score on obligation and time-decayed silence, so an unanswered post rises and a settled
+            one sinks, with engagement log-damped and hard-capped beneath every other signal &mdash;
+            then that reasoning surfaces in the UI as per-item chips, so you can read why anything is
+            where it is. Every business invariant lives in Postgres rather than React across 10
+            migrations, 21 functions, 10 triggers, and <strong>30 RLS policies</strong>: an advisory
+            lock holds a hard 500-seat cap under concurrent signups, and a composite primary key makes
+            reaction farming impossible from any client.
+          </p>
+          <div class="tags">
+            <span class="tag">Next.js 15</span><span class="tag">React 19</span>
+            <span class="tag">Tailwind v4</span><span class="tag">Supabase / Postgres</span>
+            <span class="tag">RLS</span>
+          </div>
+          <div class="project-links">
+            <a href="https://closed-circle.app" target="_blank" rel="noopener">Visit the live site</a>
           </div>
         </article>
 
@@ -514,61 +569,100 @@
   <section class="section" id="resume">
     <div class="container">
       <div class="section-head reveal">
-        <div class="section-eyebrow">Experience</div>
+        <div class="section-eyebrow">Background</div>
         <h2>Resume</h2>
         <p>Full-stack engineer and multi-time founder. Known for shipping fast and defending every architectural decision from first principles.</p>
       </div>
 
       <div class="resume-layout">
         <div class="xp-timeline">
+
+          <div class="xp-group reveal"><span>Experience</span></div>
+
+          <div class="xp-item current reveal">
+            <div class="xp-head"><h3>MADE</h3><span class="xp-date">Jun 2026 — Present</span></div>
+            <div class="xp-role">Co-Founder &amp; Founding Engineer <span class="loc">San Jose, CA</span></div>
+            <ul>
+              <li>Designed a <strong>demand-validated production model</strong> that replaces forecast-based manufacturing with pre-order-triggered batches: demand-to-delivery cut from an industry-standard 3–5 months to <strong>4–8 weeks</strong>, with zero unsold inventory by construction.</li>
+              <li>Architected an intermediate-representation translation layer converting AI-generated garment designs directly into production-ready <strong>DXF pattern files and techpacks</strong>, eliminating manual handoff to manufacturing partners across 12 silhouettes, 10 fabrics, and 8 fabrication techniques.</li>
+              <li>Architected an MCP integration layer exposing the platform's catalog, configurator, and order management to AI assistants under the same manufacturability and authorization guardrails as the web app — a zero-install storefront and back office for every assistant.</li>
+              <li>Made the founding technical call to de-risk production accuracy before demand infrastructure: scoped the pilot around a manual Stripe checkout instead of the automated threshold trigger, shortening time-to-first-verified-garment while preserving a clean upgrade path.</li>
+            </ul>
+          </div>
+
           <div class="xp-item reveal">
             <div class="xp-head"><h3>Teaching Lab Studio</h3><span class="xp-date">Mar 2026 — May 2026</span></div>
-            <div class="xp-role">Software Engineer III · Tech Lead, SCM</div>
+            <div class="xp-role">Software Engineer III · Tech Lead, SCM <span class="loc">Remote</span></div>
+            <p class="xp-note">Departed when the company made the strategic decision to offshore its engineering team, shortly after the SCM pilot went live.</p>
             <ul>
-              <li>Sole architect and tech lead of SCM, taking it from <strong>0→1 to a live production pilot</strong> with a large customer while owning engineering, product strategy, and forward-deployed customer work in parallel.</li>
-              <li>Re-architected the sensitive-data boundary for FERPA-regulated data from in-flight scrubbing to <strong>structural isolation</strong>: student PII never enters the AI region at all.</li>
-              <li>Built the capability registry, skill launcher, and per-invocation authorization model end-to-end (NestJS, Prisma, Postgres, Next.js, React) with time-bound grants and 7 FERPA-mapped audit events.</li>
-              <li>Built SCM into an identity provider for connected AI agents on a Python/FastAPI + LangGraph runtime: single-use grants, per-failure-class retry policies, ≤2 LLM calls per workflow.</li>
-              <li>Engineered the Temporal runtime with human-in-the-loop approval gates and deterministic, replayable workflows with re-validation closures.</li>
+              <li>Sole architect and tech lead of SCM: took it <strong>0→1 to a live production pilot</strong> with a large customer while owning engineering, product strategy, and forward-deployed customer work.</li>
+              <li>Designed and built <strong>A2UI</strong>, a declarative agent-to-UI protocol letting connected agents render live React components from a bounded LangGraph activity library and the user's capability manifest — every emission resolves through the per-invocation grant model, so agents cannot widen the FERPA surface.</li>
+              <li>Re-architected the FERPA boundary from in-flight scrubbing to <strong>structural isolation</strong>: the model sees only opaque per-run references and numeric metrics, while student PII rehydrates in the authorized user's browser behind a per-request check. Names never reach the AI region.</li>
+              <li>Built the capability registry, skill launcher, and per-invocation authorization model end-to-end (NestJS, Prisma, Postgres, Next.js, React): time-bound grants scope to a staff/capability/classroom/material tuple, resolve server-side, and back 7 FERPA-mapped audit events.</li>
+              <li>Built SCM into an identity provider for connected AI agents on Python/FastAPI + LangGraph: single-use grants read scope from the database row, never the agent's request, and a per-failure-class retry policy caps each workflow at ≤2 LLM calls.</li>
+              <li>Engineered the Temporal runtime with human-in-the-loop approval gates: deterministic, replayable workflows carry a re-validation closure, so an authorization that expires mid-review can never write to the database once approval lands hours later.</li>
             </ul>
           </div>
 
           <div class="xp-item reveal">
             <div class="xp-head"><h3>Union Pacific Railroad</h3><span class="xp-date">Mar 2023 — Feb 2026</span></div>
-            <div class="xp-role">Software Development Engineer II · Mechanical Systems</div>
+            <div class="xp-role">Software Development Engineer II · Mechanical Systems <span class="loc">Omaha, NE</span></div>
             <ul>
-              <li>Led the freezer-car modernization that reversed an <strong>89% revenue-loss trajectory</strong> and locked in <strong>$8M+/year</strong> with a 45% efficiency gain, via a deterministic correlation engine over Kafka.</li>
-              <li>Built a management-scoped MCP-based AI assistant that collapsed a day-to-week analyst SQL lookup across segregated AEI, Wayside, and CAD databases into a real-time answer.</li>
-              <li>Owned compliance-critical CADX bulletins in a <strong>2M-line legacy C++ codebase</strong>, then took the CADX web applications end to end with a backend-for-frontend auth architecture.</li>
-              <li>Decomposed a legacy C++ monolith into modular services, a 70% improvement in real-time data responsiveness across three enterprise applications.</li>
-              <li>Stood up structured telemetry at >90% coverage; production downtime cut 50%, deployment cycles 40% faster.</li>
+              <li>Led the freezer-car modernization that reversed an <strong>89% revenue-loss trajectory</strong> into <strong>$8M+/year</strong> at a 45% efficiency gain: a deterministic Kafka correlation engine joining wayside, AEI, and CAD signals on trainID, closing sensor-coverage gaps and applying an ML-derived health threshold to flag derailment-risk bearings for crew intervention.</li>
+              <li>Designed the operator-facing consoles for Automatic Equipment Identification and Wayside Detection, replacing raw log-scraping with consistency-aware React UIs and live status surfacing — yard staff read equipment health at a glance, and data accuracy rose <strong>85%</strong>.</li>
+              <li>Owned the CADX web applications end to end, the interface train crews read compliance-critical directives through, from track-blockage bulletins to severe-weather authorities, where a misread screen is a safety event; also owned those features in the <strong>2M-line legacy C++</strong> backend.</li>
+              <li>Fixed CADX's auth architecture after it exposed SSO session cookies to the browser: routed the frontend through a server-side proxy holding the session, moved to httpOnly cookies, and added CSRF double-submit protection so tokens never reach client JavaScript.</li>
+              <li>Shipped field inspection and reporting tooling as an offline-first, touch-first hybrid app on ruggedized Zebra handhelds, built for gloved hands, glare, and no signal; edge caching and async sync cut inspection and reporting time <strong>60%</strong>.</li>
+              <li>Built a management-scoped MCP-based AI assistant over the reconciled dataset, collapsing a day-to-week analyst SQL lookup across three segregated databases into a real-time answer — field staff now locate a humped freezer car fast enough to save cargo that previously spoiled unlocated.</li>
+              <li>Decomposed a legacy C++ monolith into modular services, a 70% gain in real-time responsiveness across three applications, and stood up structured telemetry at &gt;90% coverage, cutting downtime 50% and deploys 40% faster.</li>
+            </ul>
+          </div>
+
+          <div class="xp-group reveal"><span>Startups</span><span class="xp-group-date">2022 — 2024</span></div>
+          <p class="xp-note xp-note-group reveal">Passion projects that started as personal exploration and grew into real ventures with genuine traction.</p>
+
+          <div class="xp-item reveal">
+            <div class="xp-head"><h3>AetherisVis</h3><span class="xp-date">Nov 2024</span></div>
+            <div class="xp-role">Co-founder &amp; CTO <span class="loc">San Diego, CA</span></div>
+            <p class="xp-note">Founded AetherisVis and sold it to a commercial gym brand within the same month, delivering the flagship product as sole full-stack engineer.</p>
+            <ul>
+              <li>Shipped a consumer-facing <strong>3D product configurator</strong> for a luxury gym brand as sole full-stack engineer (live at <a href="https://www.spxgymdesign.com/configurator" target="_blank" rel="noopener">spxgymdesign.com</a>): buyers customize steel finishes, upholstery, and stitch patterns with instant 4K/8K feedback and smooth multi-angle zoom/pan, translated from a designer's pixel-perfect comps into production React/Next.js.</li>
+              <li>Delivered it as a <strong>one-week commercial build</strong> embedded in SPX's sales motion, not a demo: client teams present it with no engineer in the room, configurations save and reload, and it degrades gracefully on a hotel-lobby iPad.</li>
+              <li>Built a data-first component framework (35+ reusable React/TypeScript components) covering every configurator's shared anatomy — scene management, camera controls, material selectors — turning the SPX build into an assembly problem, not an invention one, and cutting UI prototyping time 60%.</li>
+              <li>Engineered a frame-budget scheduler for the renderer: material swaps preview instantly at proxy resolution while full 4K/8K textures stream in only on idle frames within a fraction of the ~16ms budget, holding <strong>60fps</strong> under concurrent camera drags and material changes.</li>
+              <li>Compressed 8K TwinMotion renders to WebP for 70% faster loads with stitching detail intact at 150% zoom, then added lazy loading, hardware-accelerated pan/zoom, and ARIA/focus management for a touch-friendly, accessible experience.</li>
             </ul>
           </div>
 
           <div class="xp-item reveal">
             <div class="xp-head"><h3>VortexeAI</h3><span class="xp-date">Jun 2024 — Oct 2024</span></div>
-            <div class="xp-role">Co-founder & CEO</div>
+            <div class="xp-role">Co-founder &amp; CEO <span class="loc">San Jose, CA</span></div>
+            <p class="xp-note">Reached 200+ daily active users and secured a TechStars invitation within four months of launch — ultimately opted not to join, staying focused on full-time engineering work.</p>
             <ul>
-              <li>Took VortexeAI 0→1 in four months to <strong>200+ daily active users</strong> and a TechStars invitation, building a low-code, AI-driven workflow editor for product and engineering teams.</li>
-              <li>Engineered a deterministic multi-agent orchestration engine (graph traversal + dependency resolution) at 99.9% execution reliability.</li>
-            </ul>
-          </div>
-
-          <div class="xp-item reveal">
-            <div class="xp-head"><h3>AetherisVis</h3><span class="xp-date">Nov 2024</span></div>
-            <div class="xp-role">Co-founder & CTO</div>
-            <ul>
-              <li>Shipped a browser-based 3D equipment configurator for a luxury gym brand in <strong>one week</strong>, with real-time 4K/8K customization delivered as a commercial client product.</li>
-              <li>Built a modular React + TypeScript visualization framework (35+ reusable components) that cut UI prototyping time 60%.</li>
+              <li>Took VortexeAI <strong>0→1 in four months</strong>, building the product surface: a low-code React/Next.js node-graph editor where non-engineers compose AI workflows by dragging, connecting, and configuring nodes, with live validation and inspector panels that keep a complex execution model legible.</li>
+              <li>Architected the orchestration engine as a <strong>directed graph</strong> rather than letting an LLM plan its own execution: topological sort and dependency resolution schedule independent branches concurrently and isolate exactly which steps invalidate on failure, making reruns reproducible at 99.9% execution reliability atop non-deterministic model calls.</li>
+              <li>Built a dependency-aware memory router so multi-step LLM chains receive only the state each node declared it needed, avoiding the cost and latency of stuffing full history into every call while keeping failures traceable to a single graph edge.</li>
+              <li>Drove product-market fit through 100+ customer interviews and five pivots over seven months with a three-person team, converging on a low-code abstraction that cut onboarding time 40% and scaled to 50+ deployed automation patterns.</li>
             </ul>
           </div>
 
           <div class="xp-item reveal">
             <div class="xp-head"><h3>Overwhelming Studios</h3><span class="xp-date">Nov 2022 — Mar 2023</span></div>
-            <div class="xp-role">Founder & CTO</div>
+            <div class="xp-role">Founder &amp; CTO <span class="loc">Campbell, CA</span></div>
             <ul>
-              <li>Earned direct recognition from the Head of UI/UX at PlayStation for independently developed games, reaching <strong>promotion-support stage with PlayStation Studios</strong>.</li>
-              <li>Shipped two Unreal Engine 5 mobile titles, <strong>Packet Patrol</strong> and <strong>Vegan Zombie: Crop Apocalypse</strong>, with cloud auth and cross-device sync for 1,500+ players, 30% faster load times, and 25% better retention. <a href="games.html" style="color:#52a8ff">Explore the studio →</a></li>
+              <li>Shipped two Unreal Engine 5 mobile titles with cloud auth and cross-device sync for <strong>1,500+ players</strong> (30% faster loads, 25% better retention), earning direct recognition from the Head of UI/UX at PlayStation and reaching <strong>PlayStation Studios' promotion-support stage</strong> before visa constraints halted progression. <a href="games.html" style="color:#52a8ff">Explore the studio →</a></li>
+            </ul>
+          </div>
+
+          <div class="xp-group reveal"><span>Projects</span></div>
+
+          <div class="xp-item reveal">
+            <div class="xp-head"><h3>Closed Circle</h3><span class="xp-date"><a href="https://closed-circle.app" target="_blank" rel="noopener">closed-circle.app</a></span></div>
+            <div class="xp-role">Solo Developer <span class="loc">Next.js 15 · React 19 · Tailwind v4 · Supabase</span></div>
+            <ul>
+              <li>Designed and shipped an <strong>invite-only accountability network for founders</strong> end to end as sole engineer and designer, from product definition through live production deployment: the entire design language is one authoritative stylesheet, 77 tokens and 280 component classes across 7 routes, dark-only, with hand-vendored Radix primitives.</li>
+              <li>Wrote the feed ranker as a <strong>product argument, not an engagement optimizer</strong>: items score on obligation and time-decayed silence, so an unanswered post rises and a settled one sinks, with engagement log-damped and hard-capped beneath every other signal — then surfaced that reasoning in the UI as per-item chips, so users can read why anything is where it is.</li>
+              <li>Pushed every business invariant into Postgres instead of React across 10 migrations, 21 functions, 10 triggers, and <strong>30 RLS policies</strong>: an advisory lock holding a hard 500-seat cap under concurrent signups, partial unique indexes enforcing one invite per member, and a composite primary key that makes reaction farming impossible from any client.</li>
             </ul>
           </div>
         </div>
@@ -577,32 +671,33 @@
           <div class="side-block reveal">
             <h4>Education</h4>
             <div class="edu-name">University of California, Santa Cruz</div>
-            <div class="edu-detail">B.S. Computer Science: Computer Game Design · 2022</div>
+            <div class="edu-detail">B.S. Computer Science: Computer Game Design · Aug 2022</div>
           </div>
 
           <div class="side-block reveal">
             <h4>Skills</h4>
             <div class="skill-group">
-              <div class="sg-label">Languages</div>
-              <div class="tags"><span class="tag">TypeScript</span><span class="tag">Python</span><span class="tag">Java</span><span class="tag">C++</span><span class="tag">C</span><span class="tag">C#</span></div>
+              <div class="sg-label">Frontend / UI</div>
+              <div class="tags"><span class="tag">React</span><span class="tag">Next.js</span><span class="tag">TypeScript</span><span class="tag">Tailwind</span><span class="tag">Radix / shadcn</span><span class="tag">NextUI</span><span class="tag">Design systems</span><span class="tag">Component architecture</span><span class="tag">Accessibility (ARIA/WCAG)</span><span class="tag">Touch-first UI</span><span class="tag">3D configurators</span><span class="tag">Agent-emitted UI (A2UI)</span></div>
             </div>
             <div class="skill-group">
-              <div class="sg-label">Frameworks</div>
-              <div class="tags"><span class="tag">React</span><span class="tag">Next.js</span><span class="tag">Node.js</span><span class="tag">NestJS</span><span class="tag">FastAPI</span><span class="tag">Spring Boot</span><span class="tag">Tailwind</span></div>
+              <div class="sg-label">Backend &amp; Languages</div>
+              <div class="tags"><span class="tag">Node.js</span><span class="tag">NestJS</span><span class="tag">FastAPI</span><span class="tag">Spring Boot</span><span class="tag">Python</span><span class="tag">Java</span><span class="tag">C++</span><span class="tag">C</span><span class="tag">C#</span></div>
             </div>
             <div class="skill-group">
               <div class="sg-label">AI / Agentic</div>
-              <div class="tags"><span class="tag">LangGraph</span><span class="tag">Anthropic API</span><span class="tag">MCP</span><span class="tag">Temporal workflows</span><span class="tag">Multi-agent orchestration</span><span class="tag">Eval pipelines</span></div>
+              <div class="tags"><span class="tag">LangGraph</span><span class="tag">Anthropic API (Claude)</span><span class="tag">MCP</span><span class="tag">Temporal workflows</span><span class="tag">Multi-agent orchestration</span><span class="tag">Eval pipelines</span></div>
             </div>
             <div class="skill-group">
               <div class="sg-label">Infrastructure</div>
-              <div class="tags"><span class="tag">PostgreSQL</span><span class="tag">Prisma</span><span class="tag">Docker</span><span class="tag">Kubernetes</span><span class="tag">AWS</span><span class="tag">Elasticsearch</span><span class="tag">Redis</span><span class="tag">Supabase</span></div>
+              <div class="tags"><span class="tag">PostgreSQL</span><span class="tag">Prisma</span><span class="tag">Temporal</span><span class="tag">Docker</span><span class="tag">Kubernetes</span><span class="tag">AWS</span><span class="tag">Elasticsearch</span><span class="tag">Redis</span><span class="tag">Supabase</span></div>
             </div>
           </div>
 
           <div class="side-block reveal">
             <h4>Contact</h4>
             <div class="edu-detail">San Jose, CA</div>
+            <div class="edu-detail"><a href="tel:+18314193248" style="color:#52a8ff">(831) 419-3248</a></div>
             <div class="edu-detail"><a href="mailto:dkhare1998@gmail.com" style="color:#52a8ff">dkhare1998@gmail.com</a></div>
             <div class="resume-dl" style="margin-top:20px">
               <a class="btn btn-secondary" href="DivyanshKhareResume.pdf" download>Download resume ↓</a>
@@ -613,13 +708,14 @@
     </div>
   </section>
 
-  <!-- ================= SERVICES ================= -->
+  
+<!-- ================= SERVICES ================= -->
   <section class="section" id="services">
     <div class="container">
       <div class="section-head reveal">
         <div class="section-eyebrow">Consulting</div>
         <h2>Services</h2>
-        <p>I help teams ship AI systems that hold up in production, and untangle the ones that don't. Engagements are scoped, outcome-driven, and defended from first principles.</p>
+        <p>I help teams ship AI systems that hold up in production, and untangle the ones that don't. I take a small number of engagements alongside full-time work at MADE, so they are scoped tightly, outcome-driven, and defended from first principles.</p>
       </div>
 
       <div class="services-grid">

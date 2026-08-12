@@ -538,7 +538,37 @@ a { color: inherit; text-decoration: none; }
 }
 .xp-head h3 { font-size: 17px; font-weight: 600; color: var(--fg-strong); letter-spacing: -0.01em; }
 .xp-date { font-family: var(--font-mono); font-size: 12px; color: var(--fg-faint); white-space: nowrap; }
-.xp-role { font-size: 14px; color: var(--blue); margin: 2px 0 10px; }
+.xp-role {
+  font-size: 14px; color: var(--blue); margin: 2px 0 10px;
+  display: flex; align-items: baseline; justify-content: space-between;
+  gap: 8px 20px; flex-wrap: wrap;
+}
+.xp-role .loc {
+  font-family: var(--font-mono); font-size: 11.5px;
+  color: var(--fg-faint); letter-spacing: 0.02em;
+}
+
+/* Resume group dividers: Experience / Startups / Projects */
+.xp-group {
+  display: flex; align-items: baseline; justify-content: space-between; gap: 16px;
+  font-family: var(--font-mono); font-size: 11.5px;
+  text-transform: uppercase; letter-spacing: 0.18em;
+  color: var(--fg-faint);
+  padding-bottom: 12px; margin-bottom: 26px;
+  border-bottom: 1px solid var(--border);
+}
+.xp-timeline .xp-group:not(:first-child) { margin-top: 18px; }
+.xp-group-date { letter-spacing: 0.1em; }
+
+.xp-note {
+  font-size: 13.5px; line-height: 1.65; color: var(--fg-faint);
+  margin: 0 0 12px; padding-left: 12px;
+  border-left: 2px solid var(--border-strong);
+}
+.xp-note-group { margin-bottom: 28px; }
+.xp-date a { color: inherit; text-decoration: none; border-bottom: 1px solid var(--border-strong); }
+.xp-date a:hover { color: var(--blue); border-bottom-color: var(--blue); }
+.xp-item ul a { color: var(--blue); }
 .xp-item ul { list-style: none; }
 .xp-item li {
   font-size: 14px;

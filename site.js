@@ -22,6 +22,8 @@
     { k: 'post', label: 'Deleting a Race Condition by Construction', hint: 'UoP Library', go: BASE + 'blog/uop-library-case-study.html' },
     { k: 'post', label: 'Determinism Is a Feature', hint: 'VortexeAI', go: BASE + 'blog/vortexeai-deterministic-orchestration.html' },
     { k: 'post', label: 'Shipping a 3D Configurator in a Week', hint: 'AetherisVis', go: BASE + 'blog/aetherisvis-3d-configurator.html' },
+    { k: 'link', label: 'Closed Circle — live site', hint: 'external', go: 'https://closed-circle.app', ext: true },
+    { k: 'act', label: 'Call the voice claims agent', hint: '+1 943-210-8440', go: 'tel:+19432108440' },
     { k: 'link', label: 'Tracewell — live deploy', hint: 'external', go: 'https://blok-agent-insight.vercel.app/', ext: true },
     { k: 'link', label: 'VortexeAI — live site', hint: 'external', go: 'https://vortexeai.com/', ext: true },
     { k: 'link', label: 'SPX configurator — live (AetherisVis)', hint: 'external', go: 'https://www.spxgymdesign.com/configurator', ext: true },
