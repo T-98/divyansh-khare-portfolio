@@ -82,8 +82,88 @@
       <div class="section-head reveal">
         <div class="section-eyebrow">Interactive</div>
         <h2>Run the architecture</h2>
-        <p>Most portfolios describe systems. This one runs one: SCM's grant lifecycle, reimplemented in your browser. Mint a single-use permission slip and watch the whole pipeline execute.</p>
+        <p>Most portfolios describe systems. This one runs two: call the voice agent on a real phone number, then mint a permission slip and watch SCM's grant pipeline execute in your browser.</p>
       </div>
+
+      <!-- ---------- Live call ---------- -->
+      <div class="demo-sub reveal">
+        <div class="demo-sub-num">01</div>
+        <div>
+          <h3>Call the voice agent</h3>
+          <p>A real number, a real claims agent. Pick up a phone and interrupt it.</p>
+        </div>
+      </div>
+
+      <div class="call-grid">
+        <div class="call-card reveal">
+          <div class="call-label">Live line</div>
+          <a class="call-number" href="tel:+19432108440">+1 943-210-8440</a>
+          <p class="call-hint">A real Vapi number wired to the live agent. Calls run a few cents a minute of my money, so keep it short and be kind to the poor thing.</p>
+
+          <div class="call-id">
+            <div class="call-label">Use this identity to pass authentication</div>
+            <div class="call-id-row"><span class="k">Phone number</span><span class="v">415-555-1001</span></div>
+            <div class="call-id-row"><span class="k">Date of birth</span><span class="v">March 12, 1985</span></div>
+            <p class="call-id-note">
+              A seeded test account. There is no real customer behind it, and the agent has no write
+              path to anything, so nothing you say can change a record.
+            </p>
+          </div>
+        </div>
+
+        <div class="call-steps reveal">
+          <div class="call-label">Four things worth trying</div>
+          <ol class="steps">
+            <li>
+              <h4>Give the identity, or refuse to</h4>
+              <p>
+                Read out the phone number above and it will read it back to you before it trusts it.
+                Then try the opposite: stall, refuse, give a wrong date of birth. A cap on failures
+                cannot bound a caller who never gives you anything to fail on, so there is a separate
+                stall counter watching for exactly that.
+              </p>
+            </li>
+            <li>
+              <h4>Ask about your claims</h4>
+              <p>
+                How many do I have? What is the status of the water damage one? How much was I paid?
+                The account has claims seeded against it. The id used to fetch them is injected from
+                verified state, never from anything you or the model says.
+              </p>
+            </li>
+            <li>
+              <h4>Ask a general policy question</h4>
+              <p>
+                Opening hours, the mailing address, how the claims process works, what the deductible
+                is. Answers are retrieved from a knowledge base, and when the corpus does not cover
+                something the agent is supposed to say so rather than invent it. Try to catch it out.
+              </p>
+            </li>
+            <li>
+              <h4>Pretend it is an emergency</h4>
+              <p>
+                Say there has been an accident, or just ask for a human. Both short-circuit the graph
+                before authentication even runs, because a caller in trouble should not have to pass
+                a date-of-birth check first.
+              </p>
+            </li>
+          </ol>
+          <p class="call-foot">
+            Full architecture, and the bugs a live phone line taught me, in the
+            <a href="blog/observe-voice-claims-agent.html">deep-dive write-up</a>.
+          </p>
+        </div>
+      </div>
+
+      <!-- ---------- SCM grant demo ---------- -->
+      <div class="demo-sub reveal">
+        <div class="demo-sub-num">02</div>
+        <div>
+          <h3>Run SCM's grant lifecycle</h3>
+          <p>The same pipeline as the production system, reimplemented client-side in your browser.</p>
+        </div>
+      </div>
+
       <div class="demo-grid">
         <div class="demo-copy reveal">
           <p>
@@ -132,6 +212,41 @@
       </div>
 
       <div class="projects-grid">
+        <!-- Voice Claims Agent — featured -->
+        <article class="project-card featured reveal">
+          <div class="featured-content">
+          <div class="project-top">
+            <div class="project-role">Solo Developer</div>
+          </div>
+          <h3><a class="project-title-link" href="blog/observe-voice-claims-agent.html">Voice Claims Agent</a></h3>
+          <div class="tagline">A phone line for insurance claims where the model never holds authority</div>
+          <p class="desc">
+            Vapi handles telephony and speech; a FastAPI custom-LLM endpoint drives a LangGraph state
+            machine, an authentication loop and then a router triaging every turn to a claims, FAQ,
+            or escalation specialist. Each is the same two-node loop: an <strong>agent node</strong>
+            is the only place a model runs, a <strong>tool node</strong> the only place facts get
+            written. No tool accepts a
+            <span style="font-family:var(--font-mono);font-size:13px">customer_id</span> the model
+            can fill in; it's stripped from the schema the model sees, and a test fabricates a call
+            naming another account to prove state wins. Debouncing Vapi's cumulative transcript
+            re-sends killed duplicate graph runs and brought turns to <strong>1.4–2.8s</strong>.
+            92 offline tests.
+          </p>
+          <div class="tags">
+            <span class="tag">LangGraph</span><span class="tag">FastAPI</span>
+            <span class="tag">Voice AI (Vapi)</span><span class="tag">Supabase</span>
+            <span class="tag">Retrieval / RAG</span>
+          </div>
+          <div class="project-links">
+            <a href="#system">Call the live agent</a>
+            <a href="blog/observe-voice-claims-agent.html">Read the write-up</a>
+          </div>
+          </div>
+          <div class="featured-media deck">
+            <img src="assets/voice-claims-deck.png" alt="Voice claims agent deck — five demo scenarios with their outcome states, and a 33 of 33 checks passing panel over 92 offline tests" loading="lazy" />
+          </div>
+        </article>
+
         <!-- SCM — featured -->
         <article class="project-card featured reveal">
           <div class="featured-content">
@@ -158,36 +273,6 @@
           </div>
           <div class="featured-media">
             <img src="assets/scm-mission-control.jpg" alt="Mission Control — the SCM teacher dashboard showing live class proficiency goals, Claude-generated small groups, and per-student pacing" loading="lazy" />
-          </div>
-        </article>
-
-        <!-- Voice Claims Agent -->
-        <article class="project-card wide reveal">
-          <div class="card-media"><img src="assets/cover-voice-claims.svg" alt="Voice claims agent pipeline — Vapi telephony into a FastAPI endpoint, a LangGraph auth loop and router fanning out to claim, FAQ, and escalation specialists over Supabase and an embedded FAQ corpus" loading="lazy" /></div>
-          <div class="project-top">
-            <div class="project-role">Solo Developer</div>
-          </div>
-          <h3><a class="project-title-link" href="blog/observe-voice-claims-agent.html">Voice Claims Agent</a></h3>
-          <div class="tagline">A phone line for insurance claims where the model never holds authority</div>
-          <p class="desc">
-            Vapi handles telephony and speech; a FastAPI custom-LLM endpoint drives a LangGraph state
-            machine, an authentication loop and then a router triaging every turn to a claims, FAQ,
-            or escalation specialist. Each is the same two-node loop: an <strong>agent node</strong>
-            is the only place a model runs, a <strong>tool node</strong> the only place facts get
-            written. No tool accepts a
-            <span style="font-family:var(--font-mono);font-size:13px">customer_id</span> the model
-            can fill in; it's stripped from the schema the model sees, and a test fabricates a call
-            naming another account to prove state wins. Debouncing Vapi's cumulative transcript
-            re-sends killed duplicate graph runs and brought turns to <strong>1.4–2.8s</strong>.
-            92 offline tests.
-          </p>
-          <div class="tags">
-            <span class="tag">LangGraph</span><span class="tag">FastAPI</span>
-            <span class="tag">Voice AI (Vapi)</span><span class="tag">Supabase</span>
-            <span class="tag">Retrieval / RAG</span>
-          </div>
-          <div class="project-links">
-            <a href="blog/observe-voice-claims-agent.html">Read the write-up</a>
           </div>
         </article>
 
