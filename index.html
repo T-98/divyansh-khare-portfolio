@@ -161,6 +161,36 @@
           </div>
         </article>
 
+        <!-- Voice Claims Agent -->
+        <article class="project-card wide reveal">
+          <div class="card-media"><img src="assets/cover-voice-claims.svg" alt="Voice claims agent pipeline — Vapi telephony into a FastAPI endpoint, a LangGraph auth loop and router fanning out to claim, FAQ, and escalation specialists over Supabase and an embedded FAQ corpus" loading="lazy" /></div>
+          <div class="project-top">
+            <div class="project-role">Solo Developer</div>
+          </div>
+          <h3><a class="project-title-link" href="blog/observe-voice-claims-agent.html">Voice Claims Agent</a></h3>
+          <div class="tagline">A phone line for insurance claims where the model never holds authority</div>
+          <p class="desc">
+            Vapi handles telephony and speech; a FastAPI custom-LLM endpoint drives a LangGraph state
+            machine, an authentication loop and then a router triaging every turn to a claims, FAQ,
+            or escalation specialist. Each is the same two-node loop: an <strong>agent node</strong>
+            is the only place a model runs, a <strong>tool node</strong> the only place facts get
+            written. No tool accepts a
+            <span style="font-family:var(--font-mono);font-size:13px">customer_id</span> the model
+            can fill in; it's stripped from the schema the model sees, and a test fabricates a call
+            naming another account to prove state wins. Debouncing Vapi's cumulative transcript
+            re-sends killed duplicate graph runs and brought turns to <strong>1.4–2.8s</strong>.
+            92 offline tests.
+          </p>
+          <div class="tags">
+            <span class="tag">LangGraph</span><span class="tag">FastAPI</span>
+            <span class="tag">Voice AI (Vapi)</span><span class="tag">Supabase</span>
+            <span class="tag">Retrieval / RAG</span>
+          </div>
+          <div class="project-links">
+            <a href="blog/observe-voice-claims-agent.html">Read the write-up</a>
+          </div>
+        </article>
+
         <!-- VortexeAI -->
         <article class="project-card wide reveal">
           <div class="card-media"><img src="assets/vortexeai-screens.jpg" alt="VortexeAI product screens — the workflow dashboard, editor, and profile surfaces floating on the brand's purple field" loading="lazy" /></div>

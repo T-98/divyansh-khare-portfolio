@@ -17,6 +17,7 @@
     { k: 'nav', label: 'Blog', hint: 'All posts', go: BASE + 'blog.html' },
     { k: 'nav', label: 'Overwhelming Studios (games)', hint: 'UE5 titles', go: BASE + 'games.html' },
     { k: 'post', label: 'Your Agent Shouldn’t Have a Password', hint: 'SCM deep-dive', go: BASE + 'blog/scm-agent-governance.html' },
+    { k: 'post', label: 'The Model Can Ask for Claims. It Cannot Say Whose.', hint: 'Voice Claims Agent', go: BASE + 'blog/observe-voice-claims-agent.html' },
     { k: 'post', label: 'Deterministic Facts, Probabilistic Prose', hint: 'Tracewell', go: BASE + 'blog/tracewell-trust-boundaries.html' },
     { k: 'post', label: 'Deleting a Race Condition by Construction', hint: 'UoP Library', go: BASE + 'blog/uop-library-case-study.html' },
     { k: 'post', label: 'Determinism Is a Feature', hint: 'VortexeAI', go: BASE + 'blog/vortexeai-deterministic-orchestration.html' },
