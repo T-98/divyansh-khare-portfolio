@@ -28,6 +28,27 @@
     /* Long identifiers (test_fetch_claims_ignores_a_model_supplied_customer_id)
        are wider than a phone. Let them break rather than push the page. */
     .article-body code { overflow-wrap: anywhere; }
+    /* Embedded source must never break the page: scroll it, don't wrap it.
+       Real code is wider than a prose column, so let it break out of the
+       measure — most lines then fit without scrolling at all. */
+    .article-body pre { overflow-x: auto; }
+    .article-body pre code { overflow-wrap: normal; white-space: pre; font-size: 13px; }
+    /* Negative margins rather than a transform, so the label and the block it
+       labels share an left edge at every width. */
+    .article-body pre, .article-body .code-label { margin-left: -120px; margin-right: -120px; }
+    @media (max-width: 1100px) {
+      .article-body pre, .article-body .code-label { margin-left: 0; margin-right: 0; }
+    }
+
+    /* Step markers — the post is a build in order, so number the steps. */
+    .pull-step {
+      font-family: var(--font-mono); font-size: 11.5px;
+      letter-spacing: 0.2em; text-transform: uppercase;
+      color: var(--blue);
+      margin: 64px 0 -8px !important;
+      padding-bottom: 10px; border-bottom: 1px solid var(--border);
+    }
+    .pull-step + h2 { margin-top: 20px; }
 
     .deckfig {
       width: min(1080px, calc(100vw - 48px));
@@ -274,15 +295,14 @@
       <div class="meta">
         <span class="pill">Voice AI Systems</span>
         <span>Voice Claims Agent · Solo Build</span>
-        <span>16 min read</span>
+        <span>24 min read</span>
         <span>Aug 2026</span>
       </div>
       <h1>The Model Can Ask for Claims. It Cannot Say Whose.</h1>
       <p class="lede">
-        A phone number that answers, verifies who is calling, reads back a claim status, answers
-        policy questions from a knowledge base, and hands off to a human when it should. The
-        interesting part is not that a model can hold that conversation. It is that nothing the
-        model says is ever allowed to become authorization.
+        Building a phone line that verifies a caller, reads back a claim status, answers policy
+        questions, and hands off to a human — one file at a time, in the order the problems
+        actually appeared. Every code block below is the real source, verbatim.
       </p>
     </header>
 
@@ -295,410 +315,218 @@
         not on the line.
       </p>
       <p>
-        So the architecture has one governing rule, and every other decision in the build is a
-        corollary of it:
+        Everything that follows is a corollary of one rule, so it is worth stating before any code:
       </p>
       <blockquote>
         <p>An agent node is the only place a model runs. A tool node is the only place facts get
         written. The model proposes; the code disposes.</p>
       </blockquote>
       <p>
-        Vapi owns the phone, the speech-to-text and the text-to-speech, and talks to my server as
-        though it were OpenAI: one <code>POST /chat/completions</code> per transcript update. FastAPI
-        turns that into one caller turn and runs a LangGraph state machine. The graph is an
-        authentication loop, then a router that triages each turn to a claims agent, an FAQ agent, a
-        sign-off or an escalation. Claims data is read from Supabase, policy answers are retrieved
-        from an embedded corpus, and when the call ends a webhook fires one <code>gpt-5</code> pass
-        over the saved state and upserts a single Airtable row.
-      </p>
-      <p>
-        You can <a href="../index.html#system">call the agent yourself</a> — the number and a test
+        This post is the build in order. Fourteen steps, each one a file or a function, each one
+        prompted by something that broke on a real call. You can
+        <a href="../index.html#system">call the finished thing yourself</a> — the number and a test
         identity are on the front page.
       </p>
 
-      <h2>Five scenarios. Thirty-three checks. Zero failures.</h2>
-
-      <div class="deckfig">
-        <div class="deckfig-head">
-          <span><span class="n">01</span> &nbsp;Demo the working agent</span>
-          <span>Voice AI Claims Agent</span>
-        </div>
-
-        <div class="scen-grid">
-          <div>
-            <div class="scen-row">
-              <div class="name">Happy path</div>
-              <div class="out">resolved</div>
-            </div>
-            <div class="scen-row">
-              <div class="name">Authentication failure</div>
-              <div class="out">auth_failed <span class="sep">·</span> attempts_exhausted</div>
-            </div>
-            <div class="scen-row">
-              <div class="name">Customer not found</div>
-              <div class="out">auth_failed <span class="sep">·</span> no_account</div>
-            </div>
-            <div class="scen-row">
-              <div class="name">Representative escalation</div>
-              <div class="out">escalated</div>
-            </div>
-            <div class="scen-row">
-              <div class="name">Knowledge base <span class="extra">extra</span></div>
-              <div class="out">answered, then refused</div>
-            </div>
-            <div class="scen-note">
-              Assertions are on state, not on wording.
-              <span>A reworded prompt should not break a test.</span>
-            </div>
-          </div>
-
-          <div>
-            <div class="score">
-              <div class="big">33 <span class="slash">/</span> 33</div>
-              <div class="line"><b>5 scenarios</b>, end to end</div>
-              <div class="line strong">92 offline tests</div>
-              <div class="line">Nothing mocked</div>
-            </div>
-            <div class="after-score">
-              real OpenAI<br />
-              real Supabase<br />
-              real Airtable<br />
-              the phone removed
-            </div>
-          </div>
-        </div>
-
-        <div class="deckfig-foot">
-          <span>Demo</span>
-          <span>01 / 04</span>
-        </div>
-      </div>
-
+      <!-- ============ STEP 01 ============ -->
+      <p class="pull-step">Step 01</p>
+      <h2>Answer the phone by pretending to be OpenAI</h2>
       <p>
-        <code>smoke_test.py</code> drives the five scenarios through the real graph with the phone
-        removed: real model calls, real Supabase reads, a real Airtable write. The only thing stubbed
-        is the transport, because Vapi is the one dependency whose behaviour I want to reproduce
-        rather than trust.
+        Vapi owns the telephony, the speech-to-text and the text-to-speech. What it wants from me is
+        an OpenAI-compatible chat completions endpoint: it POSTs a transcript, I return a message,
+        it speaks it. That means the entire agent hides behind one route, and the graph never knows
+        a phone exists.
       </p>
       <p>
-        The choice that makes this suite worth keeping is what it asserts on. Every check reads
-        <strong>state</strong>, not prose: <code>authenticated</code>, <code>intent</code>,
-        <code>ended_reason</code>, the claim id that got selected. A test that asserts the agent said
-        "I can see one claim on your account" is a test that fails the next time I improve a prompt,
-        and passes the next time the model says the right sentence about the wrong account. Both
-        failure modes are worse than useless.
+        The shape of the response matters more than it looks. Vapi retries on malformed bodies, so
+        even a deliberately empty reply has to be a well-formed completion:
+      </p>
+      <p class="code-label">app/main.py — an empty reply still has to be a valid completion</p>
+      <pre><code>def _no_reply(body: dict, call_id: str):
+    """An empty, correctly-shaped OpenAI response, in whichever form the request asked for.
+
+    Shape still matters even though Vapi is about to discard this: a malformed body would be
+    an error on its side rather than a discarded reply, and errors are retried.
+    """
+    response_id = f"chatcmpl-{call_id}-superseded"
+    model = body.get("model") or "gpt-4o-mini"
+    if body.get("stream"):
+        return StreamingResponse(
+            _sse(response_id, model, ""),
+            media_type="text/event-stream",
+            headers={"Cache-Control": "no-cache", "X-Accel-Buffering": "no"},
+        )
+    return JSONResponse(_full_response(response_id, model, ""))</code></pre>
+      <p>
+        Hold on to <code>-superseded</code> in that response id. It is a clue about step 04, and it
+        did not exist in the first version of this file.
       </p>
 
-      <h2>Nine nodes. One shape, three times.</h2>
-
-      <div class="deckfig">
-        <div class="deckfig-head">
-          <span><span class="n">02</span> &nbsp;Walk through the build</span>
-          <span>LangGraph · FastAPI · Vapi custom LLM</span>
-        </div>
-
-        <div class="graph">
-          <div class="graph-inner">
-            <div class="graph-eyebrow">
-              route_entry — four checks, in order · <b>where a turn starts depends on the caller</b>
-            </div>
-
-            <div class="flowline">
-              <span class="node">caller turn</span>
-              <span class="arrow">→</span>
-              <span class="node">POST /chat/completions</span>
-              <span class="arrow">→</span>
-              <span class="node key">route_entry</span>
-            </div>
-
-            <div class="lanes">
-              <div class="lane">
-                <div class="lane-label">1 · <b>emergency</b></div>
-                <span class="node">escalate_node</span>
-                <div class="end">→ END</div>
-              </div>
-
-              <div class="lane">
-                <div class="lane-label">2 · <b>authenticated</b></div>
-                <span class="node key">router_node</span>
-                <div class="subnodes">
-                  <span class="node loop">claim_agent<span class="swap">⇕</span>claim_tool_node</span>
-                  <span class="node loop">faq_agent<span class="swap">⇕</span>faq_tool_node</span>
-                  <span class="node loop">escalate_node</span>
-                  <span class="node loop">goodbye_node</span>
-                </div>
-                <div class="end">→ END</div>
-              </div>
-
-              <div class="lane">
-                <div class="lane-label">3 · <b>asks for a person</b></div>
-                <span class="node">escalate_node</span>
-                <div class="end">→ END</div>
-              </div>
-
-              <div class="lane">
-                <div class="lane-label">4 · <b>otherwise</b></div>
-                <span class="node loop key">auth_agent_node<span class="swap">⇕</span>auth_tool_node</span>
-                <div class="end">→ END</div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="three-up">
-          <div>
-            <h4>Agents propose. Tools dispose.</h4>
-            <p>A model can request. Only Python writes state.</p>
-          </div>
-          <div>
-            <h4>Rules first. Model on a tie.</h4>
-            <p>A clean keyword hit is a decision with no model call.</p>
-          </div>
-          <div>
-            <h4>One state object. Two tiers.</h4>
-            <p>An in-process checkpointer on the hot path. Postgres for the record.</p>
-          </div>
-        </div>
-
-        <div class="deckfig-foot">
-          <span>Build</span>
-          <span>02 / 04</span>
-        </div>
-      </div>
-
+      <!-- ============ STEP 02 ============ -->
+      <p class="pull-step">Step 02</p>
+      <h2>Give the call a notepad</h2>
       <p>
-        Auth, claims and FAQ are the identical shape: an agent node that may speak or may
-        <em>propose</em> a tool call, and a tool node that runs no model, executes what was proposed
-        in plain Python, and is the only place a fact enters state. The agent node never reaches the
-        database. The tool node never speaks. Escalation is the same shape with the tool half
-        deleted, because it has nothing to look up — it talks, and a human does the rest.
+        Every turn is a separate HTTP request and the server remembers nothing between them, so
+        whatever identifies the conversation has to arrive <em>inside</em> the request. Vapi's
+        <code>call.id</code> is stable across turns and unique per call, which makes it the
+        <code>thread_id</code> — a key in a dictionary, nothing to do with CPU threads, and the
+        first write creates the entry.
       </p>
       <p>
-        That split is what makes the security property checkable rather than aspirational. The grant
-        — <code>authenticated</code>, <code>customer_id</code>, <code>customer_name</code> — is
-        written in <code>auth_tool_node</code> from parsed tool JSON, never from anything the model
-        said in a sentence.
+        The state object is where the design lives. In LangGraph, the annotation on each field
+        decides how a partial update merges, and getting it backwards produces very specific bugs:
       </p>
+      <p class="code-label">app/state.py — the merge rule is the whole file</p>
+      <pre><code>"""One shared state object per call. Every node reads it and returns a partial
+update; LangGraph merges what comes back.
 
-      <h2>No tool takes a customer_id the model can fill in</h2>
-      <p>Two different mechanisms enforce that, and knowing which is which matters:</p>
-      <ul>
-        <li><strong>Auth: the parameter does not exist.</strong> <code>lookup_customer</code>
-        <em>produces</em> a <code>customer_id</code>; nothing accepts one. There is no string the
-        model could emit that names a customer.</li>
-        <li><strong>Claims: the parameter has to exist</strong>, because the query needs the id. So it
-        exists and is marked <code>InjectedToolArg</code>, which removes it from the schema sent to
-        the model — <code>fetch_claims</code> ships with an empty properties object, verified by
-        dumping it. The tool node fills it from state, spread <em>after</em> the model's arguments,
-        so state wins even for a key the model was never shown.</li>
-        <li><strong>Same treatment on <code>select_claim</code>, for a different reason.</strong> The
-        caller's own claims are injected so a <code>claim_id</code> resolves against <em>that list
-        only</em>. A borrowed id and a hallucinated one are indistinguishable, and both come back
-        <code>unknown_claim</code>.</li>
-        <li><strong>FAQ: no boundary, because there is nothing to protect.</strong>
-        <code>search_knowledge_base</code> takes a query and nothing else, and its corpus is identical
-        for every caller. The absence of an injected arg there is a consequence of the data, not an
-        oversight.</li>
-      </ul>
+The annotation on each field decides how that merge happens. `Annotated[...,
+operator.add]` appends, so the field accumulates. A plain annotation overwrites,
+so the field holds only the latest value. Getting this backwards produces the
+classic bugs: a transcript that resets to one message, or a boolean that grows
+into a list.
+"""</code></pre>
       <p>
-        None of that is worth much as an assertion, so it is a test:
-        <code>test_fetch_claims_ignores_a_model_supplied_customer_id</code> fabricates a tool call
-        naming another account and checks the answer is still the caller's.
+        Which cashes out in the fields themselves. Note that the counter is <em>not</em> a reducer,
+        and why:
       </p>
+      <p class="code-label">app/state.py — CallState, abridged to the load-bearing fields</p>
+      <pre><code>class CallState(TypedDict):
+    """The notepad for one phone call. messages appends, everything else overwrites."""
 
-      <h2>Rules first, model on a tie</h2>
+    # The transcript. Needs the reducer: every node adds to it and none may
+    # replace it, or the agent forgets the call mid-conversation.
+    messages: Annotated[List[AnyMessage], operator.add]
+
+    # This turn's caller utterance. Whichever node consumes it clears it, so a
+    # tool loop back into the agent doesn't append the same words twice.
+    user_query: str
+
+    # The auth grant. Written only by auth_tool_node, only from a parsed tool
+    # result — never from model output. This is the authorization boundary: the
+    # model can say "the customer is C001" and it lands in messages, nowhere else.
+    authenticated: bool
+    customer_id: Optional[str]
+    customer_name: Optional[str]
+
+    # Overwrite, not a reducer. The tool node computes old + 1 and returns the
+    # total; a reducer would add that total to the old value and double it.
+    auth_attempts: int</code></pre>
       <p>
-        The router is deliberately not a model call in the common case. A clean keyword hit on one
-        side and nothing on the other is a decision, made in Python, for free. The model is the
-        tie-breaker: it sees the last five messages and decides when the utterance is genuinely
-        contested.
+        Two details in the seed function are scars rather than decisions. <code>claims</code> starts
+        as <code>None</code> and not <code>[]</code>, because an empty list already means something
+        — "we looked, this account has no claims" — and conflating that with "we have not looked
+        yet" costs a wasted database trip or a wrong answer. And <code>turn_number</code> is an
+        explicit counter set by the HTTP handler rather than something derived by counting messages:
       </p>
+      <p class="code-label">app/state.py — why the turn counter is explicit</p>
+      <pre><code>    # Which caller turn this is. Set by the HTTP handler, not by a node, because
+    # only the handler knows a request arrived.
+    #
+    # It was derived from counting HumanMessages until a live call proved that
+    # wrong: Vapi asks for a model-generated opening line with no user message
+    # attached, so that turn appends no HumanMessage and the next real utterance
+    # reuses its number. Three snapshot rows came back labelled turn 1. An
+    # explicit counter cannot be fooled that way.
+    turn_number: int</code></pre>
+
+      <!-- ============ STEP 03 ============ -->
+      <p class="pull-step">Step 03</p>
+      <h2>Stop counting one sentence four times</h2>
       <p>
-        Which is exactly the fix for the routing bug I did have. <em>"Where do I mail documents"</em>
-        went to the claim agent, because <code>"document"</code> is on the claim keyword list and
-        nothing on the FAQ list matched — a clean single-sided match, no model call, wrong node. The
-        fix was not to remove <code>"document"</code> from the claim list, because <em>"did you get my
-        documents"</em> is genuinely a claim question. It was to make that utterance
-        <strong>contested</strong> so it reaches the model fallback. Same words, different things; the
-        decision belongs to the layer that can see the conversation.
-      </p>
-
-      <h2>Read on the caller's clock. Write once, after they hang up.</h2>
-
-      <div class="deckfig">
-        <div class="deckfig-head">
-          <span><span class="n">03</span> &nbsp;Explain the integrations</span>
-          <span>Supabase · Airtable · Vapi</span>
-        </div>
-
-        <div class="cols-3">
-          <div class="col">
-            <div class="col-eyebrow">Retrieval · Supabase</div>
-            <h4>One query, four answers</h4>
-            <div class="maptable">
-              <div class="row"><span class="k">absent</span><span class="a">→</span><span class="v">not_found</span></div>
-              <div class="row"><span class="k">no dob given</span><span class="a">→</span><span class="v">needs_second_factor</span></div>
-              <div class="row"><span class="k">dob mismatch</span><span class="a">→</span><span class="v">factor_mismatch</span></div>
-              <div class="row"><span class="k">match</span><span class="a">→</span><span class="v">verified</span></div>
-            </div>
-            <ul>
-              <li>Only <strong>verified</strong> writes an identity into state</li>
-              <li>Claims in <strong>one embedded select</strong>, not three trips</li>
-              <li>Six tools. <strong>All read-only.</strong></li>
-            </ul>
-          </div>
-
-          <div class="col">
-            <div class="col-eyebrow">Write-back · Airtable</div>
-            <h4>Fires when the call ends — not when the graph ends</h4>
-            <ul>
-              <li>The graph hits <strong>END every turn</strong>. A record there is a record per turn</li>
-              <li>Source is the last Postgres snapshot, not live state</li>
-              <li>One <strong>PATCH</strong>, upsert on call_id — Vapi retries, so it must be idempotent</li>
-              <li>Six fields. <strong>outcome</strong> computed, never inferred</li>
-            </ul>
-          </div>
-
-          <div class="col">
-            <div class="col-eyebrow">Authentication · Four things</div>
-            <h4>Easy to conflate, so kept apart</h4>
-            <ul>
-              <li><strong>Caller → us.</strong> Two factors, enforced in the tool node</li>
-              <li><strong>Us → Supabase.</strong> Service key, RLS bypassed. Demo scope, stated plainly</li>
-              <li><strong>Us → Airtable.</strong> Write scope, no read scope</li>
-              <li><strong>Vapi → us.</strong> A shared secret, and only on the endpoint that receives it</li>
-            </ul>
-          </div>
-        </div>
-
-        <div class="banner">
-          <div class="code">fetch_claims(<span class="arg">customer_id: InjectedToolArg</span>)</div>
-          <div class="say">
-            The model can ask for claims.
-            <span>It cannot say whose.</span>
-          </div>
-        </div>
-
-        <div class="deckfig-foot">
-          <span>Integrations</span>
-          <span>03 / 04</span>
-        </div>
-      </div>
-
-      <p>
-        The write-back timing is the one people ask about. The graph reaches <code>END</code> on
-        <em>every single turn</em> — that is what a turn is. So an Airtable write triggered on graph
-        completion would produce a row per turn, not a row per call. The record is driven by Vapi's
-        end-of-call webhook instead, reads the last Postgres snapshot rather than live state, and
-        lands as a single <code>PATCH</code> upserted on <code>call_id</code>. Vapi retries webhooks;
-        idempotency is not optional.
+        Then a caller paused in the middle of saying their phone number and got hung up on.
       </p>
       <p>
-        The last line of that section is the one I would defend hardest.
-        <code>VAPI_SECRET</code> originally guarded <code>/chat/completions</code> — but Vapi only
-        sends its server secret to the <em>webhook</em> URL. It had never been set, which is the only
-        reason nothing broke; setting it would have 401'd every caller turn. <strong>A control that
-        is inert when unset and catastrophic when set is worse than no control at all.</strong> It
-        moved to <code>/webhook</code>, which is the endpoint that matters anyway, since that payload
-        is what writes the record.
+        Vapi does not send one request per caller turn. It sends one every time endpointing thinks
+        the caller <em>might</em> have stopped, and the transcript grows each time. The docstring on
+        the function that fixed it is the clearest statement of the problem I have:
+      </p>
+      <p class="code-label">app/state.py — utterance_continues</p>
+      <pre><code>def utterance_continues(messages, user_query: str) -> bool:
+    """True when this utterance is the previous one with more words on the end.
+
+    Vapi does not send one request per caller turn. It sends one every time its
+    endpointing thinks the caller might have stopped, and the transcript so far grows
+    each time. A caller saying a phone number with pauses produced four requests:
+
+        "Yeah. My number is"
+        "Yeah. My number is 4 1 5"
+        "Yeah. My number is 4 1 5 5 5 5"
+        "Yeah. My number is 4 1 5 5 5 5 1 0 0 9"
+
+    Vapi speaks only the reply to the last one and discards the rest, so the caller
+    hears a single exchange. Our state does not get that luxury: each request was
+    counted as a turn that produced no usable number, and the stall ceiling tripped
+    before the model ever saw the complete digits.
+
+    The saving grace is that these are cumulative, not disjoint — every request
+    contains the previous one verbatim. That is what makes them detectable here rather
+    than only fixable in Vapi's endpointing settings.
+    """
+    previous = next(
+        (m.content for m in reversed(messages or []) if isinstance(m, HumanMessage)),
+        None,
+    )
+    if not previous or not user_query:
+        return False
+    before, now = _squash(previous), _squash(user_query)
+    return bool(before) and len(now) > len(before) and now.startswith(before)</code></pre>
+      <p>
+        A prefix comparison, and <code>_squash</code> lowercases and strips punctuation so the
+        comparison survives the transcriber changing its mind about commas. That keeps the turn
+        counter and the stall count off the re-sends.
       </p>
 
-      <h2>What the phone taught me</h2>
+      <!-- ============ STEP 04 ============ -->
+      <p class="pull-step">Step 04</p>
+      <h2>Stop <em>running</em> on one sentence four times</h2>
       <p>
-        Every complication in <code>auth.py</code> is a scar. Here are the ones worth the telling.
+        Not counting them was only half the job. The graph was still executing on every re-send:
+        appending messages the caller never heard, routing on half a sentence, sometimes firing a
+        tool. One utterance, two graph runs, and the caller hearing the two spliced together —
+        <em>"I see 1 claim. You're verified,"</em> then <em>"but policy questions aren't answered
+        yet."</em>
+      </p>
+      <p>
+        The fragment cannot simply be skipped, because it arrives <em>first</em>:
+      </p>
+      <p class="code-label">app/main.py — the debounce, and what it buys</p>
+      <pre><code># The fragment cannot simply be skipped, because it arrives *first* — the complete utterance
+# is the last one, and nothing in the request says which is last. So wait instead: hold each
+# request briefly, and if a newer one for the same call shows up meanwhile, this one has been
+# superseded and Vapi is going to throw its answer away regardless. Return without touching
+# the graph.
+#
+# The cost is one wait per turn. The saving is the one-to-two wasted graph runs per utterance
+# it replaces, each of which was 1-3 model calls — measured at 6.2s and 10.3s of model latency
+# on the call above. Raising Vapi's endpointing (`startSpeakingPlan`) reduces how often this
+# fires; it does not make it unnecessary, because endpointing is a guess about human speech
+# and this is a fact about our own request stream.
+DEBOUNCE_SECONDS = 0.4
+
+# Per call, incremented on arrival. A counter rather than the utterance text, so two requests
+# carrying identical text are still ordered.
+_utterance_seq: dict[str, int] = {}</code></pre>
+      <p>
+        A counter rather than the text, so two identical transcripts are still ordered. And the wait
+        happens <strong>before</strong> the per-call lock from the next step — a waiting request
+        holding the lock through its own wait could never be superseded by anything, which defeats
+        the entire mechanism.
       </p>
 
-      <h3>A caller pausing mid-number got hung up on</h3>
+      <!-- ============ STEP 05 ============ -->
+      <p class="pull-step">Step 05</p>
+      <h2>One lock per call, and no lock across calls</h2>
       <p>
-        Vapi re-sends a <em>growing</em> transcript every time endpointing thinks you paused —
-        <code>"Yeah. My number is"</code>, then <code>"Yeah. My number is 4 1 5"</code>, then the
-        whole thing. I was counting each as a fresh turn, so one phone number burned five turns and
-        tripped a ceiling on the request that finally carried the complete utterance. They are
-        cumulative, not fragments, so a prefix comparison collapses them.
+        I had written down that two requests for one call could never overlap, reasoning that Vapi
+        waits to hear turn N before sending N+1. It does not. Both requests read state before either
+        wrote, and the caller heard the same question twice in different words.
       </p>
       <p>
-        But not counting them was only half the job. The graph was still <em>running</em> on each
-        re-send: appending messages the caller never heard, routing on half a sentence, sometimes
-        firing a tool. One utterance, two graph runs, the caller hearing the two spliced together.
-        The fragment cannot simply be skipped, because it arrives <em>first</em> and nothing in the
-        payload says which request is last. So every request waits
-        <code>DEBOUNCE_SECONDS = 0.4</code> before doing anything; if a newer request for the same
-        call arrives meanwhile, this one has been superseded and returns an empty reply without
-        touching the graph. The wait happens <em>before</em> the per-call lock, or a waiting request
-        would hold the lock through its own wait and nothing could ever supersede it. Cost: 400 ms
-        per turn. Saving: the one-to-two wasted graph runs it replaces — 6.2 s and 10.3 s of model
-        latency on the call I measured it against.
+        The fix is an <code>asyncio.Lock</code> keyed by <code>call_id</code> — turns serialize
+        within a call, calls stay concurrent with each other. Which is the entire concurrency model
+        of the service, and worth drawing:
       </p>
-
-      <h3>Two requests for one call ran at once</h3>
-      <p>
-        I had written down that this was impossible, reasoning that Vapi waits to hear turn N before
-        sending N+1. It does not. Both read state before either wrote, and the caller heard the same
-        question twice in different words. One <code>asyncio.Lock</code> per <code>call_id</code>.
-      </p>
-
-      <h3>Tool turns cost two model calls</h3>
-      <p>
-        The second one only read a status and recited a sentence that was already in the prompt — a
-        network round trip for a dictionary lookup. Moving it into code halved those turns and
-        stopped the readback drifting; the model had started dropping the commas out of the phone
-        number.
-      </p>
-      <p>
-        And the first fix was in the wrong place. I put the scripted line in
-        <code>auth_tool_node</code>, because it was already holding the parsed result. That made two
-        nodes able to answer the caller, needed a conditional edge to work out which one had, and
-        forced the tool node to hand-merge its own pending update just to guess whether a ceiling was
-        about to fire. The behaviour was right and the seams were wrong — and I could tell, because
-        explaining who spoke when took several attempts. Moving the decision into
-        <code>auth_agent_node</code> as a second early return gave the same one model call per turn,
-        one node that speaks, and deleted the conditional edge entirely.
-      </p>
-
-      <h3>My absolute ceiling was 8 turns, and a messy real verification is 8 turns</h3>
-      <p>
-        It fired on someone who had cooperated the whole way. Raised to 15: it is the last resort,
-        not the defence. The related bug is subtler — a caller who simply refuses never
-        <em>fails</em>. <code>auth_attempts</code> only moves on a real failed lookup, so eight turns
-        of "I'm not giving you my number" sat at <code>attempts=0</code> with no exit. A cap on
-        failures cannot bound someone who never gives you anything to fail on, hence a separate stall
-        counter and the model judging refusal.
-      </p>
-
-      <h3>The FAQ agent refused questions it could answer</h3>
-      <p>
-        It abstained on <em>"what's my deductible"</em> — a topic the corpus answers at 0.64
-        similarity — with <strong>no retrieval call logged at all</strong>. One earlier empty search
-        sitting in the transcript had taught it that questions like this come back empty, so it
-        stopped searching. The rule that fixed it is the one worth stating: <em>an abstention has to
-        be grounded in a search too.</em> Refusing without looking is a guess in the other direction,
-        and it is the guess that loses answerable questions.
-      </p>
-
-      <h3>The same bug bit twice, from opposite sides of a boundary</h3>
-      <p>
-        Vapi hangs up by matching an end-call phrase as a <em>substring</em> of what the assistant
-        says. First I picked a sign-off that opened with the greeting's words, configured as two
-        comma-split entries — so <strong>every call hung up 8.7 seconds in, before the caller had
-        said anything</strong>. I fixed the code and added an import-time guard. Then fixing the
-        dashboard merged the two broken halves back into the <em>old</em> phrase, so the list held
-        something nothing says any more and the new closer was never added: <strong>the sign-off
-        played and the line stayed open.</strong>
-      </p>
-      <p>
-        Both halves looked fine from where I was standing — the first from the logs, because the
-        greeting went out and the next request simply never came; the second from the code, because
-        the string was right in the repo. The fix that matters is neither patch. It is the
-        <code>ends_call</code> field now on every turn log, which says which of our phrases we
-        actually spoke.
-      </p>
-      <blockquote>
-        <p>The transcript is not evidence. I diagnosed the first bug from Vapi's word-level
-        confidence scores and got it wrong — they are truncated in every payload. Logging what we
-        actually fed the graph was worth more than any of it.</p>
-      </blockquote>
-
-      <h2>One process. One lock per call. Everything else async.</h2>
 
       <div class="deckfig">
         <div class="deckfig-head">
@@ -767,33 +595,871 @@
         </div>
 
         <div class="deckfig-foot">
-          <span>Technical discussion</span>
+          <span>Runtime</span>
           <span>04 / 04</span>
         </div>
       </div>
 
+      <!-- ============ STEP 06 ============ -->
+      <p class="pull-step">Step 06</p>
+      <h2>The first tool, and the direction of trust</h2>
       <p>
-        The in-process checkpointer is the honest limitation of the build, and it is worth being
-        precise about why. <code>thread_id</code> is a conversation label — nothing to do with CPU
-        threads, nothing spawned or torn down. It is a key in a dictionary, and the first write
-        creates the entry. One notepad per <em>call</em>, not per turn: I watched messages grow
-        4 → 6 → 10 across three turns of one call, same entry.
+        Now the agent can hear a full sentence exactly once. Time to let it look somebody up — and
+        this is the step where the security property either exists or does not. The docstring says
+        it better than I can paraphrase it:
+      </p>
+      <p class="code-label">app/tools/auth_tools.py — the module docstring is the design</p>
+      <pre><code>"""The one tool the auth agent can reach.
+
+Note the direction of trust: this tool *produces* a customer_id, it never accepts
+one. There is no argument a model could fill in to name a customer, which is what
+makes the tool layer the authorization boundary rather than the prompt.
+
+Every return is a typed status string. The prompt maps each status to what the
+agent should say, so the model reads a fact and picks a script instead of
+inventing a sentence about the database.
+"""</code></pre>
+      <p>
+        One database round trip produces four different answers, and only one of them discloses
+        anything about a real person:
+      </p>
+      <p class="code-label">app/tools/auth_tools.py — lookup_customer, body</p>
+      <pre><code>    norm = normalize_phone(phone)
+    if not norm["e164"]:
+        # Unparseable speech, not a failed identity check. The graph does not
+        # spend one of the caller's three attempts on this.
+        return json.dumps({"status": "invalid_phone"})
+
+    # phone is unique in the schema, so this is at most one row.
+    res = sb.table("customers").select("customer_id, name, dob").eq("phone", norm["e164"]).execute()
+    if not res.data:
+        # `spoken` rides along so the agent can read back what we heard. Without
+        # it the caller has no idea which digit was misheard and just repeats
+        # the same thing at the same speed.
+        return json.dumps({"status": "not_found", "spoken": norm["spoken"]})
+
+    record = res.data[0]
+
+    if dob is None:
+        # The account exists but nothing about it is disclosed yet: no name, no
+        # id. Only the readback goes back, so the caller can confirm the key.
+        return json.dumps({"status": "needs_second_factor", "spoken": norm["spoken"]})
+
+    # DOB is compared as the model extracted it, deliberately. Extraction is the
+    # LLM's job; normalization is only for lookup keys, and DOB is not one. A
+    # wrong DOB fails a comparison, it never matches the wrong row.
+    if dob.strip() != record["dob"]:
+        return json.dumps({
+            "status": "factor_mismatch",
+            "heard": spoken_date(dob),
+        })
+
+    # Identity leaves this function on exactly one code path.
+    return json.dumps({
+        "status": "verified",
+        "customer_id": record["customer_id"],
+        "name": record["name"],
+    })</code></pre>
+      <p>
+        <strong>Identity leaves on exactly one code path.</strong> That is the sentence the rest of
+        the auth design protects. And the <code>heard</code> field on a mismatch is not a leak: it is
+        the caller's own words spoken back, never the date on file. It exists because on a live call
+        the transcriber turned "nineteen ninety" into "19 19" and the caller had no way to know why
+        they kept failing.
       </p>
       <p>
-        The notepad lives in <em>that</em> checkpointer instance, not in the <code>thread_id</code>.
-        Rebuild the graph and you get an empty shelf with the same labels — every turn looks like a
-        new call. Two worker processes are two shelves, and turn 2 cannot find turn 1. Hence
-        <code>--workers 1</code>, and hence Redis as the production answer. Worth noting what Redis
-        changes and what it does not: it moves where the dictionary lives, not why it needs keys. You
-        would still have to find this call among thousands.
+        Which raises the question of why a phone number needs normalizing at all, when a model is
+        right there. Because the model measurably cannot do it:
+      </p>
+      <p class="code-label">app/utils/phone.py — why this is not the model's job</p>
+      <pre><code>"""Turn a spoken phone number into a database key and a readback string.
+
+Two jobs are deliberately split in this system. Pulling structured arguments out
+of messy speech is the model's job — it handles self-corrections and filler that
+no regex can. Turning a value into a *lookup key* is this module's job, because
+a key has to be exact and the model measurably is not: asked to convert spoken
+digits itself, gpt-4o-mini produced 41555551001 and 4155555100 for the same
+number. A wrong key doesn't error, it confidently finds the wrong row or none.
+
+So the tool schema asks the model to pass the caller's words through untouched,
+and the conversion happens here where it is deterministic and testable.
+"""</code></pre>
+      <p>
+        The parsing itself has one nice property worth stealing. A non-digit token breaks the digit
+        run, so conversational filler cannot leak into the number:
+      </p>
+      <p class="code-label">app/utils/phone.py — normalize_phone</p>
+      <pre><code>    # findall drops punctuation for free, so "four one five, five five five"
+    # tokenizes the same as the version without commas.
+    tokens = re.findall(r"[a-z0-9]+", raw.lower())
+    mapped = [WORD_DIGITS.get(tok, tok) for tok in tokens]
+
+    # A non-digit word breaks the run, so filler like "give me two seconds"
+    # can't leak its digits into the number.
+    runs = ["".join(g) for is_digit, g in groupby(mapped, key=str.isdigit) if is_digit]
+    if not runs:
+        return {"e164": None, "spoken": None}
+
+    digits = max(runs, key=len)</code></pre>
+      <p>
+        <code>"oh"</code> is in the digit map, because people say it, and it is also the most common
+        interjection in English — which is exactly why the run logic matters more than the mapping.
+      </p>
+
+      <!-- ============ STEP 07 ============ -->
+      <p class="pull-step">Step 07</p>
+      <h2>Split the node that speaks from the node that writes</h2>
+      <p>
+        A tool that only produces identity is not enough on its own. Something still has to decide
+        that a <code>verified</code> status becomes a grant in state — and that decision must not
+        live anywhere a model can reach. So auth is two nodes: an agent node that is the only place
+        a model runs, and a tool node that runs no model and is the only place facts get written.
+      </p>
+      <p class="code-label">app/graph/auth.py — auth_tool_node, docstring</p>
+      <pre><code>def auth_tool_node(state: CallState) -> dict:
+    """Run the tool calls the model requested, and write everything they earn. Says nothing.
+
+    No model runs here, and this is the only place the auth grant, the attempt counter
+    and the terminal reasons are written. That is what keeps the model's words out of
+    authorization: it asks, this decides.
+
+    **It never writes `final_answer` and never appends an AIMessage.** What the caller
+    hears is decided in one place, `auth_agent_node`, which the graph returns to on a
+    plain edge straight after this. Writing the state and choosing the sentence used to be
+    tangled together here, and it made the flow much harder to follow than it needed to be.
+    """</code></pre>
+      <p>
+        That last paragraph is a refactor I got wrong the first time, and step 08 is where it bit.
+        First, the write itself — every branch is a different thing the caller earned:
+      </p>
+      <p class="code-label">app/graph/auth.py — what each status earns</p>
+      <pre><code>            # `update`, never reassign: `grant` may already hold last_lookup_status.
+            if payload["status"] == "verified":
+                grant.update({
+                    "authenticated": True,
+                    "customer_id": payload["customer_id"],
+                    "customer_name": payload["name"],
+                })
+            elif payload["status"] in FAILED_ATTEMPT_STATUSES:
+                # Reached the database and was told no. That is a real attempt, and
+                # it clears the stall count — this caller is engaging, just wrong.
+                grant.update({
+                    "auth_attempts": state.get("auth_attempts", 0) + 1,
+                    "stall_count": 0,
+                })
+            elif payload["status"] == "needs_second_factor":
+                # Reached the database. Engaging, so the stall count resets.
+                grant.update({"stall_count": 0})
+            elif payload["status"] == "invalid_phone":
+                # The tool ran but nothing was looked up, so the agent's post-tool
+                # reply will not count this turn. Count it here or a caller feeding
+                # unparseable noise forever would never trip the stall cap.
+                grant.update({"stall_count": state.get("stall_count", 0) + 1})</code></pre>
+      <p>
+        Two counters, not one, and that split is the interesting part. <code>auth_attempts</code>
+        only moves on a real failed lookup. A caller who simply <em>refuses</em> never fails
+        anything, so eight turns of "I'm not giving you my number" sat at <code>attempts=0</code>
+        with no exit at all. A cap on failures cannot bound someone who never gives you anything to
+        fail on — hence <code>stall_count</code> alongside it.
       </p>
       <p>
-        It is also why the deploy target is Railway rather than something serverless. Cloudflare
+        The node also enforces one tool call per turn, and is honest in the comment about what that
+        costs:
+      </p>
+      <p class="code-label">app/graph/auth.py — one call per turn, and the accepted cost</p>
+      <pre><code>    # `honored` enforces one tool call per turn, whichever the model listed first.
+    #
+    # The accepted cost: first does not mean best. If the model emits a wrong lookup and
+    # a right one, the wrong one burns the attempt and the right one is dropped, so a
+    # caller who gave correct details is asked again next turn. Worth it — the
+    # alternative lets one turn spend several attempts, or land a match the caller never
+    # confirmed.
+    for tool_call in tool_calls:
+        tool = auth_tools_by_name.get(tool_call["name"])
+
+        if tool is None:
+            payload = {"status": "unknown_tool"}
+        elif honored:
+            payload = {"status": "ignored_extra_call"}
+        else:
+            honored = True
+            observation = tool.invoke(tool_call["args"])
+            payload = json.loads(observation)</code></pre>
+
+      <!-- ============ STEP 08 ============ -->
+      <p class="pull-step">Step 08</p>
+      <h2>Every limit is code, and order is the guard</h2>
+      <p>
+        My absolute ceiling was 8 turns. A messy but entirely cooperative verification is 8 turns, so
+        it fired on someone who had done nothing wrong. Raised to 15: it is the last resort, not the
+        defence.
+      </p>
+      <p>
+        All four ceilings live in one function, gated on one condition, for a reason the docstring is
+        blunt about:
+      </p>
+      <p class="code-label">app/graph/auth.py — _ended_reason</p>
+      <pre><code>def _ended_reason(state: CallState) -> Optional[str]:
+    """Decide whether this call has run out of road, and why.
+
+    Called from one place: `auth_agent_node`, before it spends a model call. It used to be
+    called from the tool node too, which had to hand-merge its own pending update to guess
+    what state was about to become. Now the tool node writes, the graph merges, and this
+    reads the real thing on the way back through the agent.
+
+    The `authenticated` check gates every branch from one place. A real conversation
+    runs well past all of these limits, so a ceiling that forgot to check would hang up
+    on a verified caller mid-sentence.
+
+    Returns:
+        A REASON_* code from state.py, or None to carry on. Branch order affects only
+        which reason gets recorded when two apply at once: `auth_ended` wins because it
+        names something a counter cannot see.
+    """
+    if state.get("authenticated"):
+        return None
+    if state.get("auth_ended"):
+        return state["auth_ended"]
+    if state.get("auth_attempts", 0) &gt;= MAX_AUTH_ATTEMPTS:
+        return REASON_ATTEMPTS
+    if state.get("stall_count", 0) &gt;= MAX_STALLED_TURNS:
+        return REASON_STALLED
+    if state.get("turn_number", 0) &gt;= MAX_PRE_AUTH_TURNS:
+        return REASON_TOO_LONG
+    return None</code></pre>
+      <p>
+        "It used to be called from the tool node too, which had to hand-merge its own pending update
+        to guess what state was about to become" is the refactor from step 07, seen from the other
+        side. Putting the scripted reply in the tool node meant two nodes could answer the caller,
+        which needed a conditional edge to work out which one had, which forced the tool node to
+        fake a state merge to guess whether a ceiling was about to fire. The behaviour was right and
+        the seams were wrong — and I could tell, because explaining who spoke when took several
+        attempts.
+      </p>
+      <p>
+        Moving the decision into the agent node made it two early returns before any model call. The
+        ordering between them is itself the guard:
+      </p>
+      <p class="code-label">app/graph/auth.py — auth_agent_node, the second early return</p>
+      <pre><code>    # Second early return, and the same trade as the first: a sentence we already know
+    # costs nothing to say, so don't pay a model call to say it.
+    #
+    # Reached only on the second pass through this node in one turn — the tool ran, the
+    # graph came straight back here. Deliberately *after* the ceiling check above, which
+    # is what stops a third wrong date of birth being answered with "could you repeat
+    # that": by now the tool node's counter updates are merged into `state` for real, so
+    # the check above already saw them and returned the lockout instead.
+    scripted = _pending_scripted_reply(state.get("messages"))
+    if scripted:
+        return {
+            "messages": turn_messages + [AIMessage(content=scripted)],
+            "user_query": "",
+            "final_answer": scripted,
+        }</code></pre>
+      <p>
+        Two payoffs from those early returns. Security-relevant wording cannot drift, because it
+        comes from a constant rather than a model that had started dropping the commas out of phone
+        numbers. And a terminal turn costs <strong>zero model calls</strong> — the ceiling
+        short-circuits before <code>.invoke()</code> ever runs.
+      </p>
+
+      <!-- ============ STEP 09 ============ -->
+      <p class="pull-step">Step 09</p>
+      <h2>Police the claims that are about the conversation</h2>
+      <p>
+        Two things cannot be decided by arithmetic. "I will never give you that" and "hang on, let me
+        find my phone" are the same event to a counter — a turn where no number arrived — and only
+        one of them deserves a hang-up. So the model gets tools to <em>propose</em> those readings,
+        and the tool node decides whether to honour them:
+      </p>
+      <p class="code-label">app/graph/auth.py — a proposal, not a decision</p>
+      <pre><code>            elif payload["status"] == "verification_ended":
+                # A proposal until here. Dropped if it arrives before the caller has had
+                # a chance, or from someone already verified — a hang-up two seconds in
+                # costs more than three wasted turns, and "the model decided" doesn't
+                # make it right.
+                if (
+                    state.get("authenticated")
+                    or state.get("turn_number", 0) &lt; MIN_TURNS_BEFORE_REFUSAL
+                ):</code></pre>
+      <p>
+        And when a proposal is declined, <strong>the model has to be told</strong>. This is the bug
+        that taught me the rule. Declining silently meant the <code>ToolMessage</code> still said
+        <code>verification_ended</code>, the model read that as fact, and it said goodbye on a call
+        that was still open. A declined request now comes back as
+        <code>verification_declined</code>, not as the success status the tool returned.
+      </p>
+      <p>
+        The <code>no_account_found</code> tool gets the same treatment for a different reason: it
+        claims the caller just confirmed a readback we already failed to find. That is checkable, so
+        it gets checked — <code>last_lookup_status</code> exists in state purely so the tool node can
+        verify a claim the model makes about the conversation instead of taking it on trust.
+      </p>
+
+      <!-- ============ STEP 10 ============ -->
+      <p class="pull-step">Step 10</p>
+      <h2>The second specialist, and the argument the model cannot see</h2>
+      <p>
+        Auth got its boundary for free by having no <code>customer_id</code> parameter at all. Claims
+        cannot do that — the query needs the id. So the parameter exists, and is hidden from the
+        model instead:
+      </p>
+      <p class="code-label">app/tools/claim_tools.py — the boundary is a shape, not a policy</p>
+      <pre><code>"""The two tools the claim agent can reach.
+
+Same direction of trust as auth: nothing the model writes can name a customer or reach a
+claim that isn't theirs. Auth got that by having no `customer_id` parameter to fill in at
+all. Here a parameter has to exist — the query needs the id, and the whole point of the
+claim agent is that it operates on the verified caller's account — so it exists and is
+marked `InjectedToolArg`, which **removes it from the schema sent to the model**:
+
+    fetch_claims  ->  {"name": "fetch_claims", "parameters": {"properties": {}}}
+    select_claim  ->  {"name": "select_claim", "parameters": {"properties": {"claim_id": …}}}
+
+So the boundary is still a shape rather than a policy. There is no argument the model could
+emit to look up somebody else, and no override in the node to remember. `claim_tool_node`
+fills the injected arguments from state, spread **after** the model's, so state wins even if
+a model somehow emitted a key it can't see.
+"""</code></pre>
+      <p>
+        <code>fetch_claims</code> ships to the model as a tool with an empty properties object. There
+        is no string it could emit that names an account. The signature is the whole trick:
+      </p>
+      <p class="code-label">app/tools/claim_tools.py — the signature, and one subtle Optional</p>
+      <pre><code># `Optional`, and not because a verified caller can lack an id. Typed `str`, Pydantic
+# rejects None during argument validation and raises *before* the body runs — out of
+# `tool.invoke`, out of the node, and the caller's turn dies with a 500 instead of a
+# sentence. Optional moves that case into the `no_customer` branch below, where it is a
+# status the model can be told about. Caught by a test asserting the branch, which failed
+# with a ValidationError until this changed.
+@tool
+def fetch_claims(customer_id: Annotated[Optional[str], InjectedToolArg]) -> str:</code></pre>
+      <p>
+        That comment is my favourite one in the repo. The obvious type is <code>str</code>, the
+        obvious type is wrong, and the reason is that Pydantic validates arguments before the function
+        body exists to handle anything — so a broken invariant becomes a 500 on a live phone call
+        instead of a sentence the model can say out loud.
+      </p>
+      <p>
+        <code>select_claim</code> takes the same treatment for a different reason. The caller's own
+        claims are injected, so a <code>claim_id</code> resolves against <em>that list only</em>:
+      </p>
+      <p class="code-label">app/tools/claim_tools.py — select_claim, and the injection table</p>
+      <pre><code>    # Resolved against the caller's own claims, which arrive injected — so this cannot
+    # select a claim the caller does not own, whether the id was invented or borrowed.
+    for claim in claims or []:
+        if claim.get("claim_id") == claim_id:
+            return json.dumps({"status": "claim_selected", "claim": claim})
+
+    return json.dumps({
+        "status": "unknown_claim",
+        "claim_ids": [c.get("claim_id") for c in claims or []],
+    })
+
+
+# What each tool gets from state rather than from the model. Keyed by tool name, so a tool
+# with nothing to inject simply isn't in here. This table *is* the authorization boundary:
+# `claim_tool_node` spreads these over the model's arguments, last, so they win.
+INJECTED_FROM_STATE = {
+    "fetch_claims": lambda state: {"customer_id": state.get("customer_id")},
+    "select_claim": lambda state: {"claims": state.get("claims") or []},
+}</code></pre>
+      <p>
+        A borrowed claim id and a hallucinated one are indistinguishable, and both fall out as
+        <code>unknown_claim</code>. None of this is worth much as a claim in a blog post, which is
+        why there is a test that fabricates a tool call naming another account and asserts the answer
+        is still the caller's: <code>test_fetch_claims_ignores_a_model_supplied_customer_id</code>.
+      </p>
+      <p>
+        The FAQ specialist is the same two-node loop with retrieval instead of a database, and gets
+        <em>no</em> injected arg — worth saying out loud rather than leaving as an omission.
+        <code>search_knowledge_base</code> takes a query and nothing else, and its corpus is
+        identical for every caller, so every argument it accepts is one the model is supposed to
+        choose. The absence of a boundary there is a consequence of the data, not an oversight.
+      </p>
+      <p>
+        Which is the whole integration story, in one picture:
+      </p>
+
+      <div class="deckfig">
+        <div class="deckfig-head">
+          <span><span class="n">03</span> &nbsp;The integrations</span>
+          <span>Supabase · Airtable · Vapi</span>
+        </div>
+
+        <div class="cols-3">
+          <div class="col">
+            <div class="col-eyebrow">Retrieval · Supabase</div>
+            <h4>One query, four answers</h4>
+            <div class="maptable">
+              <div class="row"><span class="k">absent</span><span class="a">→</span><span class="v">not_found</span></div>
+              <div class="row"><span class="k">no dob given</span><span class="a">→</span><span class="v">needs_second_factor</span></div>
+              <div class="row"><span class="k">dob mismatch</span><span class="a">→</span><span class="v">factor_mismatch</span></div>
+              <div class="row"><span class="k">match</span><span class="a">→</span><span class="v">verified</span></div>
+            </div>
+            <ul>
+              <li>Only <strong>verified</strong> writes an identity into state</li>
+              <li>Claims in <strong>one embedded select</strong>, not three trips</li>
+              <li>Six tools. <strong>All read-only.</strong></li>
+            </ul>
+          </div>
+
+          <div class="col">
+            <div class="col-eyebrow">Write-back · Airtable</div>
+            <h4>Fires when the call ends — not when the graph ends</h4>
+            <ul>
+              <li>The graph hits <strong>END every turn</strong>. A record there is a record per turn</li>
+              <li>Source is the last Postgres snapshot, not live state</li>
+              <li>One <strong>PATCH</strong>, upsert on call_id — Vapi retries, so it must be idempotent</li>
+              <li>Six fields. <strong>outcome</strong> computed, never inferred</li>
+            </ul>
+          </div>
+
+          <div class="col">
+            <div class="col-eyebrow">Authentication · Four things</div>
+            <h4>Easy to conflate, so kept apart</h4>
+            <ul>
+              <li><strong>Caller → us.</strong> Two factors, enforced in the tool node</li>
+              <li><strong>Us → Supabase.</strong> Service key, RLS bypassed. Demo scope, stated plainly</li>
+              <li><strong>Us → Airtable.</strong> Write scope, no read scope</li>
+              <li><strong>Vapi → us.</strong> A shared secret, and only on the endpoint that receives it</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="banner">
+          <div class="code">fetch_claims(<span class="arg">customer_id: InjectedToolArg</span>)</div>
+          <div class="say">
+            The model can ask for claims.
+            <span>It cannot say whose.</span>
+          </div>
+        </div>
+
+        <div class="deckfig-foot">
+          <span>Integrations</span>
+          <span>03 / 04</span>
+        </div>
+      </div>
+      <p>
+        One note on the claims query, since it is the only place a join shows up. The documents are
+        embedded rather than fetched separately, and deliberately <em>not</em> as an inner join: a
+        claim with no outstanding documents has to come back with an empty list rather than vanish,
+        because "nothing outstanding" is the answer for most claims.
+      </p>
+
+      <!-- ============ STEP 11 ============ -->
+      <p class="pull-step">Step 11</p>
+      <h2>Routing: rules first, model on a tie</h2>
+      <p>
+        Three specialists need something to choose between them. A model call per turn is the obvious
+        answer and the wrong one — a clean keyword hit on one side and nothing on the other is a
+        decision, and it costs nothing:
+      </p>
+      <p class="code-label">app/graph/router.py — the classifier</p>
+      <pre><code>    claim_hits = _hits(lowered, CLAIM_KEYWORDS)
+    faq_hits = _hits(lowered, FAQ_KEYWORDS)
+
+    # One side matched cleanly, so there is nothing for a model to add.
+    if claim_hits and not faq_hits:
+        return CLAIM
+    if faq_hits and not claim_hits:
+        return FAQ
+
+    # Contested (both lists hit) or silent (neither did). One structured model
+    # call, constrained to the four labels so it cannot invent a destination.
+    prompt = "Route this caller utterance on an insurance claims line."
+    if recent:
+        prompt += f"\n\nThe conversation so far:\n{recent}"
+    prompt += f"\n\nUtterance to route: {text}"
+
+    try:
+        decision = intent_model.invoke(prompt)
+    except Exception as exc:
+        # A dead model must not drop the call. Fail toward a human.
+        log.warning(f"intent fallback failed, escalating: {exc}")
+        return ESCALATE
+
+    # Already the label vocabulary, constrained by Literal.
+    return decision.intent</code></pre>
+      <p>
+        Two things I would defend there. The fallback is <em>structured</em> — a
+        <code>Literal</code>-constrained field, so the model cannot invent a destination that has no
+        node. And a dead model escalates to a human rather than dropping the call, because on a phone
+        line the failure mode of last resort should still be a person.
+      </p>
+      <p>
+        This layer is also where a routing bug turned out to belong. <em>"Where do I mail
+        documents"</em> went to the claim agent, because <code>"document"</code> is on the claim
+        keyword list and nothing on the FAQ list matched — a clean single-sided match, no model call,
+        wrong node. The fix was not to remove <code>"document"</code> from the claim list, since
+        <em>"did you get my documents"</em> is genuinely a claim question. It was to make that
+        utterance <strong>contested</strong>, so it reaches the fallback with the last five messages
+        in hand. Same words, different things; the decision belongs to the layer that can see the
+        conversation.
+      </p>
+
+      <!-- ============ STEP 12 ============ -->
+      <p class="pull-step">Step 12</p>
+      <h2>Where a turn starts depends on the caller</h2>
+      <p>
+        With auth, a router and three specialists in hand, the last structural question is which node
+        a turn <em>begins</em> at. The obvious answer — always start at auth — is wrong twice over: a
+        verified caller would re-verify every turn, and somebody describing an active emergency would
+        be asked for a date of birth first.
+      </p>
+      <p>
+        So <code>START</code> is a conditional edge, not a fixed node:
+      </p>
+      <p class="code-label">app/graph/build.py — the entry decision</p>
+      <pre><code>    # Where a turn starts depends on the caller, not on a fixed first node:
+    # an emergency skips auth entirely, a verified caller skips it too.
+    builder.add_conditional_edges(
+        START,
+        route_entry,
+        ["auth_agent_node", "router_node", ESCALATE_NODE],
+    )</code></pre>
+      <p>
+        And the emergency check that jumps the queue is a regex, never a model, for a stated reason —
+        it decides whether a turn skips authentication, so the answer has to be identical every time
+        and cost nothing. The keyword list is also notable for what it leaves <em>out</em>:
+      </p>
+      <p class="code-label">app/state.py — active danger only</p>
+      <pre><code># Active danger only. "Accident" and "damage" are absent on purpose: on a claims line they
+# describe the past event every caller is phoning about, so matching them would route the whole
+# queue to a human.
+EMERGENCY_PATTERNS = [
+    r"\b911\b",
+    r"\bambulance\b",
+    r"\bparamedics?\b",
+    r"\bunconscious\b",
+    r"\bbleeding\b",
+    r"\btrapped\b",
+    r"\bon fire\b",
+    r"\bemergency\b",
+    r"\b(someone|somebody|he|she|they|i|we)('s| is| are|s)? (hurt|injured|dying|dead)\b",
+    r"\bcall (the )?(police|fire|cops|ambulance|medics|doctor)\b",
+    r"\bneed help (right )?now\b",
+]</code></pre>
+      <p>
+        On a claims line, "accident" and "damage" are what <em>everyone</em> is calling about. A naive
+        emergency list routes the entire queue to a human.
+      </p>
+      <p>
+        Which completes the shape. Nine nodes, one two-node loop repeated three times, and four
+        possible places for a turn to start:
+      </p>
+
+      <div class="deckfig">
+        <div class="deckfig-head">
+          <span><span class="n">02</span> &nbsp;The finished graph</span>
+          <span>LangGraph · FastAPI · Vapi custom LLM</span>
+        </div>
+
+        <div class="graph">
+          <div class="graph-inner">
+            <div class="graph-eyebrow">
+              route_entry — four checks, in order · <b>where a turn starts depends on the caller</b>
+            </div>
+
+            <div class="flowline">
+              <span class="node">caller turn</span>
+              <span class="arrow">→</span>
+              <span class="node">POST /chat/completions</span>
+              <span class="arrow">→</span>
+              <span class="node key">route_entry</span>
+            </div>
+
+            <div class="lanes">
+              <div class="lane">
+                <div class="lane-label">1 · <b>emergency</b></div>
+                <span class="node">escalate_node</span>
+                <div class="end">→ END</div>
+              </div>
+
+              <div class="lane">
+                <div class="lane-label">2 · <b>authenticated</b></div>
+                <span class="node key">router_node</span>
+                <div class="subnodes">
+                  <span class="node loop">claim_agent<span class="swap">⇕</span>claim_tool_node</span>
+                  <span class="node loop">faq_agent<span class="swap">⇕</span>faq_tool_node</span>
+                  <span class="node loop">escalate_node</span>
+                  <span class="node loop">goodbye_node</span>
+                </div>
+                <div class="end">→ END</div>
+              </div>
+
+              <div class="lane">
+                <div class="lane-label">3 · <b>asks for a person</b></div>
+                <span class="node">escalate_node</span>
+                <div class="end">→ END</div>
+              </div>
+
+              <div class="lane">
+                <div class="lane-label">4 · <b>otherwise</b></div>
+                <span class="node loop key">auth_agent_node<span class="swap">⇕</span>auth_tool_node</span>
+                <div class="end">→ END</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="three-up">
+          <div>
+            <h4>Agents propose. Tools dispose.</h4>
+            <p>A model can request. Only Python writes state.</p>
+          </div>
+          <div>
+            <h4>Rules first. Model on a tie.</h4>
+            <p>A clean keyword hit is a decision with no model call.</p>
+          </div>
+          <div>
+            <h4>One state object. Two tiers.</h4>
+            <p>An in-process checkpointer on the hot path. Postgres for the record.</p>
+          </div>
+        </div>
+
+        <div class="deckfig-foot">
+          <span>The graph</span>
+          <span>02 / 04</span>
+        </div>
+      </div>
+
+      <!-- ============ STEP 13 ============ -->
+      <p class="pull-step">Step 13</p>
+      <h2>Wire it together once, and only once</h2>
+      <p>
+        Every tool loop closes with a <strong>plain</strong> edge back to its agent, not a conditional
+        one, and the comment explains why that is not a wasted model call:
+      </p>
+      <p class="code-label">app/graph/build.py — the loops</p>
+      <pre><code>    # A plain edge, because the tool node never answers the caller — it runs the tool and
+    # writes what the result earned, nothing more. Coming back here is not a second model
+    # call: the agent node checks for an ending, then for a scripted line, and only asks
+    # the model if neither applies.
+    builder.add_edge("auth_tool_node", "auth_agent_node")
+
+    builder.add_conditional_edges(
+        "router_node",
+        route_from_router,
+        [CLAIM_NODE, FAQ_NODE, ESCALATE_NODE, GOODBYE_NODE],
+    )
+
+    # The claim specialist is a loop, not a single node — same two-node shape as auth, and
+    # the same plain edge back, because its tool node never answers the caller either.
+    builder.add_conditional_edges(
+        CLAIM_NODE, should_continue_for_claim_agent, ["claim_tool_node", END]
+    )
+    builder.add_edge("claim_tool_node", CLAIM_NODE)</code></pre>
+      <p>
+        There is one architectural rule in this file that made the whole thing pleasant to extend, and
+        it is stated at the top:
+      </p>
+      <p class="code-label">app/graph/build.py — the dependency rule</p>
+      <pre><code>Keeping it separate matters for one reason beyond tidiness: **no node module
+imports another module's nodes**, so adding a specialist never means editing
+auth.py. Everything points inward at build.py; build.py points at nothing.
+
+Shared values live in state.py rather than being passed between node modules —
+the intent labels, `is_emergency`, `asks_for_a_person`. There is one deliberate
+exception: escalate.py imports END_CALL_PHRASE from auth.py, because duplicating
+the string Vapi hangs up on would let a typo promise a caller a callback and then
+strand them on an open line. A constant, never a node.</code></pre>
+      <p>
+        That single exception is a scar too, and the nastiest one in the build. Vapi hangs up by
+        matching an end-call phrase as a <em>substring</em> of what the assistant says. I first picked
+        a sign-off that opened with the greeting's words, configured as two comma-split entries — so
+        <strong>every call hung up 8.7 seconds in, before the caller had said anything.</strong> I
+        fixed the code and added an import-time guard. Then fixing the dashboard merged the two broken
+        halves back into the <em>old</em> phrase, so the list held something nothing says any more:
+        <strong>the sign-off played and the line stayed open.</strong>
+      </p>
+      <p>
+        Both halves looked fine from where I was standing — the first from the logs, because the
+        greeting went out and the next request simply never came; the second from the code, because
+        the string was right in the repo. The fix that matters is neither patch. It is the
+        <code>ends_call</code> field now on every turn log, which says which of our phrases we
+        actually spoke.
+      </p>
+      <p>
+        Finally, the checkpointer, and the honest limitation of the whole build:
+      </p>
+      <p class="code-label">app/graph/build.py — one graph, one shelf</p>
+      <pre><code>    # In-process, one thread per call_id, no network cost on the hot path. It
+    # holds the state between turns, which is why a caller turn passes only what
+    # changed rather than the whole state (see state.initial_call_state).
+    #
+    # The state lives in THIS InMemorySaver instance, not in the thread_id. A new
+    # graph gets a new empty one, so rebuilding per request would silently make
+    # every turn look like a new call — which is why nothing calls this directly.
+    # main.py's lifespan builds it once at startup; every request path goes through
+    # get_claims_agent() and receives that same one.
+    checkpointer = InMemorySaver()
+    return builder.compile(checkpointer=checkpointer)</code></pre>
+      <p>
+        The notepad lives in <em>that instance</em>, not in the <code>thread_id</code>. Rebuild the
+        graph and you get an empty shelf with the same labels — every turn looks like a new call. Two
+        worker processes are two shelves, and turn 2 cannot find turn 1. Hence
+        <code>--workers 1</code>, and hence Redis as the production answer. Worth being precise about
+        what Redis changes and what it does not: it moves where the dictionary lives, not why it needs
+        keys. You would still have to find this call among thousands.
+      </p>
+      <p>
+        It is also why the deploy target is Railway rather than anything serverless. Cloudflare
         Workers, Lambda and Cloud Run scaled to zero are stateless per-request isolates — turn 2 lands
         somewhere with no memory of turn 1, which is the same failure as <code>--workers 2</code>.
         Render's free tier spins down after 15 minutes and cold-starts in about 50 seconds, and Vapi's
         server timeout is 20, so the first call after a quiet period fails outright. Railway does not
         sleep services. That is the one property that matters.
+      </p>
+
+      <!-- ============ STEP 14 ============ -->
+      <p class="pull-step">Step 14</p>
+      <h2>After they hang up</h2>
+      <p>
+        Two tiers of state, because the fast one dies with the process. A snapshot goes to Postgres
+        after every turn, and it is explicitly forensics rather than recovery:
+      </p>
+      <p class="code-label">app/snapshot.py — forensics, not recovery</p>
+      <pre><code>"""Tier 2 state: the durable record of a call.
+
+Tier 1 is the in-process checkpointer, which is fast and dies with the process.
+This writes the same state to Postgres after a turn so there is something to
+query afterwards.
+
+It is forensics, not recovery. Nothing rebuilds a live thread from a snapshot, so
+a crash mid-call still drops the call — the snapshot just means the record shows
+the call reached turn 8, authenticated, and was asking about CLM-1005, instead of
+showing nothing.
+
+**The last row for a call is also the input to the post-call record.** `synthesis.py` reads
+it back rather than live state, because a caller who hangs up mid-turn never reaches graph
+END and the checkpointer dies with the process either way.
+"""</code></pre>
+      <p>
+        The transcript is flattened to <code>"role: content"</code> rather than serialized message
+        objects, for a reason that surprised me:
+      </p>
+      <p class="code-label">app/snapshot.py — why the transcript is flattened</p>
+      <pre><code>        # It records **who spoke**. The repr does not: only model-*generated* AIMessages carry
+        # `response_metadata={'token_usage': …}`, and every scripted line in this build is a
+        # hand-built AIMessage, so a caller turn and an agent reply serialize identically.
+        # Anything reading the transcript back — a person, or the synthesis model — was left
+        # guessing from content alone, and a call summary that swaps the speakers is worse than
+        # no summary.
+        #
+        # And it drops the metadata nobody reads. A real 9-turn call went from 13.3k characters
+        # to about 3k, which is the difference between a transcript and a token-usage dump with
+        # a transcript in it.</code></pre>
+      <p>
+        A side effect of scripting the security-relevant replies: every one of them is a hand-built
+        <code>AIMessage</code> with no token-usage metadata, so the naive serialization loses the
+        distinction between a caller and the agent. A summary that swaps the speakers is worse than no
+        summary.
+      </p>
+      <p>
+        And the write itself swallows its own failures on purpose — "an audit gap is recoverable; a
+        dropped call is not. The caller must never hear silence because Postgres was slow."
+      </p>
+      <p>
+        The customer-facing record is a separate concern with a timing trap in it. The graph reaches
+        <code>END</code> on <em>every single turn</em> — that is what a turn is — so an Airtable write
+        triggered on graph completion produces a row per turn, not per call. The record is driven by
+        Vapi's end-of-call webhook instead, reads the last Postgres snapshot rather than live state,
+        and lands as one <code>PATCH</code> upserted on <code>call_id</code>. Vapi retries webhooks;
+        idempotency is not optional.
+      </p>
+      <p>
+        One last security note, and it is the one I would defend hardest.
+        <code>VAPI_SECRET</code> originally guarded <code>/chat/completions</code> — but Vapi only
+        sends its server secret to the <em>webhook</em> URL. It had never been set, which is the only
+        reason nothing broke; setting it would have 401'd every caller turn.
+        <strong>A control that is inert when unset and catastrophic when set is worse than no control
+        at all.</strong> It moved to <code>/webhook</code>, which is the endpoint that matters anyway,
+        since that payload is what writes the record.
+      </p>
+
+      <!-- ============ DOES IT WORK ============ -->
+      <h2>Does it work?</h2>
+      <p>
+        Fourteen steps in, the question is whether any of it holds up when somebody actually talks.
+        <code>smoke_test.py</code> drives five scenarios through the real graph with the phone removed:
+        real model calls, real Supabase reads, a real Airtable write. The only thing stubbed is the
+        transport, because Vapi is the one dependency whose behaviour I want to reproduce rather than
+        trust.
+      </p>
+
+      <div class="deckfig">
+        <div class="deckfig-head">
+          <span><span class="n">01</span> &nbsp;The working agent</span>
+          <span>Five scenarios, end to end</span>
+        </div>
+
+        <div class="scen-grid">
+          <div>
+            <div class="scen-row">
+              <div class="name">Happy path</div>
+              <div class="out">resolved</div>
+            </div>
+            <div class="scen-row">
+              <div class="name">Authentication failure</div>
+              <div class="out">auth_failed <span class="sep">·</span> attempts_exhausted</div>
+            </div>
+            <div class="scen-row">
+              <div class="name">Customer not found</div>
+              <div class="out">auth_failed <span class="sep">·</span> no_account</div>
+            </div>
+            <div class="scen-row">
+              <div class="name">Representative escalation</div>
+              <div class="out">escalated</div>
+            </div>
+            <div class="scen-row">
+              <div class="name">Knowledge base <span class="extra">extra</span></div>
+              <div class="out">answered, then refused</div>
+            </div>
+            <div class="scen-note">
+              Assertions are on state, not on wording.
+              <span>A reworded prompt should not break a test.</span>
+            </div>
+          </div>
+
+          <div>
+            <div class="score">
+              <div class="big">33 <span class="slash">/</span> 33</div>
+              <div class="line"><b>5 scenarios</b>, end to end</div>
+              <div class="line strong">92 offline tests</div>
+              <div class="line">Nothing mocked</div>
+            </div>
+            <div class="after-score">
+              real OpenAI<br />
+              real Supabase<br />
+              real Airtable<br />
+              the phone removed
+            </div>
+          </div>
+        </div>
+
+        <div class="deckfig-foot">
+          <span>Verification</span>
+          <span>01 / 04</span>
+        </div>
+      </div>
+
+      <p>
+        The choice that makes this suite worth keeping is what it asserts on. Every check reads
+        <strong>state</strong>, not prose: <code>authenticated</code>, <code>intent</code>,
+        <code>ended_reason</code>, the claim id that got selected. A test that asserts the agent said
+        "I can see one claim on your account" is a test that fails the next time I improve a prompt,
+        and passes the next time the model says the right sentence about the wrong account. Both
+        failure modes are worse than useless.
+      </p>
+      <p>
+        The one bug this style of testing did <em>not</em> catch is instructive. The FAQ agent abstained
+        on <em>"what's my deductible"</em> — a topic the corpus answers at 0.64 similarity — with
+        <strong>no retrieval call logged at all</strong>. One earlier empty search sitting in the
+        transcript had taught it that questions like this come back empty, so it stopped searching. The
+        rule that fixed it is worth stating on its own: <em>an abstention has to be grounded in a
+        search too.</em> Refusing without looking is a guess in the other direction, and it is the
+        guess that loses answerable questions.
       </p>
 
       <h2>Numbers</h2>
@@ -819,8 +1485,8 @@
 
       <h2>Gaps, owned first</h2>
       <p>
-        A build is defined as much by what it refuses to claim. These are the ones I would raise
-        before anyone found them.
+        A build is defined as much by what it refuses to claim. These are the ones I would raise before
+        anyone found them.
       </p>
       <div class="gaps">
         <div class="gap">
@@ -833,7 +1499,7 @@
         </div>
         <div class="gap">
           <div class="g">The attempt budget is per call</div>
-          <div class="d">A redial gets three more. Cross-call rate limiting is production work.</div>
+          <div class="d">A redial is a new <code>call_id</code>, a new empty notepad, and three more attempts. Cross-call rate limiting is production work.</div>
         </div>
         <div class="gap">
           <div class="g">Needing a second factor confirms an account exists</div>
@@ -855,9 +1521,10 @@
 
       <h2>What I would defend</h2>
       <p>
-        Voice is the format that punishes an architecture fastest. There is no loading spinner to
-        hide behind, no form validation to lean on, no second chance to re-read the sentence. Every
-        decision either survives contact with somebody talking or it does not.
+        Voice is the format that punishes an architecture fastest. There is no loading spinner to hide
+        behind, no form validation to lean on, no second chance to re-read the sentence. Every decision
+        either survives contact with somebody talking or it does not — and you can see that in the
+        shape of this post, where almost every step exists because a specific call went wrong.
       </p>
       <p>
         What survived was the boring rule. The model is very good at understanding that a caller
@@ -865,6 +1532,12 @@
         last month" means a specific claim. It is not the thing that should decide whose claim it is
         allowed to read. Give it the first job, take the second away structurally, and the failure
         modes left over are the ordinary kind — the ones you can measure, log, and fix on a Tuesday.
+      </p>
+      <p>
+        One last thing that is not in any of the code above. The transcript is not evidence. I
+        diagnosed the very first bug from Vapi's word-level confidence scores and got it wrong, because
+        they are truncated in every payload. Logging what we actually fed the graph was worth more than
+        all of it.
       </p>
 
       <p style="border-top:1px solid var(--border); padding-top: 28px; margin-top: 44px">
