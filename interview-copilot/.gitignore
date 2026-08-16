@@ -1,0 +1,15 @@
+.env
+*.db
+*.db-journal
+
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+
+node_modules/
+dist/
+*.tsbuildinfo
+.DS_Store
+
+eval-report*.json

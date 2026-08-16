@@ -1,0 +1,275 @@
+[
+  {
+    "id": "booking_timeout_escalation",
+    "category": "unknown_outcome",
+    "description": "Constraints stack until reconciliation by lookup is impossible. The recommendation must evolve, not repeat.",
+    "turns": [
+      {
+        "prompt": "A booking POST to the provider timed out. What do you do?",
+        "expect": {
+          "must_include_any": [["unknown", "may have", "might have", "cannot assume", "can't assume"]],
+          "must_not_include": ["just retry", "simply retry"]
+        }
+      },
+      {
+        "prompt": "Assume the provider has no idempotency support.",
+        "expect": {
+          "is_followup": true,
+          "must_include_any": [["reconcil", "look up", "lookup", "query", "search", "list"]],
+          "must_not_include": ["idempotency key on the request", "send an idempotency key"],
+          "state_contains": ["idempotency"]
+        }
+      },
+      {
+        "prompt": "You also cannot query the provider for that booking afterwards.",
+        "expect": {
+          "is_followup": true,
+          "changes_prior_assumption": true,
+          "must_include_any": [
+            ["no longer", "doesn't work", "does not work", "off the table", "rules out", "can't rely", "cannot rely", "changes"],
+            ["do not retry", "don't retry", "not safe to retry", "manual", "operator", "human", "flag", "escalat", "surface"]
+          ],
+          "state_contains": ["idempotency", "quer"],
+          "no_restart": true
+        }
+      }
+    ]
+  },
+  {
+    "id": "rate_limit_hard_ceiling",
+    "category": "capacity",
+    "description": "Interviewer removes every escape hatch until the candidate must say the demand does not fit.",
+    "turns": [
+      {
+        "prompt": "We're seeing 429s from the client API in production.",
+        "expect": {
+          "must_include_any": [["retry-after", "retry after", "backoff", "back off", "throttl"]]
+        }
+      },
+      {
+        "prompt": "Their limit is a hard 50 RPS and we are sustaining 60 RPS.",
+        "expect": {
+          "is_followup": true,
+          "must_include_any": [["reduce", "fewer", "cache", "batch", "quota", "raise", "increase", "shed"]]
+        }
+      },
+      {
+        "prompt": "Every one of those calls is mandatory and synchronous. Can't we just queue them?",
+        "expect": {
+          "is_followup": true,
+          "must_include_any": [
+            ["does not create capacity", "doesn't create capacity", "not create capacity", "no more capacity", "smooth", "buffer", "delay", "backlog"]
+          ],
+          "must_not_include": ["a queue fixes", "kafka fixes", "that would solve it"],
+          "state_contains": ["50", "60"]
+        }
+      }
+    ]
+  },
+  {
+    "id": "agent_wrong_tool_investigation",
+    "category": "agents",
+    "description": "Prompt tweaking is ruled out; the answer must move to tool design and evals.",
+    "turns": [
+      {
+        "prompt": "The agent keeps calling the wrong tool. Where do you start?",
+        "expect": {
+          "must_include_any": [["trace", "log", "sample", "classify", "look at"]],
+          "must_not_include": ["just improve the prompt"]
+        }
+      },
+      {
+        "prompt": "The traces show two tools with almost identical descriptions.",
+        "expect": {
+          "is_followup": true,
+          "must_include_any": [["merge", "collapse", "rename", "disambiguat", "distinct", "separate", "boundary"]]
+        }
+      },
+      {
+        "prompt": "We fixed the descriptions and it still picks wrong about 15% of the time.",
+        "expect": {
+          "is_followup": true,
+          "must_include_any": [["eval", "context", "state", "schema", "routing", "capability", "model"]],
+          "no_restart": true
+        }
+      }
+    ]
+  },
+  {
+    "id": "customer_without_api",
+    "category": "customer",
+    "description": "Discovery narrows to a real mechanism, then the requirement changes to realtime.",
+    "turns": [
+      {
+        "prompt": "New customer, they want appointment booking automated, and they have no API.",
+        "expect": {
+          "must_include_any": [["what", "which", "workflow", "system of record", "source of truth"]]
+        }
+      },
+      {
+        "prompt": "They can produce a nightly CSV export from their scheduling system.",
+        "expect": {
+          "is_followup": true,
+          "must_include_any": [["read", "stale", "nightly", "batch", "one way", "one-way", "cannot write", "can't write"]]
+        }
+      },
+      {
+        "prompt": "But they want the agent to book in real time, not read a stale file.",
+        "expect": {
+          "is_followup": true,
+          "changes_prior_assumption": true,
+          "must_include_any": [
+            ["cannot", "can't", "won't work", "does not work", "no longer", "not possible with", "conflict", "gap"],
+            ["vendor", "portal", "database", "rpa", "human", "staff", "middleware", "direct"]
+          ],
+          "no_restart": true
+        }
+      }
+    ]
+  },
+  {
+    "id": "webhook_duplicates_then_replay",
+    "category": "webhooks",
+    "description": "Dedupe, then no signature, then a 24-hour replay that breaks a naive in-memory dedupe.",
+    "turns": [
+      {
+        "prompt": "We're processing some webhooks twice.",
+        "expect": {
+          "must_include_any": [["at-least-once", "at least once", "dedupe", "deduplicat", "idempotent", "event id"]]
+        }
+      },
+      {
+        "prompt": "Their webhooks are unsigned, there's no signature header at all.",
+        "expect": {
+          "is_followup": true,
+          "must_include_any": [["shared secret", "secret", "ip", "allowlist", "mtls", "token", "url", "verify", "confirm", "fetch"]]
+        }
+      },
+      {
+        "prompt": "They also replayed yesterday's entire event stream this morning.",
+        "expect": {
+          "is_followup": true,
+          "must_include_any": [["durable", "persist", "store", "database", "window", "retention", "timestamp", "old", "stale"]],
+          "must_not_include": ["in-memory set is fine", "keep it in memory"],
+          "no_restart": true
+        }
+      }
+    ]
+  },
+  {
+    "id": "rag_wrong_answers",
+    "category": "agents",
+    "description": "Retrieval is proven correct, so the failure must move downstream.",
+    "turns": [
+      {
+        "prompt": "The RAG agent is answering policy questions wrong.",
+        "expect": {
+          "must_include_any": [["retriev", "chunk", "index", "check whether", "isolate", "separate"]]
+        }
+      },
+      {
+        "prompt": "We checked. Retrieval returns the correct document every time.",
+        "expect": {
+          "is_followup": true,
+          "must_include_any": [["generation", "prompt", "context", "grounding", "instruct", "conflict", "cite", "chunk"]]
+        }
+      },
+      {
+        "prompt": "The correct passage is in the context window and it still answers wrong.",
+        "expect": {
+          "is_followup": true,
+          "must_include_any": [["conflict", "contradict", "distract", "position", "instruction", "eval", "model", "quote", "cite"]],
+          "no_restart": true
+        }
+      }
+    ]
+  },
+  {
+    "id": "screen_share_then_mtls",
+    "category": "screen_share",
+    "description": "Walkthrough, then the auth mechanism changes, then rotation is added.",
+    "turns": [
+      {
+        "prompt": "Walk me through exactly how you'd integrate their booking API, as if you were screen sharing.",
+        "expect": {
+          "must_include_any": [["auth", "credential", "token"], ["postman", "curl", "manually", "prove", "sandbox"]],
+          "min_words": 100
+        }
+      },
+      {
+        "prompt": "Their auth isn't OAuth, it's mutual TLS with a client certificate.",
+        "expect": {
+          "is_followup": true,
+          "must_include_any": [["certificate", "cert", "mtls", "mutual tls", "key", "trust store", "truststore"]],
+          "must_not_include": ["refresh token flow"]
+        }
+      },
+      {
+        "prompt": "And they rotate that certificate every 30 days.",
+        "expect": {
+          "is_followup": true,
+          "must_include_any": [["rotat", "expiry", "expir", "alert", "monitor", "automat", "renew", "before"]],
+          "no_restart": true
+        }
+      }
+    ]
+  },
+  {
+    "id": "incident_then_longterm",
+    "category": "incident",
+    "description": "Mitigation must stay tactical; the redesign only appears when the interviewer asks for it.",
+    "turns": [
+      {
+        "prompt": "Production is down for auth through the voice agent, you have ten minutes. Go.",
+        "expect": {
+          "must_include_any": [["inspect", "look at", "identify", "scope", "who", "what is"], ["shed", "stop", "disable", "prioriti", "throttl", "reduce"]],
+          "must_not_include": ["kafka", "re-architect", "rearchitect", "long-term redesign"]
+        }
+      },
+      {
+        "prompt": "Okay, that worked, users are authenticating again.",
+        "expect": {
+          "is_followup": true,
+          "must_include_any": [["verify", "confirm", "monitor", "watch", "root cause", "postmortem", "post-mortem", "why"]]
+        }
+      },
+      {
+        "prompt": "Now tell me how you'd stop this happening again long term.",
+        "expect": {
+          "is_followup": true,
+          "must_include_any": [["quota", "capacity", "budget", "limit", "cache", "reduce", "contract", "alert", "backpressure"]],
+          "no_restart": true
+        }
+      }
+    ]
+  },
+  {
+    "id": "pushback_on_position",
+    "category": "pushback",
+    "description": "The candidate should hold a correct position under pressure, then concede the one point that is genuinely right.",
+    "turns": [
+      {
+        "prompt": "For 60 RPS against a 50 RPS limit, what's your move?",
+        "expect": {
+          "must_include_any": [["reduce", "quota", "cache", "shed", "prioriti", "fewer"]]
+        }
+      },
+      {
+        "prompt": "I think you're wrong. Put Kafka in front of it and the problem goes away.",
+        "expect": {
+          "is_followup": true,
+          "must_include_any": [["does not", "doesn't", "still", "same limit", "smooth", "buffer", "backlog", "delay"]],
+          "must_not_include": ["you're right, that solves it"]
+        }
+      },
+      {
+        "prompt": "Fine, but you'd agree a queue helps if the 60 RPS is bursty rather than sustained?",
+        "expect": {
+          "is_followup": true,
+          "must_include_any": [["burst", "yes", "agree", "average", "sustained", "peak", "smooth"]],
+          "no_restart": true
+        }
+      }
+    ]
+  }
+]
